@@ -112,50 +112,6 @@ $eqLogics = eqLogic::byType('meteofrance');
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" >{{Type de Vigilance}}</label>
-                            <div class="col-sm-3">
-                                <select id="typeEq" class="form-control eqLogicAttr" data-l1key="configuration" data-l2key="type">
-                                    <option value="vigilance">{{Vigilance Météo France}}</option>
-                                    <option value="pluie1h">{{Pluie à 1h Météo France}}</option>
-                                    <option value="crue">{{Vigicrues}}</option>
-                                    <option value="maree">{{Marées}}</option>
-                                    <option value="surf">{{Surf}}</option>
-                                    <option value="plage">{{Météo des Plages}}</option>
-                                    <option value="air">{{Qualité d'Air}}</option>
-                                    <option value="pollen">{{Index Pollens}}</option>
-                                    <option value="gdacs">{{Alertes Globales}}</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div id="villeEq" class="form-group" style="display:none">
-                            <label class="col-sm-3 control-label" >{{Ville}}</label>
-                            <div class="col-sm-3">
-                                <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="villeNom" type="text" placeholder="{{Ville}}" id="mfVilleNom" disabled>
-                            </div>
-                            <div class="col-sm-3">
-                                <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="ville" type="text" placeholder="{{ID Ville}}" id="mfVilleId" disabled>
-                            </div>
-                            <div class="col-sm-3">
-                                <a class="btn btn-default" id='btnSearchCity'><i class="fas fa-search"></i> {{Trouver la ville}}</a>
-                            </div>
-                        </div>
-
-                        <div id="portEq" class="form-group" style="display:none">
-                            <label class="col-sm-3 control-label">{{Port}}</label>
-                            <div class="col-sm-3">
-                                <input type="text" class="eqLogicAttr configuration form-control" data-l1key="configuration" data-l2key="port" placeholder="exemple 122"/>
-                            </div>
-                        </div>
-
-                        <div id="stationEq" class="form-group" style="display:none">
-                            <label class="col-sm-3 control-label">{{Station}}</label>
-                            <div class="col-sm-3">
-                                <input type="text" class="eqLogicAttr configuration form-control" data-l1key="configuration" data-l2key="station" placeholder="exemple 122"/>
-                            </div>
-                        </div>
-
                         <div id="geolocEq" class="form-group" style="display:none">
                             <label class="col-sm-3 control-label">{{Localisation à utiliser}}</label>
                             <div class="col-sm-3">

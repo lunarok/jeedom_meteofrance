@@ -37,31 +37,67 @@ class meteofrance extends eqLogic {
     }
   }
 
-  public function getDetails() {
-    $url = 'http://ws.meteofrance.com/ws/getDetail/france/' . $meteofrance->getConfiguration('insee') . '0.json';
+  public function preSave() {
+    $this->getDetails($this->getInsee());
+  }
+
+  public function getInsee() {
+    $geoloc = $this->getConfiguration('geoloc', 'none');
+    if ($geoloc == 'none') {
+      log::add(__CLASS__, 'error', 'Pollen geoloc non configuré.');
+      return;
+    }
+    if ($geoloc == "jeedom") {
+      $zip = config::byKey('info::postalCode');
+    } else {
+      $geotrav = eqLogic::byId($geoloc);
+      if (is_object($geotrav) && $geotrav->getEqType_name() == 'geotrav') {
+        $geotravCmd = geotravCmd::byEqLogicIdAndLogicalId($geoloc,'location:zip');
+        //location:city
+        if(is_object($geotravCmd))
+          $zip = $geotravCmd->execCmd();
+        else {
+          log::add(__CLASS__, 'error', 'Pollen geotravCmd object not found');
+          return;
+        }
+      }
+      else {
+        log::add(__CLASS__, 'error', 'Pollen geotrav object not found');
+        return;
+      }
+    }
+    $url = 'https://api-adresse.data.gouv.fr/search/?q=postcode=' . $zip . '&limit=1';
     $request_http = new com_http($url);
     $request_http->setNoSslCheck(true);
 	  $request_http->setNoReportError(true);
-	  $return = $request_http->exec(15,2);
+	  $insee = json_encode($request_http->exec(15,2), true);
+    return $insee['features']['properties']['citycode'];
+  }
+
+  public function getDetails($_insee) {
+    $url = 'http://ws.meteofrance.com/ws/getDetail/france/' . $_insee . '0.json';
+    $request_http = new com_http($url);
+    $request_http->setNoSslCheck(true);
+	  $request_http->setNoReportError(true);
+	  $return = json_encode($request_http->exec(15,2), true);
     $this->setConfiguration('bulletinCote', $return['result']['ville']['bulletinCote']);
     $this->setConfiguration('couvertPluie', $return['result']['ville']['couvertPluie']);
     $this->setConfiguration('lat', $return['result']['ville']['latitude']);
     $this->setConfiguration('lon', $return['result']['ville']['longitude']);
+    $this->setConfiguration('numDept', $return['result']['ville']['numDept']);
+    $this->setConfiguration('insee', $_insee);
   }
 
   public function getRain() {
-    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/nowcast/rain?lat=' . $meteofrance->getConfiguration('lat') . '&lon=' . $meteofrance->getConfiguration('lat') . '&token=' . config::byKey('token', 'meteofrance');
-    $request_http = new com_http($url);
-    $request_http->setNoSslCheck(true);
-	  $request_http->setNoReportError(true);
-	  $return = $request_http->exec(15,2);
+    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/nowcast/rain?lat=' . $meteofrance->getConfiguration('lat') . '&lon=' . $meteofrance->getConfiguration('lat');
+    $return = self::callMeteoFrance($url);
     $i = 0;
     $cumul = 0;
     $next = 0;
     foreach ($return['forecast'] as $rain) {
       i++;
-      $this->checkAndUpdateCmd('rain' . $i, $rain['rain']);
-      $this->checkAndUpdateCmd('desc' . $i, $rain['desc']);
+      $this->checkAndUpdateCmd('Rainrain' . $i, $rain['rain']);
+      $this->checkAndUpdateCmd('Raindesc' . $i, $rain['desc']);
       if (($rain['rain'] > 1) && ($next == 0)) {
         $next = $i * 5;
         if ($i > 6) {
@@ -71,44 +107,88 @@ class meteofrance extends eqLogic {
       }
       $cumul += $rain['rain'];
     }
-    $this->checkAndUpdateCmd('cumul', $cumul);
-    $this->checkAndUpdateCmd('next', $next);
+    $this->checkAndUpdateCmd('Raincumul', $cumul);
+    $this->checkAndUpdateCmd('Rainnext', $next);
   }
 
   public function getMarine() {
-    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/nowcast/forecast/marine?lat=' . $meteofrance->getConfiguration('lat') . '&lon=' . $meteofrance->getConfiguration('lat') . '&token=' . config::byKey('token', 'meteofrance');
-    $request_http = new com_http($url);
-    $request_http->setNoSslCheck(true);
-	  $request_http->setNoReportError(true);
-	  $return = $request_http->exec(15,2);
-
+    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/forecast/marine?lat=' . $meteofrance->getConfiguration('lat') . '&lon=' . $meteofrance->getConfiguration('lat');
+    $return = self::callMeteoFrance($url);
+    foreach ($return['properties']['marine'] as $id => $marine) {
+      $this->checkAndUpdateCmd('Marinewind_speed_kt' . $id, $marine['wind_speed_kt']);
+      $this->checkAndUpdateCmd('Marinewind_direction' . $id, $marine['wind_direction']);
+      $this->checkAndUpdateCmd('Marinebeaufort_scale' . $id, $marine['beaufort_scale']);
+      $this->checkAndUpdateCmd('Marinewave_height' . $id, $marine['wave_height']);
+      $this->checkAndUpdateCmd('Marinemax_wave_height' . $id, $marine['max_wave_height']);
+      $this->checkAndUpdateCmd('Marinewind_waves_height' . $id, $marine['wind_waves_height']);
+      $this->checkAndUpdateCmd('Marineprimary_swell_direction' . $id, $marine['primary_swell_direction']);
+      $this->checkAndUpdateCmd('Marineprimary_swell_height' . $id, $marine['primary_swell_height']);
+      $this->checkAndUpdateCmd('Marineprimary_swell_period' . $id, $marine['primary_swell_period']);
+      $this->checkAndUpdateCmd('MarineT_sea' . $id, $marine['T_sea']);
+      $this->checkAndUpdateCmd('Marinesea_condition' . $id, $marine['sea_condition']);
+      $this->checkAndUpdateCmd('Marinesea_condition_description' . $id, $marine['sea_condition_description']);
+    }
   }
 
   public function getTide() {
-    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/nowcast/tide?id=' . $meteofrance->getConfiguration('insee') . '52&token=' . config::byKey('token', 'meteofrance');
-    $request_http = new com_http($url);
-    $request_http->setNoSslCheck(true);
-	  $request_http->setNoReportError(true);
-	  $return = $request_http->exec(15,2);
-
+    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/tide?id=' . $meteofrance->getConfiguration('insee') . '52&token=' . config::byKey('token', 'meteofrance');
+    $return = self::callMeteoFrance($url);
+    $this->checkAndUpdateCmd('Tidehigh_tide0time', $return['properties']['tide']['high_tide'][0]['time']);
+    $this->checkAndUpdateCmd('Tidehigh_tide0tidal_coefficient', $return['properties']['tide']['high_tide'][0]['tidal_coefficient']);
+    $this->checkAndUpdateCmd('Tidehigh_tide0tidal_height', $return['properties']['tide']['high_tide'][0]['tidal_height']);
+    $this->checkAndUpdateCmd('Tidehigh_tide1time', $return['properties']['tide']['high_tide'][1]['time']);
+    $this->checkAndUpdateCmd('Tidehigh_tide1tidal_coefficient', $return['properties']['tide']['high_tide'][1]['tidal_coefficient']);
+    $this->checkAndUpdateCmd('Tidehigh_tide1tidal_height', $return['properties']['tide']['high_tide'][1]['tidal_height']);
+    $this->checkAndUpdateCmd('Tidelow_tide0time', $return['properties']['tide']['low_tide'][0]['time']);
+    $this->checkAndUpdateCmd('Tidelow_tide0tidal_coefficient', $return['properties']['tide']['low_tide'][0]['tidal_coefficient']);
+    $this->checkAndUpdateCmd('Tidelow_tide0tidal_height', $return['properties']['tide']['low_tide'][0]['tidal_height']);
+    $this->checkAndUpdateCmd('Tidelow_tide1time', $return['properties']['tide']['low_tide'][1]['time']);
+    $this->checkAndUpdateCmd('Tidelow_tide1tidal_coefficient', $return['properties']['tide']['low_tide'][1]['tidal_coefficient']);
+    $this->checkAndUpdateCmd('Tidelow_tide1tidal_height', $return['properties']['tide']['low_tide'][1]['tidal_height']);
   }
 
   public function getVigilance() {
-    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/nowcast/warning/currentphenomenons?domain=' . $meteofrance->getConfiguration('departement') . '52&token=' . config::byKey('token', 'meteofrance');
-    $request_http = new com_http($url);
-    $request_http->setNoSslCheck(true);
-	  $request_http->setNoReportError(true);
-	  $return = $request_http->exec(15,2);
-
+    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/warning/full?domain=' . $meteofrance->getConfiguration('numDept');
+    $return = self::callMeteoFrance($url);
+    $this->checkAndUpdateCmd('Vigilancecolor_max', $return['color_max']);
+    foreach ($return['timelaps'] as $id => $vigilance) {
+      $phase = array();
+      foreach ($vigilance['timelaps_items'] as $id2 => $segment) {
+        $phase[] = date(H:i, $segment['begin_time']) . ' vigilance niveau ' . $segment['color_id'];
+      }
+      $this->checkAndUpdateCmd('Vigilancephases' . $vigilance['phenomenon_id'], implode(', ',$phase));
+    }
+    foreach ($return['phenomenons_items'] as $id => $vigilance) {
+      $this->checkAndUpdateCmd('Vigilancephenomenon_max_color_id' . $vigilance['phenomenon_id'], $vigilance['phenomenon_max_color_id']);
+    }
   }
 
   public function getAlerts() {
-    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/nowcast/report?domain=france&report_type=message&report_subtype=infospe&format=&token=' . config::byKey('token', 'meteofrance');
-    $request_http = new com_http($url);
+    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/report?domain=france&report_type=message&report_subtype=infospe&format=';
+	  $return = self::callMeteoFrance($url);
+    if (isset($return['Com'][0]['titre'])) {
+      $this->checkAndUpdateCmd('Alerttitre', $return['Com'][0]['titre']);
+      $this->checkAndUpdateCmd('Alerttexte', $return['Com'][0]['texte']);
+      $this->checkAndUpdateCmd('AlertdateDeFin', $return['Com'][0]['dateDeFin']);
+      $this->checkAndUpdateCmd('AlertdateProduction', $return['Com'][0]['dateProduction']);
+    }
+  }
+
+  public static function callMeteoFrance($_url) {
+    //$token = config::byKey('token', 'meteofrance');
+    $token = '';
+    $request_http = new com_http($_url . '&token=' . $token);
     $request_http->setNoSslCheck(true);
 	  $request_http->setNoReportError(true);
 	  $return = $request_http->exec(15,2);
-
+    if ($result === false) {
+      log::add(__CLASS__, 'debug', 'Unable to fetch ' . $_url);
+      return;
+    } else {
+      log::add(__CLASS__, 'debug', 'Get ' . $_url);
+      log::add(__CLASS__, 'debug', 'Result ' . $return);
+    }
+    return json_encode($return, true);
   }
 
 }

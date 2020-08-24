@@ -67,19 +67,13 @@ class meteofrance extends eqLogic {
       }
     }
     $url = 'https://api-adresse.data.gouv.fr/search/?q=postcode=' . $zip . '&limit=1';
-    $request_http = new com_http($url);
-    $request_http->setNoSslCheck(true);
-	  $request_http->setNoReportError(true);
-	  $insee = json_encode($request_http->exec(15,2), true);
+    $return = self::callURL($url);
     return $insee['features']['properties']['citycode'];
   }
 
   public function getDetails($_insee) {
     $url = 'http://ws.meteofrance.com/ws/getDetail/france/' . $_insee . '0.json';
-    $request_http = new com_http($url);
-    $request_http->setNoSslCheck(true);
-	  $request_http->setNoReportError(true);
-	  $return = json_encode($request_http->exec(15,2), true);
+    $return = self::callURL($url);
     $this->setConfiguration('bulletinCote', $return['result']['ville']['bulletinCote']);
     $this->setConfiguration('couvertPluie', $return['result']['ville']['couvertPluie']);
     $this->setConfiguration('lat', $return['result']['ville']['latitude']);
@@ -90,7 +84,7 @@ class meteofrance extends eqLogic {
 
   public function getRain() {
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/nowcast/rain?lat=' . $meteofrance->getConfiguration('lat') . '&lon=' . $meteofrance->getConfiguration('lat');
-    $return = self::callMeteoFrance($url);
+    $return = self::callMeteoWS($url);
     $i = 0;
     $cumul = 0;
     $next = 0;
@@ -113,7 +107,7 @@ class meteofrance extends eqLogic {
 
   public function getMarine() {
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/forecast/marine?lat=' . $meteofrance->getConfiguration('lat') . '&lon=' . $meteofrance->getConfiguration('lat');
-    $return = self::callMeteoFrance($url);
+    $return = self::callMeteoWS($url);
     foreach ($return['properties']['marine'] as $id => $marine) {
       $this->checkAndUpdateCmd('Marinewind_speed_kt' . $id, $marine['wind_speed_kt']);
       $this->checkAndUpdateCmd('Marinewind_direction' . $id, $marine['wind_direction']);
@@ -132,7 +126,7 @@ class meteofrance extends eqLogic {
 
   public function getTide() {
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/tide?id=' . $meteofrance->getConfiguration('insee') . '52&token=' . config::byKey('token', 'meteofrance');
-    $return = self::callMeteoFrance($url);
+    $return = self::callMeteoWS($url);
     $this->checkAndUpdateCmd('Tidehigh_tide0time', $return['properties']['tide']['high_tide'][0]['time']);
     $this->checkAndUpdateCmd('Tidehigh_tide0tidal_coefficient', $return['properties']['tide']['high_tide'][0]['tidal_coefficient']);
     $this->checkAndUpdateCmd('Tidehigh_tide0tidal_height', $return['properties']['tide']['high_tide'][0]['tidal_height']);
@@ -149,7 +143,7 @@ class meteofrance extends eqLogic {
 
   public function getVigilance() {
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/warning/full?domain=' . $meteofrance->getConfiguration('numDept');
-    $return = self::callMeteoFrance($url);
+    $return = self::callMeteoWS($url);
     $this->checkAndUpdateCmd('Vigilancecolor_max', $return['color_max']);
     foreach ($return['timelaps'] as $id => $vigilance) {
       $phase = array();
@@ -165,7 +159,7 @@ class meteofrance extends eqLogic {
 
   public function getAlerts() {
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/report?domain=france&report_type=message&report_subtype=infospe&format=';
-	  $return = self::callMeteoFrance($url);
+    $return = self::callMeteoWS($url);
     if (isset($return['Com'][0]['titre'])) {
       $this->checkAndUpdateCmd('Alerttitre', $return['Com'][0]['titre']);
       $this->checkAndUpdateCmd('Alerttexte', $return['Com'][0]['texte']);
@@ -174,13 +168,28 @@ class meteofrance extends eqLogic {
     }
   }
 
-  public static function callMeteoFrance($_url) {
+  public static function callMeteoWS($_url) {
     //$token = config::byKey('token', 'meteofrance');
     $token = '';
     $request_http = new com_http($_url . '&token=' . $token);
     $request_http->setNoSslCheck(true);
 	  $request_http->setNoReportError(true);
 	  $return = $request_http->exec(15,2);
+    if ($result === false) {
+      log::add(__CLASS__, 'debug', 'Unable to fetch ' . $_url);
+      return;
+    } else {
+      log::add(__CLASS__, 'debug', 'Get ' . $_url);
+      log::add(__CLASS__, 'debug', 'Result ' . $return);
+    }
+    return json_encode($return, true);
+  }
+
+  public static function callURL($_url) {
+    $request_http = new com_http($_url);
+    $request_http->setNoSslCheck(true);
+$request_http->setNoReportError(true);
+  $return = $request_http->exec(15,2);
     if ($result === false) {
       log::add(__CLASS__, 'debug', 'Unable to fetch ' . $_url);
       return;

@@ -95,7 +95,7 @@ class meteofrance extends eqLogic {
     $cumul = 0;
     $next = 0;
     foreach ($return['forecast'] as $rain) {
-      i++;
+      $i++;
       $this->checkAndUpdateCmd('Rainrain' . $i, $rain['rain']);
       $this->checkAndUpdateCmd('Raindesc' . $i, $rain['desc']);
       if (($rain['rain'] > 1) && ($next == 0)) {
@@ -154,7 +154,7 @@ class meteofrance extends eqLogic {
     foreach ($return['timelaps'] as $id => $vigilance) {
       $phase = array();
       foreach ($vigilance['timelaps_items'] as $id2 => $segment) {
-        $phase[] = date(H:i, $segment['begin_time']) . ' vigilance niveau ' . $segment['color_id'];
+        $phase[] = date('H:i', $segment['begin_time']) . ' vigilance niveau ' . $segment['color_id'];
       }
       $this->checkAndUpdateCmd('Vigilancephases' . $vigilance['phenomenon_id'], implode(', ',$phase));
     }

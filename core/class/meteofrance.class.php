@@ -96,7 +96,7 @@ class meteofrance extends eqLogic {
 	if (!$this->getConfiguration('couvertPluie')) {
         return;
       }
-    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/nowcast/rain?lat=' . $this->getConfiguration('lat') . '&lon=' . $this->getConfiguration('lat');
+    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/nowcast/rain?lat=' . $this->getConfiguration('lat') . '&lon=' . $this->getConfiguration('lon');
     $return = self::callMeteoWS($url);
     $i = 0;
     $cumul = 0;
@@ -122,7 +122,7 @@ class meteofrance extends eqLogic {
   if (!$this->getConfiguration('bulletinCote')) {
         return;
       }
-    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/forecast/marine?lat=' . $this->getConfiguration('lat') . '&lon=' . $this->getConfiguration('lat');
+    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/forecast/marine?lat=' . $this->getConfiguration('lat') . '&lon=' . $this->getConfiguration('lon');
     $return = self::callMeteoWS($url);
     foreach ($return['properties']['marine'] as $id => $marine) {
       $this->checkAndUpdateCmd('Marinewind_speed_kt' . $id, $marine['wind_speed_kt']);

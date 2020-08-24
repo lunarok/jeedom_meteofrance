@@ -68,6 +68,7 @@ class meteofrance extends eqLogic {
     }
     $url = 'https://api-adresse.data.gouv.fr/search/?q=postcode=' . $zip . '&limit=1';
     $return = self::callURL($url);
+    log::add(__CLASS__, 'debug', 'Insee ' . $return['features'][0]['properties']['citycode']);
     return $return['features'][0]['properties']['citycode'];
   }
 

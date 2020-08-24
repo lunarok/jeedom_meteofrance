@@ -183,7 +183,7 @@ class meteofrance extends eqLogic {
       log::add(__CLASS__, 'debug', 'Get ' . $_url);
       log::add(__CLASS__, 'debug', 'Result ' . $return);
     }
-    return json_encode($return, true);
+    return json_decode($return, true);
   }
 
   public static function callURL($_url) {
@@ -198,7 +198,7 @@ $request_http->setNoReportError(true);
       log::add(__CLASS__, 'debug', 'Get ' . $_url);
       log::add(__CLASS__, 'debug', 'Result ' . $return);
     }
-    return json_encode($return, true);
+    return json_decode($return, true);
   }
 
 }

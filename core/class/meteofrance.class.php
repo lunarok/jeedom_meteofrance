@@ -189,7 +189,7 @@ class meteofrance extends eqLogic {
 
   public static function callMeteoWS($_url) {
     //$token = config::byKey('token', 'meteofrance');
-    $token = '';
+    $token = 'eyJjbGFzcyI6ImludGVybmV0IiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJqdGkiOiI2ODZkYzI5OTRjMmM2MjBlODExMGM3NTg4NGU0ZDc3YiIsImlhdCI6MTU5ODMwMDYxMH0.O97I-Jewjr8fYiCdc469daGOAPqYuo3vNTm25L5ZDYA';
     $request_http = new com_http($_url . '&token=' . $token);
     $request_http->setNoSslCheck(true);
 	  $request_http->setNoReportError(true);

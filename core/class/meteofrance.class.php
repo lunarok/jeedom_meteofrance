@@ -21,24 +21,33 @@ class meteofrance extends eqLogic {
 
   public static function cron5() {
     foreach (eqLogic::byType(__CLASS__, true) as $meteofrance) {
-      if ($meteofrance->getConfiguration('couvertPluie')) {
         $meteofrance->getRain();
-      }
     }
   }
 
   public static function cronHourly() {
     foreach (eqLogic::byType(__CLASS__, true) as $meteofrance) {
       $meteofrance->getVigilance();
-      if ($meteofrance->getConfiguration('bulletinCote')) {
-        $meteofrance->getMarine();
+      $meteofrance->getMarine();
         $meteofrance->getTide();
-      }
+ 	$meteofrance->getAlerts();
     }
   }
 
   public function preSave() {
     $this->getDetails($this->getInsee());
+  }
+
+  public function postSave() {
+    $this->getInformations();
+  }
+
+  public function getInformations() {
+    $this->getRain();
+    $this->getVigilance();
+      $this->getMarine();
+        $this->getTide();
+        $this->getAlerts();
   }
 
   public function getInsee() {
@@ -84,7 +93,10 @@ class meteofrance extends eqLogic {
   }
 
   public function getRain() {
-    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/nowcast/rain?lat=' . $meteofrance->getConfiguration('lat') . '&lon=' . $meteofrance->getConfiguration('lat');
+	if (!$this->getConfiguration('couvertPluie')) {
+        return;
+      }
+    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/nowcast/rain?lat=' . $this->getConfiguration('lat') . '&lon=' . $this->getConfiguration('lat');
     $return = self::callMeteoWS($url);
     $i = 0;
     $cumul = 0;
@@ -107,7 +119,10 @@ class meteofrance extends eqLogic {
   }
 
   public function getMarine() {
-    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/forecast/marine?lat=' . $meteofrance->getConfiguration('lat') . '&lon=' . $meteofrance->getConfiguration('lat');
+  if (!$this->getConfiguration('bulletinCote')) {
+        return;
+      }
+    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/forecast/marine?lat=' . $this->getConfiguration('lat') . '&lon=' . $this->getConfiguration('lat');
     $return = self::callMeteoWS($url);
     foreach ($return['properties']['marine'] as $id => $marine) {
       $this->checkAndUpdateCmd('Marinewind_speed_kt' . $id, $marine['wind_speed_kt']);
@@ -126,7 +141,10 @@ class meteofrance extends eqLogic {
   }
 
   public function getTide() {
-    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/tide?id=' . $meteofrance->getConfiguration('insee') . '52&token=' . config::byKey('token', 'meteofrance');
+  if (!$this->getConfiguration('bulletinCote')) {
+        return;
+      }
+    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/tide?id=' . $this->getConfiguration('insee') . '52&token=' . config::byKey('token', 'meteofrance');
     $return = self::callMeteoWS($url);
     $this->checkAndUpdateCmd('Tidehigh_tide0time', $return['properties']['tide']['high_tide'][0]['time']);
     $this->checkAndUpdateCmd('Tidehigh_tide0tidal_coefficient', $return['properties']['tide']['high_tide'][0]['tidal_coefficient']);
@@ -143,7 +161,7 @@ class meteofrance extends eqLogic {
   }
 
   public function getVigilance() {
-    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/warning/full?domain=' . $meteofrance->getConfiguration('numDept');
+    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/warning/full?domain=' . $this->getConfiguration('numDept');
     $return = self::callMeteoWS($url);
     $this->checkAndUpdateCmd('Vigilancecolor_max', $return['color_max']);
     foreach ($return['timelaps'] as $id => $vigilance) {

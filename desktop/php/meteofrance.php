@@ -112,7 +112,7 @@ $eqLogics = eqLogic::byType('meteofrance');
                             </div>
                         </div>
 
-                        <div id="geolocEq" class="form-group" style="display:none">
+                        <div id="geolocEq" class="form-group">
                             <label class="col-sm-3 control-label">{{Localisation à utiliser}}</label>
                             <div class="col-sm-3">
                                 <select class="form-control eqLogicAttr configuration" id="geoloc" data-l1key="configuration" data-l2key="geoloc">
@@ -135,34 +135,6 @@ $eqLogics = eqLogic::byType('meteofrance');
                                     }
                                     ?>
                                 </select>
-                            </div>
-                        </div>
-
-                        <div id="pollenEq" class="form-group" style="display:none">
-                          <label class="col-sm-3 control-label"></label>
-                          <div class="col-sm-8">
-                            <label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="displayNullPollen" checked/>{{Afficher les pollens niveau 0}}</label>
-                          </div>
-                        </div>
-
-                        <div id="breezeEq" class="form-group" style="display:none">
-                            <label class="col-sm-3 control-label">{{Clef}} <a href='http://aqicn.org/api/'>AQICN</a></label>
-                            <div class="col-sm-3">
-                                <input type="text" class="eqLogicAttr configuration form-control" data-l1key="configuration" data-l2key="aqicn" placeholder="exemple 122"/>
-                            </div>
-                        </div>
-
-                        <div id="surfEq" class="form-group" style="display:none">
-                            <label class="col-sm-3 control-label">{{ID Spot}}</label>
-                            <div class="col-sm-3">
-                                <input type="text" class="eqLogicAttr configuration form-control" data-l1key="configuration" data-l2key="surf" placeholder="exemple 1"/>
-                            </div>
-                        </div>
-
-                        <div id="mswEq" class="form-group" style="display:none">
-                            <label class="col-sm-3 control-label">{{Clef}} <a href='http://magicseaweed.com/developer/api'>Magicseaweed</a></label>
-                            <div class="col-sm-3">
-                                <input type="text" class="eqLogicAttr configuration form-control" data-l1key="configuration" data-l2key="magicseaweed" placeholder="clef API"/>
                             </div>
                         </div>
                     </fieldset>

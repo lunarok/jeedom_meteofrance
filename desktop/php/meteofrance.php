@@ -138,7 +138,7 @@ $eqLogics = eqLogic::byType('meteofrance');
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="zoneRain">
               <label class="col-sm-3 control-label"></label>
               <div class="col-sm-3">
                 <input type="checkbox" class="eqLogicAttr form-control configuration" data-l1key="configuration" data-l2key="couvertPluie" style="display : none;" id="rain"/>
@@ -153,11 +153,19 @@ $eqLogics = eqLogic::byType('meteofrance');
               </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="zoneMarine">
               <label class="col-sm-3 control-label"></label>
               <div class="col-sm-3">
                 <input type="checkbox" class="eqLogicAttr form-control configuration" data-l1key="configuration" data-l2key="bulletinCote" style="display : none;" id="marine"/>
                 <a class="btn btn-default" id='btMarine'><i class="fas fa-ship"></i> {{Créer les commandes Météo Marine}}</a>
+              </div>
+            </div>
+
+            <div class="form-group" id="zoneCrue">
+              <label class="col-sm-3 control-label"></label>
+              <div class="col-sm-3">
+                <input type="checkbox" class="eqLogicAttr form-control configuration" data-l1key="configuration" data-l2key="bulletinCote" style="display : none;" id="crue"/>
+                <a class="btn btn-default" id='btCrue'><i class="fas fa-water"></i> {{Créer les commandes Vigicrues}}</a>
               </div>
             </div>
 

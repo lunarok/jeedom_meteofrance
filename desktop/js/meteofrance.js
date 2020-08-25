@@ -17,17 +17,25 @@
 
  $('#rain').change(function(){
    if ($('#rain').value() == 1) {
-    $('#btRain').show();
+    $('#zoneRain').show();
   } else {
-    $('#btRain').hide();
+    $('#zoneRain').hide();
    }
  });
 
  $('#marine').change(function(){
    if ($('#marine').value() == 1) {
-    $('#btMarine').show();
+    $('#zoneMarine').show();
   } else {
-    $('#btMarine').hide();
+    $('#zoneMarine').hide();
+   }
+ });
+
+ $('#crue').change(function(){
+   if ($('#crue').value() == 1) {
+    $('#zoneCrue').show();
+  } else {
+    $('#zoneCrue').hide();
    }
  });
 
@@ -37,6 +45,10 @@
 
  $('#btMarine').on('click', function () {
    createCmd('marine');
+ });
+
+ $('#btCrue').on('click', function () {
+   createCmd('crue');
  });
 
  $('#btVigilance').on('click', function () {

@@ -32,24 +32,24 @@
  });
 
  $('#btRain').on('click', function () {
-   createCmd('rain');
+   createCmd('rain',$(this).attr('data-eqLogic_id'));
  });
 
  $('#btMarine').on('click', function () {
-   createCmd('marine');
+   createCmd('marine',$(this).attr('data-eqLogic_id'));
  });
 
  $('#btVigilance').on('click', function () {
-   createCmd('vigilance');
+   createCmd('vigilance',$(this).attr('data-eqLogic_id'));
  });
 
- function createCmd(type) {
+ function createCmd(type,id) {
   $.ajax({// fonction permettant de faire de l'ajax
     type: "POST", // methode de transmission des données au fichier php
     url: "plugins/meteofrance/core/ajax/meteofrance.ajax.php", // url du fichier php
     data: {
       action: "createcmd",
-      id: $(this).attr('data-eqlogic_id'),
+      id: id,
       type: type,
     },
     dataType: 'json',

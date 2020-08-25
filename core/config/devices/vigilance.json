@@ -1,124 +1,136 @@
 {
   "commands": [
         {
-            "name": "Pluie 1h - Previsions Textuelles 0-5mn",
+            "name": "Vigilance - Vent violent conditions",
             "type": "info",
             "subtype": "string",
-            "logicalId": "Raindesc1"
+            "logicalId": "Vigilancephases1"
         },
         {
-            "name": "Pluie 1h - Niveau Pluie  0-5mn",
+            "name": "Vigilance - Vent violent niveau",
             "type": "info",
             "subtype": "numeric",
-            "logicalId": "Rainrain1"
+            "logicalId": "Vigilancephenomenon_max_color_id1"
         },
         {
-            "name": "Pluie 1h - Previsions Textuelles 5-10mn",
+            "name": "Vigilance - Pluie-inondation conditions",
             "type": "info",
             "subtype": "string",
-            "logicalId": "Raindesc2"
+            "logicalId": "Vigilancephases2"
         },
         {
-            "name": "Pluie 1h - Niveau Pluie 5-10mn",
+            "name": "Vigilance - Pluie-inondation niveau",
             "type": "info",
             "subtype": "numeric",
-            "logicalId": "Rainrain2"
+            "logicalId": "Vigilancephenomenon_max_color_id2"
         },
         {
-            "name": "Pluie 1h - Previsions Textuelles 10-15mn",
+            "name": "Vigilance - Orages conditions",
             "type": "info",
             "subtype": "string",
-            "logicalId": "Raindesc3"
+            "logicalId": "Vigilancephases3"
         },
         {
-            "name": "Pluie 1h - Niveau Pluie 10-15mn",
+            "name": "Vigilance - Orages niveau",
             "type": "info",
             "subtype": "numeric",
-            "logicalId": "Rainrain3"
+            "logicalId": "Vigilancephenomenon_max_color_id3"
         },
         {
-            "name": "Pluie 1h - Previsions Textuelles 15-20mn",
+            "name": "Vigilance - Inondation conditions",
             "type": "info",
             "subtype": "string",
-            "logicalId": "Raindesc4"
+            "logicalId": "Vigilancephases4"
         },
         {
-            "name": "Pluie 1h - Niveau Pluie 15-20mn",
+            "name": "Vigilance - Inondation niveau",
             "type": "info",
             "subtype": "numeric",
-            "logicalId": "Rainrain4"
+            "logicalId": "Vigilancephenomenon_max_color_id4"
         },
         {
-            "name": "Pluie 1h - Previsions Textuelles 20-25mn",
+            "name": "Vigilance - Neige-verglas conditions",
             "type": "info",
             "subtype": "string",
-            "logicalId": "Raindesc5"
+            "logicalId": "Vigilancephases5"
         },
         {
-            "name": "Pluie 1h - Niveau Pluie 20-25mn",
+            "name": "Vigilance - Neige-verglas niveau",
             "type": "info",
             "subtype": "numeric",
-            "logicalId": "Rainrain5"
+            "logicalId": "Vigilancephenomenon_max_color_id5"
         },
         {
-            "name": "Pluie 1h - Previsions Textuelles 25-30mn",
+            "name": "Vigilance - Canicule conditions",
             "type": "info",
             "subtype": "string",
-            "logicalId": "Raindesc6"
+            "logicalId": "Vigilancephases6"
         },
         {
-            "name": "Pluie 1h - Niveau Pluie 25-30mn",
+            "name": "Vigilance - Canicule niveau",
             "type": "info",
             "subtype": "numeric",
-            "logicalId": "Rainrain6"
+            "logicalId": "Vigilancephenomenon_max_color_id6"
         },
         {
-            "name": "Pluie 1h - Previsions Textuelles 30-40mn",
+            "name": "Vigilance - Grand-froid conditions",
             "type": "info",
             "subtype": "string",
-            "logicalId": "Raindesc7"
+            "logicalId": "Vigilancephases7"
         },
         {
-            "name": "Pluie 1h - Niveau Pluie 30-40mn",
+            "name": "Vigilance - Grand-froid niveau",
             "type": "info",
             "subtype": "numeric",
-            "logicalId": "Rainrain7"
+            "logicalId": "Vigilancephenomenon_max_color_id7"
         },
         {
-            "name": "Pluie 1h - Previsions Textuelles 40-50mn",
+            "name": "Vigilance - Avalanches conditions",
             "type": "info",
             "subtype": "string",
-            "logicalId": "Raindesc8"
+            "logicalId": "Vigilancephases8"
         },
         {
-            "name": "Pluie 1h - Niveau Pluie 40-50mn",
+            "name": "Vigilance - Avalanches niveau",
             "type": "info",
             "subtype": "numeric",
-            "logicalId": "Rainrain8"
+            "logicalId": "Vigilancephenomenon_max_color_id8"
         },
         {
-            "name": "Pluie 1h - Previsions Textuelles 50-60mn",
+            "name": "Vigilance - Vagues-submersion conditions",
             "type": "info",
             "subtype": "string",
-            "logicalId": "Raindesc9"
+            "logicalId": "Vigilancephases9"
         },
         {
-            "name": "Pluie 1h - Niveau Pluie 50-60mn",
+            "name": "Vigilance - Vagues-submersion niveau",
             "type": "info",
             "subtype": "numeric",
-            "logicalId": "Rainrain9"
+            "logicalId": "Vigilancephenomenon_max_color_id9"
         },
         {
-            "name": "Pluie 1h - Pluie prévue dans l heure",
+            "name": "Alertes - Titre",
             "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Raincumul"
+            "subtype": "string",
+            "logicalId": "Alerttitre"
         },
         {
-            "name": "Pluie 1h - Delai avant prochaine pluie",
+            "name": "Alertes - Texte",
             "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Rainnext"
+            "subtype": "string",
+            "logicalId": "Alerttexte"
+        },
+        {
+            "name": "Alertes - Date de fin",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "AlertdateDeFin"
+        },
+        {
+            "name": "Alertes - Date annonce",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "AlertdateProduction"
         }
     ]
 }

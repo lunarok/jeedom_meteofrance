@@ -115,7 +115,7 @@
             "logicalId": "Raincumul"
         },
         {
-            "name": "Delai avant prochaine pluie",
+            "name": "Pluie 1h - Delai avant prochaine pluie",
             "type": "info",
             "subtype": "numeric",
             "logicalId": "Rainnext"

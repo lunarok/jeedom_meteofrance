@@ -149,7 +149,7 @@ function addCmdToTable(_cmd) {
       tr += '<td>';
       tr += '<span class="cmdAttr" data-l1key="id"></span>';
       tr += '</td><td>';
-      tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" style="width : 140px;" placeholder="{{Nom de la commande}}"></td>';
+      tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" style="width : 400px;" placeholder="{{Nom de la commande}}"></td>';
       tr += '</td><td>';
       if (_cmd.subType == 'numeric' || _cmd.subType == 'binary') {
         tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized" checked/>{{Historiser}}</label></span>';

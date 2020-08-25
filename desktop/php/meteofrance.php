@@ -137,6 +137,14 @@ $eqLogics = eqLogic::byType('meteofrance');
                                 </select>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                          <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-6">
+                              <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="couvertPluie" style="display : none;" id="rain"/>
+                                              <a class="btn btn-default" id='btRain'><i class="fas fa-umbrella"></i> {{Créer les commandes Pluie 1h}}</a>
+                                          </div>
+                                          </div>
                     </fieldset>
                 </form>
             </div>

@@ -1,0 +1,124 @@
+{
+    "commands": [
+        {
+            "name": "Pluie 1h - Previsions Textuelles 0-5mn",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Raindesc1"
+        },
+        {
+            "name": "Pluie 1h - Niveau Pluie  0-5mn",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Rainrain1"
+        },
+        {
+            "name": "Pluie 1h - Previsions Textuelles 5-10mn",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Raindesc2"
+        },
+        {
+            "name": "Pluie 1h - Niveau Pluie 5-10mn",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Rainrain2"
+        },
+        {
+            "name": "Pluie 1h - Previsions Textuelles 10-15mn",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Raindesc3"
+        },
+        {
+            "name": "Pluie 1h - Niveau Pluie 10-15mn",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Rainrain3"
+        },
+        {
+            "name": "Pluie 1h - Previsions Textuelles 15-20mn",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Raindesc4"
+        },
+        {
+            "name": "Pluie 1h - Niveau Pluie 15-20mn",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Rainrain4"
+        },
+        {
+            "name": "Pluie 1h - Previsions Textuelles 20-25mn",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Raindesc5"
+        },
+        {
+            "name": "Pluie 1h - Niveau Pluie 20-25mn",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Rainrain5"
+        },
+        {
+            "name": "Pluie 1h - Previsions Textuelles 25-30mn",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Raindesc6"
+        },
+        {
+            "name": "Pluie 1h - Niveau Pluie 25-30mn",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Rainrain6"
+        },
+        {
+            "name": "Pluie 1h - Previsions Textuelles 30-40mn",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Raindesc7"
+        },
+        {
+            "name": "Pluie 1h - Niveau Pluie 30-40mn",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Rainrain7"
+        },
+        {
+            "name": "Pluie 1h - Previsions Textuelles 40-50mn",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Raindesc8"
+        },
+        {
+            "name": "Pluie 1h - Niveau Pluie 40-50mn",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Rainrain8"
+        },
+        {
+            "name": "Pluie 1h - Previsions Textuelles 50-60mn",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Raindesc9"
+        },
+        {
+            "name": "Pluie 1h - Niveau Pluie 50-60mn",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Rainrain9"
+        },
+        {
+            "name": "Pluie 1h - Pluie prévue dans l heure",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Raincumul"
+        },
+        {
+            "name": "Delai avant prochaine pluie",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Rainnext"
+        }
+    ]
+}

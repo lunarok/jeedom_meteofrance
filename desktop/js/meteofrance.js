@@ -14,6 +14,44 @@
  * You should have received a copy of the GNU General Public License
  * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
+
+ $('#rain').change(function(){
+   if ($('#rain').value()) {
+    $('#btRain').show();
+  } else {
+    $('#btRain').hide();
+   }
+ });
+
+ $('#btRain').on('click', function () {
+   createCmd('rain');
+ });
+
+ function createCmd(type) {
+  $.ajax({// fonction permettant de faire de l'ajax
+    type: "POST", // methode de transmission des données au fichier php
+    url: "plugins/meteofrance/core/ajax/meteofrance.ajax.php", // url du fichier php
+    data: {
+      action: "createcmd",
+      id: $(this).attr('data-eqlogic_id'),
+      type: type,
+    },
+    dataType: 'json',
+    error: function(request, status, error) {
+      handleAjaxError(request, status, error);
+    },
+    success: function(data) { // si l'appel a bien fonctionné
+
+      if (data.state != 'ok') {
+        $('#div_alert').showAlert({message: data.result, level: 'danger'});
+        return;
+      }
+      $('#div_alert').showAlert({message: 'Recherche ok', level: 'success'});
+      window.location.reload();
+    }
+  });
+}
+
  $("#butCol").click(function(){
    $("#hidCol").toggle("slow");
    document.getElementById("listCol").classList.toggle('col-lg-12');

@@ -1,0 +1,76 @@
+{
+  "commands": [
+        {
+            "name": "Marine - Vitesse du vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Marinewind_speed_kt"
+        },
+        {
+            "name": "Marine - Direction du vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Marinewind_direction"
+        },
+        {
+            "name": "Marine - Echelle Beaufort",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Marinebeaufort_scale"
+        },
+        {
+            "name": "Marine - Vagues hauteur",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Marinewave_height"
+        },
+        {
+            "name": "Marine - Vagues hauteur max",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Marinemax_wave_height"
+        },
+        {
+            "name": "Marine - Vagues hauteur vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Marinewind_waves_height"
+        },
+        {
+            "name": "Marine - Houle direction",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Marineprimary_swell_direction"
+        },
+        {
+            "name": "Marine - Houle hauteur",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Marineprimary_swell_height"
+        },
+        {
+            "name": "Marine - Houteur fréquence",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Marineprimary_swell_period"
+        },
+        {
+            "name": "Marine - Température eau",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "MarineT_sea"
+        },
+        {
+            "name": "Marine - Mer condition",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Marinesea_condition"
+        },
+        {
+            "name": "Marine - Mer condition texte",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Marinesea_condition_description"
+        }
+    ]
+}

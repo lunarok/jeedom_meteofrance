@@ -105,14 +105,14 @@ class meteofrance extends eqLogic {
       $i++;
       $this->checkAndUpdateCmd('Rainrain' . $i, $rain['rain_intensity']);
       $this->checkAndUpdateCmd('Raindesc' . $i, $rain['rain_intensity_description']);
-      if (($rain['rain'] > 1) && ($next == 0)) {
+      if (($rain['rain_intensity'] > 1) && ($next == 0)) {
         $next = $i * 5;
         if ($i > 6) {
           $next += ($i - 6) * 5;
           //after 30 mn, steps are for 10mn
         }
       }
-      $cumul += $rain['rain'];
+      $cumul += $rain['rain_intensity'];
     }
     $this->checkAndUpdateCmd('Raincumul', $cumul);
     $this->checkAndUpdateCmd('Rainnext', $next);
@@ -144,7 +144,7 @@ class meteofrance extends eqLogic {
     if (!$this->getConfiguration('bulletinCote')) {
       return;
     }
-    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/tide?id=' . $this->getConfiguration('insee') . '52&token=' . config::byKey('token', 'meteofrance');
+    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/tide?id=' . $this->getConfiguration('insee') . '52';
     $return = self::callMeteoWS($url);
     $this->checkAndUpdateCmd('Tidehigh_tide0time', $return['properties']['tide']['high_tide'][0]['time']);
     $this->checkAndUpdateCmd('Tidehigh_tide0tidal_coefficient', $return['properties']['tide']['high_tide'][0]['tidal_coefficient']);

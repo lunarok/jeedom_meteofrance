@@ -23,8 +23,20 @@
    }
  });
 
+ $('#marine').change(function(){
+   if ($('#marine').value()) {
+    $('#btMarine').show();
+  } else {
+    $('#btMarine').hide();
+   }
+ });
+
  $('#btRain').on('click', function () {
    createCmd('rain');
+ });
+
+ $('#btMarine').on('click', function () {
+   createCmd('marine');
  });
 
  function createCmd(type) {

@@ -21,7 +21,7 @@ class meteofrance extends eqLogic {
 
   public static function cron5() {
     foreach (eqLogic::byType(__CLASS__, true) as $meteofrance) {
-        $meteofrance->getRain();
+      $meteofrance->getRain();
     }
   }
 
@@ -29,8 +29,8 @@ class meteofrance extends eqLogic {
     foreach (eqLogic::byType(__CLASS__, true) as $meteofrance) {
       $meteofrance->getVigilance();
       $meteofrance->getMarine();
-        $meteofrance->getTide();
- 	$meteofrance->getAlerts();
+      $meteofrance->getTide();
+      $meteofrance->getAlerts();
     }
   }
 
@@ -45,9 +45,9 @@ class meteofrance extends eqLogic {
   public function getInformations() {
     $this->getRain();
     $this->getVigilance();
-      $this->getMarine();
-        $this->getTide();
-        $this->getAlerts();
+    $this->getMarine();
+    $this->getTide();
+    $this->getAlerts();
   }
 
   public function getInsee() {
@@ -64,7 +64,7 @@ class meteofrance extends eqLogic {
         $geotravCmd = geotravCmd::byEqLogicIdAndLogicalId($geoloc,'location:zip');
         //location:city
         if(is_object($geotravCmd))
-          $zip = $geotravCmd->execCmd();
+        $zip = $geotravCmd->execCmd();
         else {
           log::add(__CLASS__, 'error', 'Pollen geotravCmd object not found');
           return;
@@ -93,9 +93,9 @@ class meteofrance extends eqLogic {
   }
 
   public function getRain() {
-	if (!$this->getConfiguration('couvertPluie')) {
-        return;
-      }
+    if (!$this->getConfiguration('couvertPluie')) {
+      return;
+    }
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/nowcast/rain?lat=' . $this->getConfiguration('lat') . '&lon=' . $this->getConfiguration('lon');
     $return = self::callMeteoWS($url);
     $i = 0;
@@ -119,9 +119,9 @@ class meteofrance extends eqLogic {
   }
 
   public function getMarine() {
-  if (!$this->getConfiguration('bulletinCote')) {
-        return;
-      }
+    if (!$this->getConfiguration('bulletinCote')) {
+      return;
+    }
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/forecast/marine?lat=' . $this->getConfiguration('lat') . '&lon=' . $this->getConfiguration('lon');
     $return = self::callMeteoWS($url);
     foreach ($return['properties']['marine'] as $id => $marine) {
@@ -141,9 +141,9 @@ class meteofrance extends eqLogic {
   }
 
   public function getTide() {
-  if (!$this->getConfiguration('bulletinCote')) {
-        return;
-      }
+    if (!$this->getConfiguration('bulletinCote')) {
+      return;
+    }
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/tide?id=' . $this->getConfiguration('insee') . '52&token=' . config::byKey('token', 'meteofrance');
     $return = self::callMeteoWS($url);
     $this->checkAndUpdateCmd('Tidehigh_tide0time', $return['properties']['tide']['high_tide'][0]['time']);
@@ -192,8 +192,8 @@ class meteofrance extends eqLogic {
     $token = 'eyJjbGFzcyI6ImludGVybmV0IiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJqdGkiOiI2ODZkYzI5OTRjMmM2MjBlODExMGM3NTg4NGU0ZDc3YiIsImlhdCI6MTU5ODMwMDYxMH0.O97I-Jewjr8fYiCdc469daGOAPqYuo3vNTm25L5ZDYA';
     $request_http = new com_http($_url . '&token=' . $token);
     $request_http->setNoSslCheck(true);
-	  $request_http->setNoReportError(true);
-	  $return = $request_http->exec(15,2);
+    $request_http->setNoReportError(true);
+    $return = $request_http->exec(15,2);
     if ($result === false) {
       log::add(__CLASS__, 'debug', 'Unable to fetch ' . $_url);
       return;
@@ -207,8 +207,8 @@ class meteofrance extends eqLogic {
   public static function callURL($_url) {
     $request_http = new com_http($_url);
     $request_http->setNoSslCheck(true);
-$request_http->setNoReportError(true);
-  $return = $request_http->exec(15,2);
+    $request_http->setNoReportError(true);
+    $return = $request_http->exec(15,2);
     if ($result === false) {
       log::add(__CLASS__, 'debug', 'Unable to fetch ' . $_url);
       return;
@@ -220,35 +220,35 @@ $request_http->setNoReportError(true);
   }
 
   public function loadCmdFromConf($type) {
-		/*create commands based on template*/
-		if (!is_file(dirname(__FILE__) . '/../config/devices/' . $type . '.json')) {
-			return;
-		}
-		$content = file_get_contents(dirname(__FILE__) . '/../config/devices/' . $type . '.json');
-		if (!is_json($content)) {
-			return;
-		}
-		$device = json_decode($content, true);
-		if (!is_array($device) || !isset($device['commands'])) {
-			return true;
-		}
-		foreach ($device['commands'] as $command) {
-			$cmd = null;
-			foreach ($this->getCmd() as $liste_cmd) {
-				if ((isset($command['logicalId']) && $liste_cmd->getLogicalId() == $command['logicalId'])
-				|| (isset($command['name']) && $liste_cmd->getName() == $command['name'])) {
-					$cmd = $liste_cmd;
-					break;
-				}
-			}
-			if ($cmd == null || !is_object($cmd)) {
-				$cmd = new meteofranceCmd();
-				$cmd->setEqLogic_id($this->getId());
-				utils::a2o($cmd, $command);
-				$cmd->save();
-			}
-		}
-	}
+    /*create commands based on template*/
+    if (!is_file(dirname(__FILE__) . '/../config/devices/' . $type . '.json')) {
+      return;
+    }
+    $content = file_get_contents(dirname(__FILE__) . '/../config/devices/' . $type . '.json');
+    if (!is_json($content)) {
+      return;
+    }
+    $device = json_decode($content, true);
+    if (!is_array($device) || !isset($device['commands'])) {
+      return true;
+    }
+    foreach ($device['commands'] as $command) {
+      $cmd = null;
+      foreach ($this->getCmd() as $liste_cmd) {
+        if ((isset($command['logicalId']) && $liste_cmd->getLogicalId() == $command['logicalId'])
+        || (isset($command['name']) && $liste_cmd->getName() == $command['name'])) {
+          $cmd = $liste_cmd;
+          break;
+        }
+      }
+      if ($cmd == null || !is_object($cmd)) {
+        $cmd = new meteofranceCmd();
+        $cmd->setEqLogic_id($this->getId());
+        utils::a2o($cmd, $command);
+        $cmd->save();
+      }
+    }
+  }
 
 }
 

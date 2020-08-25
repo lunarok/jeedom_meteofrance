@@ -16,7 +16,7 @@
  */
 
  $('#rain').change(function(){
-   if ($('#rain').value()) {
+   if ($('#rain').value() == 1) {
     $('#btRain').show();
   } else {
     $('#btRain').hide();
@@ -24,7 +24,7 @@
  });
 
  $('#marine').change(function(){
-   if ($('#marine').value()) {
+   if ($('#marine').value() == 1) {
     $('#btMarine').show();
   } else {
     $('#btMarine').hide();
@@ -37,6 +37,10 @@
 
  $('#btMarine').on('click', function () {
    createCmd('marine');
+ });
+
+ $('#btVigilance').on('click', function () {
+   createCmd('vigilance');
  });
 
  function createCmd(type) {

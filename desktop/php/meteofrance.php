@@ -141,7 +141,7 @@ $eqLogics = eqLogic::byType('meteofrance');
             <div class="form-group">
               <label class="col-sm-3 control-label"></label>
               <div class="col-sm-3">
-                <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="couvertPluie" style="display : none;" id="rain"/>
+                <input type="checkbox" class="eqLogicAttr form-control configuration" data-l1key="configuration" data-l2key="couvertPluie" style="display : none;" id="rain"/>
                 <a class="btn btn-default" id='btRain'><i class="fas fa-umbrella"></i> {{Créer les commandes Pluie 1h}}</a>
               </div>
             </div>
@@ -149,8 +149,15 @@ $eqLogics = eqLogic::byType('meteofrance');
             <div class="form-group">
               <label class="col-sm-3 control-label"></label>
               <div class="col-sm-3">
-                <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="bulletinCote" style="display : none;" id="marine"/>
+                <input type="checkbox" class="eqLogicAttr form-control configuration" data-l1key="configuration" data-l2key="bulletinCote" style="display : none;" id="marine"/>
                 <a class="btn btn-default" id='btMarine'><i class="fas fa-ship"></i> {{Créer les commandes Météo Marine}}</a>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-sm-3 control-label"></label>
+              <div class="col-sm-3">
+                <a class="btn btn-default" id='btVigilance'><i class="fas fa-exclamation"></i> {{Créer les commandes Vigilance}}</a>
               </div>
             </div>
 

@@ -101,7 +101,7 @@ class meteofrance extends eqLogic {
     $i = 0;
     $cumul = 0;
     $next = 0;
-    foreach ($return[['properties']'forecast'] as $id => $rain) {
+    foreach ($return['properties']['forecast'] as $id => $rain) {
       $i++;
       $this->checkAndUpdateCmd('Rainrain' . $i, $rain['rain_intensity']);
       $this->checkAndUpdateCmd('Raindesc' . $i, $rain['rain_intensity_description']);

@@ -101,10 +101,10 @@ class meteofrance extends eqLogic {
     $i = 0;
     $cumul = 0;
     $next = 0;
-    foreach ($return['forecast'] as $rain) {
+    foreach ($return[['properties']'forecast'] as $id => $rain) {
       $i++;
-      $this->checkAndUpdateCmd('Rainrain' . $i, $rain['rain']);
-      $this->checkAndUpdateCmd('Raindesc' . $i, $rain['desc']);
+      $this->checkAndUpdateCmd('Rainrain' . $i, $rain['rain_intensity']);
+      $this->checkAndUpdateCmd('Raindesc' . $i, $rain['rain_intensity_description']);
       if (($rain['rain'] > 1) && ($next == 0)) {
         $next = $i * 5;
         if ($i > 6) {

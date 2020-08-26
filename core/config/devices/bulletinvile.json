@@ -1,0 +1,34 @@
+{
+  "commands": [
+        {
+            "name": "Bulletin Ville - Nom de la période 1",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "BulletinvilletitreEcheance1"
+        },
+        {
+            "name": "Bulletin France - Pression atmosphérique de la période 1",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Bulletinvillepression1"
+        },
+        {
+            "name": "Bulletin France - Ciel de la période 1",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "BulletinvilleTS1"
+        },
+        {
+            "name": "Bulletin France - Température de la période 1",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Bulletinvilletemperature1"
+        },
+        {
+            "name": "Bulletin France - Vent de la période 1",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Bulletinvillevent1"
+        }
+    ]
+}

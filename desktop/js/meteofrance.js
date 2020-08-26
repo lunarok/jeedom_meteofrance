@@ -39,6 +39,14 @@
    }
  });
 
+ $('#ville').change(function(){
+   if ($('#ville').value() == '') {
+    $('#zoneBulletin').hide();
+  } else {
+    $('#zoneBulletin').show();
+   }
+ });
+
  $('#btRain').on('click', function () {
    createCmd('rain');
  });
@@ -61,6 +69,14 @@
 
  $('#btBulletin').on('click', function () {
    createCmd('bulletin');
+ });
+
+ $('#btBulletinVille').on('click', function () {
+   createCmd('bulletinville');
+ });
+
+ $('#btMeteo').on('click', function () {
+   createCmd('meteo');
  });
 
  function createCmd(type) {

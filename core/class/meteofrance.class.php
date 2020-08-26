@@ -133,11 +133,11 @@ class meteofrance extends eqLogic {
     $dom = new DOMDocument;
     $dom->loadHTMLFile($url);
     $xpath = new DomXPath($dom);
-    //$var = $xpath->getElementsByTagName('script')->item(0);
     log::add(__CLASS__, 'debug', 'Bulletin Ville URL ' . $url);
     log::add(__CLASS__, 'debug', 'Bulletin Ville ' . $xpath->query("//html/body/script[1]")[0]->nodeValue);
     $json = json_decode($xpath->query("//html/body/script[1]")[0]->nodeValue, true);
-    log::add(__CLASS__, 'debug', 'Bulletin Ville Result ' . $json['id_bulletin_ville']);
+    //log::add(__CLASS__, 'debug', 'Bulletin Ville Result ' . $json['id_bulletin_ville']);
+    $this->setConfiguration('bulletinVille', $json['id_bulletin_ville']);
   }
 
   public function getBulletinVille() {
@@ -145,7 +145,12 @@ class meteofrance extends eqLogic {
       return;
     }
     $url = 'https://rpcache-aa.meteofrance.com/wsft/files/agat/ville/bulvillefr_' . $this->getConfiguration('bulletinVille') . '.xml';
-    $return = self::callMeteoWS($url);
+    $return = self::callMeteoWS($url, true);
+    $this->checkAndUpdateCmd('BulletinvilletitreEcheance1', $return['echeance'][0]['titreEcheance']);
+    $this->checkAndUpdateCmd('Bulletinvillepression1', $return['echeance'][0]['pression']);
+    $this->checkAndUpdateCmd('BulletinvilleTS1', $return['echeance'][0]['TS']);
+    $this->checkAndUpdateCmd('Bulletinvilletemperature1', $return['echeance'][0]['temperature']);
+    $this->checkAndUpdateCmd('Bulletinvillevent1', $return['echeance'][0]['vent']);
   }
 
   public function getDetailsValues() {

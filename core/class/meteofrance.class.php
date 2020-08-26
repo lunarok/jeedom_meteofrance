@@ -195,7 +195,7 @@ class meteofrance extends eqLogic {
   }
 
   public function getEphemeris() {
-    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/ephemeris?lat=' . $meteofrance->getConfiguration('lat') . '&lon=' . $meteofrance->getConfiguration('lat');
+    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/ephemeris?lat=' . $this->getConfiguration('lat') . '&lon=' . $this->getConfiguration('lat');
 	  $return = self::callMeteoFrance($url);
     $this->checkAndUpdateCmd('Ephemerismoon_phase', $return['properties']['ephemeris']['moon_phase']);
     $this->checkAndUpdateCmd('Ephemerismoon_phase_description', $return['properties']['ephemeris']['moon_phase_description']);

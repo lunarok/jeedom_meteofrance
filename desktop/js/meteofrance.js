@@ -82,7 +82,7 @@
         $('#div_alert').showAlert({message: data.result, level: 'danger'});
         return;
       }
-      $('#div_alert').showAlert({message: 'Recherche ok', level: 'success'});
+      $('#div_alert').showAlert({message: 'Ajout ok', level: 'success'});
       window.location.reload();
     }
   });

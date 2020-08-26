@@ -163,7 +163,7 @@ $eqLogics = eqLogic::byType('meteofrance');
             <div class="form-group">
               <label class="col-sm-3 control-label"></label>
               <div class="col-sm-3">
-                <a class="btn btn-default" id='btBulletin'><i class="fas fa-moon"></i> {{Créer les commandes Bulletin Météo}}</a>
+                <a class="btn btn-default" id='btBulletin'><i class="fas fa-temperature-high"></i> {{Créer les commandes Bulletin Météo}}</a>
               </div>
             </div>
 

@@ -228,9 +228,7 @@ class meteofrance extends eqLogic {
       log::add(__CLASS__, 'debug', 'Result ' . $return);
     }
     if ($_xml) {
-      $return = str_replace('<![CDATA[','',$return);
-      $return = str_replace(']]>','',$return);
-      $xml = simplexml_load_string($return);
+      $xml = simplexml_load_string($return, 'SimpleXMLElement', LIBXML_NOCDATA);
       $return = json_encode($xml);
       log::add(__CLASS__, 'debug', 'Result ' . $return);
     }

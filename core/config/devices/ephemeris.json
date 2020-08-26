@@ -15,7 +15,7 @@
         {
             "name": "Ephéméride - Saint du jour",
             "type": "info",
-            "subtype": "numeric",
+            "subtype": "string",
             "logicalId": "Ephemerissaint"
         },
         {

@@ -45,7 +45,9 @@ class meteofrance extends eqLogic {
   }
 
   public function preSave() {
-    $this->getDetails($this->getInsee());
+    $args = $this->getInsee();
+    $this->getDetails($args);
+    $this->getBulletinDetails($args);
   }
 
   public function postSave() {
@@ -66,20 +68,24 @@ class meteofrance extends eqLogic {
   }
 
   public function getInsee() {
+    $array = array();
     $geoloc = $this->getConfiguration('geoloc', 'none');
     if ($geoloc == 'none') {
       log::add(__CLASS__, 'error', 'Pollen geoloc non configuré.');
       return;
     }
     if ($geoloc == "jeedom") {
-      $zip = config::byKey('info::postalCode');
+      $array['zip'] = config::byKey('info::postalCode');
+      $array['ville'] = config::byKey('info::city');
     } else {
       $geotrav = eqLogic::byId($geoloc);
       if (is_object($geotrav) && $geotrav->getEqType_name() == 'geotrav') {
         $geotravCmd = geotravCmd::byEqLogicIdAndLogicalId($geoloc,'location:zip');
-        //location:city
         if(is_object($geotravCmd))
-        $zip = $geotravCmd->execCmd();
+        $array['zip'] = $geotravCmd->execCmd();
+        $geotravCmd = geotravCmd::byEqLogicIdAndLogicalId($geoloc,'location:city');
+        if(is_object($geotravCmd))
+        $array['ville'] = $geotravCmd->execCmd();
         else {
           log::add(__CLASS__, 'error', 'Pollen geotravCmd object not found');
           return;
@@ -90,21 +96,35 @@ class meteofrance extends eqLogic {
         return;
       }
     }
-    $url = 'https://api-adresse.data.gouv.fr/search/?q=postcode=' . $zip . '&limit=1';
+    $url = 'https://api-adresse.data.gouv.fr/search/?q=postcode=' . $array['zip'] . '&limit=1';
     $return = self::callURL($url);
     log::add(__CLASS__, 'debug', 'Insee ' . print_r($return['features'][0]['properties'],true));
-    return $return['features'][0]['properties']['citycode'];
+    $array['insee'] = $return['features'][0]['properties']['citycode'];
+    $array['ville'] = strtolower(strtr(utf8_decode($array['ville']), utf8_decode('ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïñòóôõöøùúûüýÿĀāĂăĄąĆćĈĉĊċČčĎďĐđĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħĨĩĪīĬĭĮįİıĲĳĴĵĶķĹĺĻļĽľĿŀŁłŃńŅņŇňŉŌōŎŏŐőŒœŔŕŖŗŘřŚśŜŝŞşŠšŢţŤťŦŧŨũŪūŬŭŮůŰűŲųŴŵŶŷŸŹźŻżŽžſƒƠơƯưǍǎǏǐǑǒǓǔǕǖǗǘǙǚǛǜǺǻǼǽǾǿ'), 'AAAAAAAECEEEEIIIIDNOOOOOOUUUUYsaaaaaaaeceeeeiiiinoooooouuuuyyAaAaAaCcCcCcCcDdDdEeEeEeEeEeGgGgGgGgHhHhIiIiIiIiIiIJijJjKkLlLlLlLlllNnNnNnnOoOoOoOEoeRrRrRrSsSsSsSsTtTtTtUuUuUuUuUuUuWwYyYZzZzZzsfOoUuAaIiOoUuUuUuUuUuAaAEaeOo'));
+    return $array;
   }
 
-  public function getDetails($_insee) {
-    $url = 'http://ws.meteofrance.com/ws/getDetail/france/' . $_insee . '0.json';
+  public function getDetails($_array = array()) {
+    $url = 'http://ws.meteofrance.com/ws/getDetail/france/' . $_array['insee'] . '0.json';
     $return = self::callURL($url);
     $this->setConfiguration('bulletinCote', $return['result']['ville']['bulletinCote']);
     $this->setConfiguration('couvertPluie', $return['result']['ville']['couvertPluie']);
     $this->setConfiguration('lat', $return['result']['ville']['latitude']);
     $this->setConfiguration('lon', $return['result']['ville']['longitude']);
     $this->setConfiguration('numDept', $return['result']['ville']['numDept']);
-    $this->setConfiguration('insee', $_insee);
+    $this->setConfiguration('insee', $_array['insee']);
+    $this->setConfiguration('zip', $_array['zip']);
+    $this->setConfiguration('ville', $_array['ville']);
+  }
+
+  public function getBulletinDetails($_array = array()) {
+    $dom = new DomDocument;
+    $dom->loadHTMLFile("http://meteofrance.com/previsions-meteo-france/" . $_array['ville'] . "/" . $_array['zip']);
+    $xpath = new DomXPath($dom);
+    $nodes = $xpath->query("/html/body/script[1]");
+    foreach($nodes as $id => $name) {
+          log::add(__CLASS__, 'debug', 'Bulletin Ville ' . $name->nodeValue);
+      }
   }
 
   public function getDetailsValues() {
@@ -236,16 +256,6 @@ class meteofrance extends eqLogic {
     $return = self::callMeteoWS($url, true);
     $this->checkAndUpdateCmd('Bulletindatesem', $return['groupe'][0]['date']);
     $this->checkAndUpdateCmd('Bulletintempssem', $return['groupe'][0]['titre']);
-  }
-
-  public function getBulletinVille() {
-    $dom = new DomDocument;
-    $dom->loadHTMLFile("https://forums.eveonline.com");
-    $xpath = new DomXPath($dom);
-    $nodes = $xpath->query("/html/body/script[1]");
-    foreach($nodes as $id => $name) {
-          log::add(__CLASS__, 'debug', 'Bulletin Ville ' . $name->nodeValue);
-      }
   }
 
   public static function callMeteoWS($_url, $_xml = false) {

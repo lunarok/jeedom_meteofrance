@@ -208,7 +208,7 @@ class meteofrance extends eqLogic {
   }
 
   public function getBulletinFrance() {
-    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0report?domain=france&report_type=forecast&report_subtype=BGP';
+    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/report?domain=france&report_type=forecast&report_subtype=BGP';
     $return = self::callMeteoWS($url, true);
     //$this->checkAndUpdateCmd('Ephemerissaint', $return['properties']['ephemeris']['saint']);
   }

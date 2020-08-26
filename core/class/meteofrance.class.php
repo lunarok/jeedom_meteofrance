@@ -239,8 +239,10 @@ class meteofrance extends eqLogic {
   }
 
   public function getBulletinVille() {
-    $xml = simplexml_load_file('https://forums.eveonline.com');
-    $id = $xml->xpath("/html/body/script[1]");
+    $dom = new DomDocument;
+    $dom->loadHTMLFile("https://forums.eveonline.com");
+    $xpath = new DomXPath($dom);
+    $id = $xpath->query("/html/body/script[1]");
     foreach($id as $name) {
           log::add(__CLASS__, 'debug', 'Bulletin Ville ' . $name);
       }

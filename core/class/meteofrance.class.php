@@ -31,12 +31,14 @@ class meteofrance extends eqLogic {
       $meteofrance->getMarine();
       $meteofrance->getTide();
       $meteofrance->getAlerts();
+      $meteofrance->getBulletinFrance();
     }
   }
 
   public static function cronDaily() {
     foreach (eqLogic::byType(__CLASS__, true) as $meteofrance) {
       $meteofrance->getEphemeris();
+      $meteofrance->getBulletinSemaine();
     }
   }
 
@@ -56,6 +58,7 @@ class meteofrance extends eqLogic {
     $this->getAlerts();
     $this->getEphemeris();
     $this->getBulletinFrance();
+    $this->getBulletinSemaine();
   }
 
   public function getInsee() {
@@ -210,13 +213,19 @@ class meteofrance extends eqLogic {
   public function getBulletinFrance() {
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/report?domain=france&report_type=forecast&report_subtype=BGP';
     $return = self::callMeteoWS($url, true);
-    log::add(__CLASS__, 'debug', 'Bulletin ' . $return['groupe'][0]['date']);
     $this->checkAndUpdateCmd('Bulletinfrdate0', $return['groupe'][0]['date']);
     $this->checkAndUpdateCmd('Bulletinfrtitre0', $return['groupe'][0]['titre']);
     $this->checkAndUpdateCmd('Bulletinfrtemps0', $return['groupe'][0]['temps']);
     $this->checkAndUpdateCmd('Bulletinfrdate1', $return['groupe'][1]['date']);
     $this->checkAndUpdateCmd('Bulletinfrtitre1', $return['groupe'][1]['titre']);
     $this->checkAndUpdateCmd('Bulletinfrtemps1', $return['groupe'][1]['temps']);
+  }
+
+  public function getBulletinSemaine() {
+    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/report?domain=france&report_type=forecast&report_subtype=BGP_mensuel';
+    $return = self::callMeteoWS($url, true);
+    $this->checkAndUpdateCmd('Bulletindatesem', $return['groupe'][0]['date']);
+    $this->checkAndUpdateCmd('Bulletinsem', $return['groupe'][0]['titre']);
   }
 
   public static function callMeteoWS($_url, $_xml = false) {

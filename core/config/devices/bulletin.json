@@ -35,6 +35,18 @@
             "type": "info",
             "subtype": "string",
             "logicalId": "Bulletinfrtemps1"
+        },
+        {
+            "name": "Bulletin - Semaine Prochaine Date",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Bulletindatesem"
+        },
+        {
+            "name": "Bulletin - Semaine Prochaine Texte",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Bulletintempssem"
         }
     ]
 }

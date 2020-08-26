@@ -118,13 +118,10 @@ class meteofrance extends eqLogic {
   }
 
   public function getBulletinDetails($_array = array()) {
-    $dom = new DomDocument;
+    $dom = new DomDocument();
     $dom->loadHTMLFile("http://meteofrance.com/previsions-meteo-france/" . $_array['ville'] . "/" . $_array['zip']);
     $xpath = new DomXPath($dom);
-    $nodes = $xpath->query("/html/body/script[1]");
-    foreach($nodes as $id => $name) {
-          log::add(__CLASS__, 'debug', 'Bulletin Ville ' . $name->nodeValue);
-      }
+    log::add(__CLASS__, 'debug', 'Bulletin Ville ' . $xpath->query("//html/body/script[1]")[0]->nodeValue);
   }
 
   public function getBulletinVille() {

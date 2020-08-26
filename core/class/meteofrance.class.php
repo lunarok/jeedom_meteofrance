@@ -242,9 +242,9 @@ class meteofrance extends eqLogic {
     $dom = new DomDocument;
     $dom->loadHTMLFile("https://forums.eveonline.com");
     $xpath = new DomXPath($dom);
-    $id = $xpath->query("/html/body/script[1]");
-    foreach($id as $name) {
-          log::add(__CLASS__, 'debug', 'Bulletin Ville ' . $name);
+    $nodes = $xpath->query("/html/body/script[1]");
+    foreach($nodes as $id => $name) {
+          log::add(__CLASS__, 'debug', 'Bulletin Ville ' . $name->nodeValue);
       }
   }
 

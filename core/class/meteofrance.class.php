@@ -127,6 +127,14 @@ class meteofrance extends eqLogic {
       }
   }
 
+  public function getBulletinVille() {
+    if ($this->getConfiguration('bulletinVille','') == '') {
+      return;
+    }
+    $url = 'https://rpcache-aa.meteofrance.com/wsft/files/agat/ville/bulvillefr_' . $this->getConfiguration('bulletinVille') . '.xml';
+    $return = self::callMeteoWS($url);
+  }
+
   public function getDetailsValues() {
     $url = 'http://ws.meteofrance.com/ws/getDetail/france/' . $this->getConfiguration('insee') . '0.json';
     $return = self::callURL($url);

@@ -135,6 +135,8 @@ class meteofrance extends eqLogic {
     $xpath = new DomXPath($dom);
     log::add(__CLASS__, 'debug', 'Bulletin Ville URL ' . $url);
     log::add(__CLASS__, 'debug', 'Bulletin Ville ' . $xpath->query("//html/body/script[1]")[0]->nodeValue);
+    $json = json_decode($xpath->query("//html/body/script[1]")[0]->nodeValue);
+    log::add(__CLASS__, 'debug', 'Bulletin Ville Result ' . $json['id_bulletin_ville']);
   }
 
   public function getBulletinVille() {

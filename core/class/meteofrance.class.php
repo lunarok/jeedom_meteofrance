@@ -225,7 +225,7 @@ class meteofrance extends eqLogic {
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/report?domain=france&report_type=forecast&report_subtype=BGP_mensuel';
     $return = self::callMeteoWS($url, true);
     $this->checkAndUpdateCmd('Bulletindatesem', $return['groupe'][0]['date']);
-    $this->checkAndUpdateCmd('Bulletinsem', $return['groupe'][0]['titre']);
+    $this->checkAndUpdateCmd('Bulletintempssem', $return['groupe'][0]['titre']);
   }
 
   public static function callMeteoWS($_url, $_xml = false) {

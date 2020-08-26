@@ -153,6 +153,13 @@ $eqLogics = eqLogic::byType('meteofrance');
               </div>
             </div>
 
+            <div class="form-group">
+              <label class="col-sm-3 control-label"></label>
+              <div class="col-sm-3">
+                <a class="btn btn-default" id='btEphemeris'><i class="fas fa-moon"></i> {{Créer les commandes Ephéméride}}</a>
+              </div>
+            </div>
+
             <div class="form-group" id="zoneMarine">
               <label class="col-sm-3 control-label"></label>
               <div class="col-sm-3">

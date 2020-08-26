@@ -34,6 +34,12 @@ class meteofrance extends eqLogic {
     }
   }
 
+  public static function cronDaily() {
+    foreach (eqLogic::byType(__CLASS__, true) as $meteofrance) {
+      $meteofrance->getEphemeris();
+    }
+  }
+
   public function preSave() {
     $this->getDetails($this->getInsee());
   }
@@ -48,6 +54,7 @@ class meteofrance extends eqLogic {
     $this->getMarine();
     $this->getTide();
     $this->getAlerts();
+    $this->getEphemeris();
   }
 
   public function getInsee() {
@@ -185,6 +192,18 @@ class meteofrance extends eqLogic {
       $this->checkAndUpdateCmd('AlertdateDeFin', $return['Com'][0]['dateDeFin']);
       $this->checkAndUpdateCmd('AlertdateProduction', $return['Com'][0]['dateProduction']);
     }
+  }
+
+  public function getEphemeris() {
+    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/ephemeris?lat=' . $meteofrance->getConfiguration('lat') . '&lon=' . $meteofrance->getConfiguration('lat');
+	  $return = self::callMeteoFrance($url);
+    $this->checkAndUpdateCmd('Ephemerismoon_phase', $return['properties']['ephemeris']['moon_phase']);
+    $this->checkAndUpdateCmd('Ephemerismoon_phase_description', $return['properties']['ephemeris']['moon_phase_description']);
+    $this->checkAndUpdateCmd('Ephemerissaint', $return['properties']['ephemeris']['saint']);
+    $this->checkAndUpdateCmd('Ephemerissunrise_time', $return['properties']['ephemeris']['sunrise_time']);
+    $this->checkAndUpdateCmd('Ephemerissunset_time', $return['properties']['ephemeris']['sunset_time']);
+    $this->checkAndUpdateCmd('Ephemerismoonrise_time', $return['properties']['ephemeris']['moonrise_time']);
+    $this->checkAndUpdateCmd('Ephemerismoonset_time', $return['properties']['ephemeris']['moonset_time']);
   }
 
   public static function callMeteoWS($_url) {

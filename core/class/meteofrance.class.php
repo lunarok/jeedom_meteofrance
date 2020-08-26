@@ -145,7 +145,7 @@ class meteofrance extends eqLogic {
       return;
     }
     $url = 'https://rpcache-aa.meteofrance.com/wsft/files/agat/ville/bulvillefr_' . $this->getConfiguration('bulletinVille') . '.xml';
-    $return = self::callMeteoWS($url, true);
+    $return = self::callMeteoWS($url, true, false);
     $this->checkAndUpdateCmd('BulletinvilletitreEcheance1', $return['echeance'][0]['titreEcheance']);
     $this->checkAndUpdateCmd('Bulletinvillepression1', $return['echeance'][0]['pression']);
     $this->checkAndUpdateCmd('BulletinvilleTS1', $return['echeance'][0]['TS']);
@@ -284,10 +284,14 @@ class meteofrance extends eqLogic {
     $this->checkAndUpdateCmd('Bulletintempssem', $return['groupe'][0]['titre']);
   }
 
-  public static function callMeteoWS($_url, $_xml = false) {
+  public static function callMeteoWS($_url, $_xml = false, $_token = true) {
     //$token = config::byKey('token', 'meteofrance');
-    $token = '__Wj7dVSTjV9YGu1guveLyDq0g7S7TfTjaHBTPTpO0kj8__';
-    $request_http = new com_http($_url . '&token=' . $token);
+    if ($_token)  {
+      $token = '&token=' . '__Wj7dVSTjV9YGu1guveLyDq0g7S7TfTjaHBTPTpO0kj8__';
+    } else {
+      $token = '';
+    }
+    $request_http = new com_http($_url . $token);
     $request_http->setNoSslCheck(true);
     $request_http->setNoReportError(true);
     $return = $request_http->exec(15,2);

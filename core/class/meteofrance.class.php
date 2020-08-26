@@ -32,6 +32,8 @@ class meteofrance extends eqLogic {
       $meteofrance->getTide();
       $meteofrance->getAlerts();
       $meteofrance->getBulletinFrance();
+      $meteofrance->getDetailsValues();
+      $meteofrance->getBulletinVille();
     }
   }
 
@@ -59,6 +61,8 @@ class meteofrance extends eqLogic {
     $this->getEphemeris();
     $this->getBulletinFrance();
     $this->getBulletinSemaine();
+    $this->getDetailsValues();
+    $this->getBulletinVille();
   }
 
   public function getInsee() {
@@ -101,6 +105,12 @@ class meteofrance extends eqLogic {
     $this->setConfiguration('lon', $return['result']['ville']['longitude']);
     $this->setConfiguration('numDept', $return['result']['ville']['numDept']);
     $this->setConfiguration('insee', $_insee);
+  }
+
+  public function getDetailsValues() {
+    $url = 'http://ws.meteofrance.com/ws/getDetail/france/' . $this->getConfiguration('insee') . '0.json';
+    $return = self::callURL($url);
+    //$this->checkAndUpdateCmd('Raincumul', $cumul);
   }
 
   public function getRain() {
@@ -226,6 +236,14 @@ class meteofrance extends eqLogic {
     $return = self::callMeteoWS($url, true);
     $this->checkAndUpdateCmd('Bulletindatesem', $return['groupe'][0]['date']);
     $this->checkAndUpdateCmd('Bulletintempssem', $return['groupe'][0]['titre']);
+  }
+
+  public function getBulletinVille() {
+    $xml = simplexml_load_file('https://forums.eveonline.com');
+    $id = $xml->xpath("/html/body/script[1]");
+    foreach($id as $name) {
+          log::add(__CLASS__, 'debug', 'Bulletin Ville ' . $name);
+      }
   }
 
   public static function callMeteoWS($_url, $_xml = false) {

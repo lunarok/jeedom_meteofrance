@@ -151,6 +151,16 @@ class meteofrance extends eqLogic {
     $this->checkAndUpdateCmd('BulletinvilleTS1', $return['echeance'][0]['TS']);
     $this->checkAndUpdateCmd('Bulletinvilletemperature1', $return['echeance'][0]['temperature']);
     $this->checkAndUpdateCmd('Bulletinvillevent1', $return['echeance'][0]['vent']);
+    $this->checkAndUpdateCmd('BulletinvilletitreEcheance2', $return['echeance'][1]['titreEcheance']);
+    $this->checkAndUpdateCmd('Bulletinvillepression2', $return['echeance'][1]['pression']);
+    $this->checkAndUpdateCmd('BulletinvilleTS2', $return['echeance'][1]['TS']);
+    $this->checkAndUpdateCmd('Bulletinvilletemperature2', $return['echeance'][1]['temperature']);
+    $this->checkAndUpdateCmd('Bulletinvillevent2', $return['echeance'][1]['vent']);
+    $this->checkAndUpdateCmd('BulletinvilletitreEcheance3', $return['echeance'][2]['titreEcheance']);
+    $this->checkAndUpdateCmd('Bulletinvillepression3', $return['echeance'][2]['pression']);
+    $this->checkAndUpdateCmd('BulletinvilleTS3', $return['echeance'][2]['TS']);
+    $this->checkAndUpdateCmd('Bulletinvilletemperature3', $return['echeance'][2]['temperature']);
+    $this->checkAndUpdateCmd('Bulletinvillevent3', $return['echeance'][2]['vent']);
   }
 
   public function getDetailsValues() {

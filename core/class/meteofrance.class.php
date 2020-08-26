@@ -100,7 +100,18 @@ class meteofrance extends eqLogic {
     $return = self::callURL($url);
     log::add(__CLASS__, 'debug', 'Insee ' . print_r($return['features'][0]['properties'],true));
     $array['insee'] = $return['features'][0]['properties']['citycode'];
-    //$array['ville'] = strtolower(strtr(utf8_decode($array['ville']), utf8_decode('ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïñòóôõöøùúûüýÿĀāĂăĄąĆćĈĉĊċČčĎďĐđĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħĨĩĪīĬĭĮįİıĲĳĴĵĶķĹĺĻļĽľĿŀŁłŃńŅņŇňŉŌōŎŏŐőŒœŔŕŖŗŘřŚśŜŝŞşŠšŢţŤťŦŧŨũŪūŬŭŮůŰűŲųŴŵŶŷŸŹźŻżŽžſƒƠơƯưǍǎǏǐǑǒǓǔǕǖǗǘǙǚǛǜǺǻǼǽǾǿ'), 'AAAAAAAECEEEEIIIIDNOOOOOOUUUUYsaaaaaaaeceeeeiiiinoooooouuuuyyAaAaAaCcCcCcCcDdDdEeEeEeEeEeGgGgGgGgHhHhIiIiIiIiIiIJijJjKkLlLlLlLlllNnNnNnnOoOoOoOEoeRrRrRrSsSsSsSsTtTtTtUuUuUuUuUuUuWwYyYZzZzZzsfOoUuAaIiOoUuUuUuUuUuAaAEaeOo'));
+    $array['ville'] = str_replace(' ','_',strtolower($array['ville']));
+    $array['ville'] = preg_replace('#Ç#', 'C', $array['ville']);
+    $array['ville'] = preg_replace('#ç#', 'c', $array['ville']);
+    $array['ville'] = preg_replace('#è|é|ê|ë#', 'e', $array['ville']);
+    $array['ville'] = preg_replace('#à|á|â|ã|ä|å#', 'a', $array['ville']);
+    $array['ville'] = preg_replace('#ì|í|î|ï#', 'i', $array['ville']);
+    $array['ville'] = preg_replace('#ð|ò|ó|ô|õ|ö#', 'o', $array['ville']);
+    $array['ville'] = preg_replace('#ù|ú|û|ü#', 'u', $array['ville']);
+    $array['ville'] = preg_replace('#ý|ÿ#', 'y', $array['ville']);
+    $array['ville'] = preg_replace('#Ý#', 'Y', $array['ville']);
+    $array['ville'] = str_replace('_', '-', $array['ville']);
+    $array['ville'] = str_replace('\'', '', $array['ville']);
     return $array;
   }
 
@@ -237,7 +248,7 @@ class meteofrance extends eqLogic {
 
   public function getEphemeris() {
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/ephemeris?lat=' . $this->getConfiguration('lat') . '&lon=' . $this->getConfiguration('lat');
-	  $return = self::callMeteoWS($url);
+    $return = self::callMeteoWS($url);
     $this->checkAndUpdateCmd('Ephemerismoon_phase', $return['properties']['ephemeris']['moon_phase']);
     $this->checkAndUpdateCmd('Ephemerismoon_phase_description', $return['properties']['ephemeris']['moon_phase_description']);
     $this->checkAndUpdateCmd('Ephemerissaint', $return['properties']['ephemeris']['saint']);

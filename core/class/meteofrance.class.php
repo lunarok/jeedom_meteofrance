@@ -55,6 +55,7 @@ class meteofrance extends eqLogic {
     $this->getTide();
     $this->getAlerts();
     $this->getEphemeris();
+    $this->getBulletinFrance();
   }
 
   public function getInsee() {

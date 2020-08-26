@@ -206,7 +206,13 @@ class meteofrance extends eqLogic {
     $this->checkAndUpdateCmd('Ephemerismoonset_time', date('Hi',strtotime($return['properties']['ephemeris']['moonset_time'])));
   }
 
-  public static function callMeteoWS($_url) {
+  public function getBulletinFrance() {
+    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0report?domain=france&report_type=forecast&report_subtype=BGP';
+    $return = self::callMeteoWS($url, true);
+    //$this->checkAndUpdateCmd('Ephemerissaint', $return['properties']['ephemeris']['saint']);
+  }
+
+  public static function callMeteoWS($_url, $_xml = false) {
     //$token = config::byKey('token', 'meteofrance');
     $token = '__Wj7dVSTjV9YGu1guveLyDq0g7S7TfTjaHBTPTpO0kj8__';
     $request_http = new com_http($_url . '&token=' . $token);
@@ -218,6 +224,11 @@ class meteofrance extends eqLogic {
       return;
     } else {
       log::add(__CLASS__, 'debug', 'Get ' . $_url);
+      log::add(__CLASS__, 'debug', 'Result ' . $return);
+    }
+    if ($_xml) {
+      $xml = simplexml_load_string($return);
+      $return = json_encode($xml);
       log::add(__CLASS__, 'debug', 'Result ' . $return);
     }
     return json_decode($return, true);

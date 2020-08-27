@@ -1,0 +1,484 @@
+{
+  "commands": [
+        {
+            "name": "Météo du Jour - Aujourd'hui - Description",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteoday0description"
+        },
+        {
+            "name": "Météo du Jour - Aujourd'hui - Picto",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteoday0picto"
+        },
+        {
+            "name": "Météo du Jour - Aujourd'hui - Direction du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteoday0directionVent"
+        },
+        {
+            "name": "Météo du Jour - Aujourd'hui - Vitesse du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteoday0vitesseVent"
+        },
+        {
+            "name": "Météo du Jour - Aujourd'hui - Force Rafales",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteoday0forceRafales"
+        },
+        {
+            "name": "Météo du Jour - Aujourd'hui - Température Minimum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteoday0temperatureMin"
+        },
+        {
+            "name": "Météo du Jour - Aujourd'hui - Température Maximum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteoday0temperatureMax"
+        },
+        {
+            "name": "Météo du Jour - Aujourd'hui - Indice UV",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteoday0indiceUV"
+        },
+        {
+            "name": "Météo du Jour - Demain - Description",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteoday1description"
+        },
+        {
+            "name": "Météo du Jour - Demain - Picto",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteoday1picto"
+        },
+        {
+            "name": "Météo du Jour - Demain - Direction du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteoday1directionVent"
+        },
+        {
+            "name": "Météo du Jour - Demain - Vitesse du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteoday1vitesseVent"
+        },
+        {
+            "name": "Météo du Jour - Demain - Force Rafales",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteoday1forceRafales"
+        },
+        {
+            "name": "Météo du Jour - Demain - Température Minimum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteoday1temperatureMin"
+        },
+        {
+            "name": "Météo du Jour - Demain - Température Maximum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteoday1temperatureMax"
+        },
+        {
+            "name": "Météo du Jour - Demain - Indice UV",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteoday1indiceUV"
+        },
+        {
+            "name": "Météo du Jour - Aujourd'hui - Description",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteoday2description"
+        },
+        {
+            "name": "Météo du Jour - Aujourd'hui - Picto",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteoday2picto"
+        },
+        {
+            "name": "Météo du Jour - Aujourd'hui - Direction du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteoday2directionVent"
+        },
+        {
+            "name": "Météo du Jour - Aujourd'hui - Vitesse du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteoday2vitesseVent"
+        },
+        {
+            "name": "Météo du Jour - Aujourd'hui - Force Rafales",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteoday2forceRafales"
+        },
+        {
+            "name": "Météo du Jour - Aujourd'hui - Température Minimum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteoday2temperatureMin"
+        },
+        {
+            "name": "Météo du Jour - Aujourd'hui - Température Maximum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteoday2temperatureMax"
+        },
+        {
+            "name": "Météo du Jour - Aujourd'hui - Indice UV",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteoday2indiceUV"
+        },
+        {
+            "name": "Météo du Matin - Aujourd'hui - Description",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteomatin0description"
+        },
+        {
+            "name": "Météo du Matin - Aujourd'hui - Picto",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteomatin0picto"
+        },
+        {
+            "name": "Météo du Matin - Aujourd'hui - Direction du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteomatin0directionVent"
+        },
+        {
+            "name": "Météo du Matin - Aujourd'hui - Vitesse du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteomatin0vitesseVent"
+        },
+        {
+            "name": "Météo du Matin - Aujourd'hui - Force Rafales",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteomatin0forceRafales"
+        },
+        {
+            "name": "Météo du Matin - Aujourd'hui - Température Minimum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteomatin0temperatureMin"
+        },
+        {
+            "name": "Météo du Matin - Aujourd'hui - Température Maximum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteomatin0temperatureMax"
+        },
+        {
+            "name": "Météo du Matin - Demain - Description",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteomatin1description"
+        },
+        {
+            "name": "Météo du Matin - Demain - Picto",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteomatin1picto"
+        },
+        {
+            "name": "Météo du Matin - Demain - Direction du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteomatin1directionVent"
+        },
+        {
+            "name": "Météo du Matin - Demain - Vitesse du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteomatin1vitesseVent"
+        },
+        {
+            "name": "Météo du Matin - Demain - Force Rafales",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteomatin1forceRafales"
+        },
+        {
+            "name": "Météo du Matin - Demain - Température Minimum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteomatin1temperatureMin"
+        },
+        {
+            "name": "Météo du Matin - Demain - Température Maximum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteomatin1temperatureMax"
+        },
+        {
+            "name": "Météo du Midi - Aujourd'hui - Description",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteomidi0description"
+        },
+        {
+            "name": "Météo du Midi - Aujourd'hui - Picto",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteomidi0picto"
+        },
+        {
+            "name": "Météo du Midi - Aujourd'hui - Direction du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteomidi0directionVent"
+        },
+        {
+            "name": "Météo du Midi - Aujourd'hui - Vitesse du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteomidi0vitesseVent"
+        },
+        {
+            "name": "Météo du Midi - Aujourd'hui - Force Rafales",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteomidi0forceRafales"
+        },
+        {
+            "name": "Météo du Midi - Aujourd'hui - Température Minimum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteomidi0temperatureMin"
+        },
+        {
+            "name": "Météo du Midi - Aujourd'hui - Température Maximum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteomidi0temperatureMax"
+        },
+        {
+            "name": "Météo du Midi - Demain - Description",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteomidi1description"
+        },
+        {
+            "name": "Météo du Midi - Demain - Picto",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteomidi1picto"
+        },
+        {
+            "name": "Météo du Midi - Demain - Direction du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteomidi1directionVent"
+        },
+        {
+            "name": "Météo du Midi - Demain - Vitesse du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteomidi1vitesseVent"
+        },
+        {
+            "name": "Météo du Midi - Demain - Force Rafales",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteomidi1forceRafales"
+        },
+        {
+            "name": "Météo du Midi - Demain - Température Minimum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteomidi1temperatureMin"
+        },
+        {
+            "name": "Météo du Midi - Demain - Température Maximum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteomidi1temperatureMax"
+        },
+        {
+            "name": "Météo du Soir - Aujourd'hui - Description",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteosoir0description"
+        },
+        {
+            "name": "Météo du Soir - Aujourd'hui - Picto",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteosoir0picto"
+        },
+        {
+            "name": "Météo du Soir - Aujourd'hui - Direction du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteosoir0directionVent"
+        },
+        {
+            "name": "Météo du Soir - Aujourd'hui - Vitesse du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteosoir0vitesseVent"
+        },
+        {
+            "name": "Météo du Soir - Aujourd'hui - Force Rafales",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteosoir0forceRafales"
+        },
+        {
+            "name": "Météo du Soir - Aujourd'hui - Température Minimum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteosoir0temperatureMin"
+        },
+        {
+            "name": "Météo du Soir - Aujourd'hui - Température Maximum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteosoir0temperatureMax"
+        },
+        {
+            "name": "Météo du Soir - Demain - Description",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteosoir1description"
+        },
+        {
+            "name": "Météo du Soir - Demain - Picto",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteosoir1picto"
+        },
+        {
+            "name": "Météo du Soir - Demain - Direction du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteosoir1directionVent"
+        },
+        {
+            "name": "Météo du Soir - Demain - Vitesse du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteosoir1vitesseVent"
+        },
+        {
+            "name": "Météo du Soir - Demain - Force Rafales",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteosoir1forceRafales"
+        },
+        {
+            "name": "Météo du Soir - Demain - Température Minimum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteosoir1temperatureMin"
+        },
+        {
+            "name": "Météo du Soir - Demain - Température Maximum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteosoir1temperatureMax"
+        },
+        {
+            "name": "Météo de la Nuit - Aujourd'hui - Description",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteonuit0description"
+        },
+        {
+            "name": "Météo de la Nuit - Aujourd'hui - Picto",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteonuit0picto"
+        },
+        {
+            "name": "Météo de la Nuit - Aujourd'hui - Direction du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteonuit0directionVent"
+        },
+        {
+            "name": "Météo de la Nuit - Aujourd'hui - Vitesse du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteonuit0vitesseVent"
+        },
+        {
+            "name": "Météo de la Nuit - Aujourd'hui - Force Rafales",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteonuit0forceRafales"
+        },
+        {
+            "name": "Météo de la Nuit - Aujourd'hui - Température Minimum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteonuit0temperatureMin"
+        },
+        {
+            "name": "Météo de la Nuit - Aujourd'hui - Température Maximum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteonuit0temperatureMax"
+        },
+        {
+            "name": "Météo de la Nuit - Demain - Description",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteonuit1description"
+        },
+        {
+            "name": "Météo de la Nuit - Demain - Picto",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteonuit1picto"
+        },
+        {
+            "name": "Météo de la Nuit - Demain - Direction du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteonuit1directionVent"
+        },
+        {
+            "name": "Météo de la Nuit - Demain - Vitesse du Vent",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteonuit1vitesseVent"
+        },
+        {
+            "name": "Météo de la Nuit - Demain - Force Rafales",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteonuit1forceRafales"
+        },
+        {
+            "name": "Météo de la Nuit - Demain - Température Minimum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteonuit1temperatureMin"
+        },
+        {
+            "name": "Météo de la Nuit - Demain - Température Maximum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteonuit1temperatureMax"
+        }
+    ]
+}

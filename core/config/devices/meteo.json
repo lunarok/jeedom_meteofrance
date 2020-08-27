@@ -97,49 +97,49 @@
             "logicalId": "Meteoday1indiceUV"
         },
         {
-            "name": "Météo du Jour - Aujourd'hui - Description",
+            "name": "Météo du Jour - Surlendemain - Description",
             "type": "info",
             "subtype": "string",
             "logicalId": "Meteoday2description"
         },
         {
-            "name": "Météo du Jour - Aujourd'hui - Picto",
+            "name": "Météo du Jour - Surlendemain - Picto",
             "type": "info",
             "subtype": "string",
             "logicalId": "Meteoday2picto"
         },
         {
-            "name": "Météo du Jour - Aujourd'hui - Direction du Vent",
+            "name": "Météo du Jour - Surlendemain - Direction du Vent",
             "type": "info",
             "subtype": "numeric",
             "logicalId": "Meteoday2directionVent"
         },
         {
-            "name": "Météo du Jour - Aujourd'hui - Vitesse du Vent",
+            "name": "Météo du Jour - Surlendemain - Vitesse du Vent",
             "type": "info",
             "subtype": "numeric",
             "logicalId": "Meteoday2vitesseVent"
         },
         {
-            "name": "Météo du Jour - Aujourd'hui - Force Rafales",
+            "name": "Météo du Jour - Surlendemain - Force Rafales",
             "type": "info",
             "subtype": "numeric",
             "logicalId": "Meteoday2forceRafales"
         },
         {
-            "name": "Météo du Jour - Aujourd'hui - Température Minimum",
+            "name": "Météo du Jour - Surlendemain - Température Minimum",
             "type": "info",
             "subtype": "numeric",
             "logicalId": "Meteoday2temperatureMin"
         },
         {
-            "name": "Météo du Jour - Aujourd'hui - Température Maximum",
+            "name": "Météo du Jour - Surlendemain - Température Maximum",
             "type": "info",
             "subtype": "numeric",
             "logicalId": "Meteoday2temperatureMax"
         },
         {
-            "name": "Météo du Jour - Aujourd'hui - Indice UV",
+            "name": "Météo du Jour - Surlendemain - Indice UV",
             "type": "info",
             "subtype": "numeric",
             "logicalId": "Meteoday2indiceUV"

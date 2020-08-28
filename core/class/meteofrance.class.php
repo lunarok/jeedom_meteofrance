@@ -368,10 +368,10 @@ class meteofrance extends eqLogic {
     $this->checkAndUpdateCmd('Ephemerismoon_phase', $return['properties']['ephemeris']['moon_phase']);
     $this->checkAndUpdateCmd('Ephemerismoon_phase_description', $return['properties']['ephemeris']['moon_phase_description']);
     $this->checkAndUpdateCmd('Ephemerissaint', $return['properties']['ephemeris']['saint']);
-    $this->checkAndUpdateCmd('Ephemerissunrise_time', date('Hi',strtotime($return['properties']['ephemeris']['sunrise_time'])));
-    $this->checkAndUpdateCmd('Ephemerissunset_time', date('Hi',strtotime($return['properties']['ephemeris']['sunset_time'])));
-    $this->checkAndUpdateCmd('Ephemerismoonrise_time', date('Hi',strtotime($return['properties']['ephemeris']['moonrise_time'])));
-    $this->checkAndUpdateCmd('Ephemerismoonset_time', date('Hi',strtotime($return['properties']['ephemeris']['moonset_time'])));
+    $this->checkAndUpdateCmd('Ephemerissunrise_time', date('Hi',strtotime(str_replace('Z','',$return['properties']['ephemeris']['sunrise_time']))));
+    $this->checkAndUpdateCmd('Ephemerissunset_time', date('Hi',strtotime(str_replace('Z','',$return['properties']['ephemeris']['sunset_time']))));
+    $this->checkAndUpdateCmd('Ephemerismoonrise_time', date('Hi',strtotime(str_replace('Z','',$return['properties']['ephemeris']['moonrise_time']))));
+    $this->checkAndUpdateCmd('Ephemerismoonset_time', date('Hi',strtotime(str_replace('Z','',$return['properties']['ephemeris']['moonset_time']))));
   }
 
   public function getBulletinFrance() {

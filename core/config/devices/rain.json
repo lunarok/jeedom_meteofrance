@@ -119,6 +119,12 @@
             "type": "info",
             "subtype": "numeric",
             "logicalId": "Rainnext"
+        },
+        {
+            "name": "Pluie 1h - Type de prochaine pluie",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Raintype"
         }
     ]
 }

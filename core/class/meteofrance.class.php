@@ -257,6 +257,7 @@ class meteofrance extends eqLogic {
     $i = 0;
     $cumul = 0;
     $next = 0;
+    $type = '';
     foreach ($return['properties']['forecast'] as $id => $rain) {
       $i++;
       $this->checkAndUpdateCmd('Rainrain' . $i, $rain['rain_intensity']);
@@ -267,11 +268,13 @@ class meteofrance extends eqLogic {
           $next += ($i - 6) * 5;
           //after 30 mn, steps are for 10mn
         }
+        $type = $rain['rain_intensity_description'];
       }
       $cumul += $rain['rain_intensity'];
     }
     $this->checkAndUpdateCmd('Raincumul', $cumul);
     $this->checkAndUpdateCmd('Rainnext', $next);
+    $this->checkAndUpdateCmd('Raintype', $type);
   }
 
   public function getMarine() {

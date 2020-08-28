@@ -367,12 +367,12 @@ class meteofrance extends eqLogic {
 
   public function getEphemeris() {
     date_default_timezone_set(config::byKey('timezone'));
-    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/ephemeris?lat=' . $this->getConfiguration('lat') . '&lon=' . $this->getConfiguration('lat');
+    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/ephemeris?lat=' . $this->getConfiguration('lat') . '&lon=' . $this->getConfiguration('lon');
     $return = self::callMeteoWS($url);
     $this->checkAndUpdateCmd('Ephemerismoon_phase', $return['properties']['ephemeris']['moon_phase']);
     $this->checkAndUpdateCmd('Ephemerismoon_phase_description', $return['properties']['ephemeris']['moon_phase_description']);
     $this->checkAndUpdateCmd('Ephemerissaint', $return['properties']['ephemeris']['saint']);
-    log::add(__CLASS__, 'debug', 'Date ' . $return['properties']['ephemeris']['sunrise_time'] . ', ' . strtotime($return['properties']['ephemeris']['sunrise_time']));
+    //log::add(__CLASS__, 'debug', 'Date ' . $return['properties']['ephemeris']['sunrise_time'] . ', ' . strtotime($return['properties']['ephemeris']['sunrise_time']));
     $this->checkAndUpdateCmd('Ephemerissunrise_time', date('Hi',strtotime($return['properties']['ephemeris']['sunrise_time'])));
     $this->checkAndUpdateCmd('Ephemerissunset_time', date('Hi',strtotime($return['properties']['ephemeris']['sunset_time'])));
     $this->checkAndUpdateCmd('Ephemerismoonrise_time', date('Hi',strtotime($return['properties']['ephemeris']['moonrise_time'])));

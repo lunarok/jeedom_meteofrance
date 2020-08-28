@@ -1,16 +1,28 @@
 {
   "commands": [
         {
+            "name": "Météo du Jour - Probabilité Pluie",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "MeteoprobaPluie"
+        },
+        {
+            "name": "Météo du Jour - Probabilité Neige",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "MeteoprobaNeige"
+        },
+        {
+            "name": "Météo du Jour - Probabilité Gel",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "MeteoprobaGel"
+        },
+        {
             "name": "Météo du Jour - Aujourd'hui - Description",
             "type": "info",
             "subtype": "string",
             "logicalId": "Meteoday0description"
-        },
-        {
-            "name": "Météo du Jour - Aujourd'hui - Picto",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteoday0picto"
         },
         {
             "name": "Météo du Jour - Aujourd'hui - Direction du Vent",
@@ -55,12 +67,6 @@
             "logicalId": "Meteoday1description"
         },
         {
-            "name": "Météo du Jour - Demain - Picto",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteoday1picto"
-        },
-        {
             "name": "Météo du Jour - Demain - Direction du Vent",
             "type": "info",
             "subtype": "numeric",
@@ -101,12 +107,6 @@
             "type": "info",
             "subtype": "string",
             "logicalId": "Meteoday2description"
-        },
-        {
-            "name": "Météo du Jour - Surlendemain - Picto",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteoday2picto"
         },
         {
             "name": "Météo du Jour - Surlendemain - Direction du Vent",
@@ -151,12 +151,6 @@
             "logicalId": "Meteomatin0description"
         },
         {
-            "name": "Météo du Matin - Aujourd'hui - Picto",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteomatin0picto"
-        },
-        {
             "name": "Météo du Matin - Aujourd'hui - Direction du Vent",
             "type": "info",
             "subtype": "numeric",
@@ -191,12 +185,6 @@
             "type": "info",
             "subtype": "string",
             "logicalId": "Meteomatin1description"
-        },
-        {
-            "name": "Météo du Matin - Demain - Picto",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteomatin1picto"
         },
         {
             "name": "Météo du Matin - Demain - Direction du Vent",
@@ -235,12 +223,6 @@
             "logicalId": "Meteomidi0description"
         },
         {
-            "name": "Météo du Midi - Aujourd'hui - Picto",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteomidi0picto"
-        },
-        {
             "name": "Météo du Midi - Aujourd'hui - Direction du Vent",
             "type": "info",
             "subtype": "numeric",
@@ -275,12 +257,6 @@
             "type": "info",
             "subtype": "string",
             "logicalId": "Meteomidi1description"
-        },
-        {
-            "name": "Météo du Midi - Demain - Picto",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteomidi1picto"
         },
         {
             "name": "Météo du Midi - Demain - Direction du Vent",
@@ -319,12 +295,6 @@
             "logicalId": "Meteosoir0description"
         },
         {
-            "name": "Météo du Soir - Aujourd'hui - Picto",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteosoir0picto"
-        },
-        {
             "name": "Météo du Soir - Aujourd'hui - Direction du Vent",
             "type": "info",
             "subtype": "numeric",
@@ -359,12 +329,6 @@
             "type": "info",
             "subtype": "string",
             "logicalId": "Meteosoir1description"
-        },
-        {
-            "name": "Météo du Soir - Demain - Picto",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteosoir1picto"
         },
         {
             "name": "Météo du Soir - Demain - Direction du Vent",
@@ -403,12 +367,6 @@
             "logicalId": "Meteonuit0description"
         },
         {
-            "name": "Météo de la Nuit - Aujourd'hui - Picto",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteonuit0picto"
-        },
-        {
             "name": "Météo de la Nuit - Aujourd'hui - Direction du Vent",
             "type": "info",
             "subtype": "numeric",
@@ -443,12 +401,6 @@
             "type": "info",
             "subtype": "string",
             "logicalId": "Meteonuit1description"
-        },
-        {
-            "name": "Météo de la Nuit - Demain - Picto",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteonuit1picto"
         },
         {
             "name": "Météo de la Nuit - Demain - Direction du Vent",

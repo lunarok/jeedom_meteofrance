@@ -237,6 +237,7 @@ class meteofrance extends eqLogic {
     $this->checkAndUpdateCmd('Meteonuit1temperatureMax', $return['result']['previsions']['1_nuit']['temperatureMax']);
 
     foreach(array_slice($return['result']['previsions48h'], 0, 1) as $value) {
+      log::add(__CLASS__, 'debug', 'Proba ' . print_r($value,true));
       $this->checkAndUpdateCmd('MeteoprobaPluie', $value['probaPluie']);
       $this->checkAndUpdateCmd('MeteoprobaNeige', $value['probaNeige']);
       $this->checkAndUpdateCmd('MeteoprobaGel', $value['probaGel']);

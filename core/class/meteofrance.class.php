@@ -348,7 +348,7 @@ class meteofrance extends eqLogic {
       $this->checkAndUpdateCmd('Vigilancephenomenon_max_color_id' . $vigilance['phenomenon_id'], $vigilance['phenomenon_max_color_id']);
       if ($vigilance['phenomenon_max_color_id'] > 1) {
         $cmd = meteofranceCmd::byEqLogicIdAndLogicalId($this->getId(),'Vigilancephases' . $vigilance['phenomenon_id']);
-        $listVigilance[] = $type[$vigilance['phenomenon_id']] . ' : ' . $value[$vigilance['phenomenon_max_color_id'] . ', ' . $cmd->execCmd()];
+        $listVigilance[] = $type[$vigilance['phenomenon_id']] . ' : ' . $value[$vigilance['phenomenon_max_color_id']] . ', ' . $cmd->execCmd();
       }
     }
     $this->checkAndUpdateCmd('Vigilancelist', implode(', ',$listVigilance));
@@ -366,15 +366,16 @@ class meteofrance extends eqLogic {
   }
 
   public function getEphemeris() {
+    date_default_timezone_set(config::byKey('timezone'));
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/ephemeris?lat=' . $this->getConfiguration('lat') . '&lon=' . $this->getConfiguration('lat');
     $return = self::callMeteoWS($url);
     $this->checkAndUpdateCmd('Ephemerismoon_phase', $return['properties']['ephemeris']['moon_phase']);
     $this->checkAndUpdateCmd('Ephemerismoon_phase_description', $return['properties']['ephemeris']['moon_phase_description']);
     $this->checkAndUpdateCmd('Ephemerissaint', $return['properties']['ephemeris']['saint']);
-    $this->checkAndUpdateCmd('Ephemerissunrise_time', date('Hi',strtotime(str_replace('Z','',$return['properties']['ephemeris']['sunrise_time']))));
-    $this->checkAndUpdateCmd('Ephemerissunset_time', date('Hi',strtotime(str_replace('Z','',$return['properties']['ephemeris']['sunset_time']))));
-    $this->checkAndUpdateCmd('Ephemerismoonrise_time', date('Hi',strtotime(str_replace('Z','',$return['properties']['ephemeris']['moonrise_time']))));
-    $this->checkAndUpdateCmd('Ephemerismoonset_time', date('Hi',strtotime(str_replace('Z','',$return['properties']['ephemeris']['moonset_time']))));
+    $this->checkAndUpdateCmd('Ephemerissunrise_time', date('Hi',strtotime($return['properties']['ephemeris']['sunrise_time'])));
+    $this->checkAndUpdateCmd('Ephemerissunset_time', date('Hi',strtotime($return['properties']['ephemeris']['sunset_time'])));
+    $this->checkAndUpdateCmd('Ephemerismoonrise_time', date('Hi',strtotime($return['properties']['ephemeris']['moonrise_time'])));
+    $this->checkAndUpdateCmd('Ephemerismoonset_time', date('Hi',strtotime($return['properties']['ephemeris']['moonset_time'])));
   }
 
   public function getBulletinFrance() {

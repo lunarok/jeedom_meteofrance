@@ -236,9 +236,11 @@ class meteofrance extends eqLogic {
     $this->checkAndUpdateCmd('Meteonuit1temperatureMin', $return['result']['previsions']['1_nuit']['temperatureMin']);
     $this->checkAndUpdateCmd('Meteonuit1temperatureMax', $return['result']['previsions']['1_nuit']['temperatureMax']);
 
-    $this->checkAndUpdateCmd('MeteoprobaPluie', $return['result']['previsions48h'][0]['probaPluie']);
-    $this->checkAndUpdateCmd('MeteoprobaNeige', $return['result']['previsions48h'][0]['probaNeige']);
-    $this->checkAndUpdateCmd('MeteoprobaGel', $return['result']['previsions48h'][0]['probaGel']);
+    foreach(array_slice($return['result']['previsions48h'], 0, 1) as $value) {
+      $this->checkAndUpdateCmd('MeteoprobaPluie', $value['probaPluie']);
+      $this->checkAndUpdateCmd('MeteoprobaNeige', $value['probaNeige']);
+      $this->checkAndUpdateCmd('MeteoprobaGel', $value['probaGel']);
+    }
   }
 
   public function getRain() {

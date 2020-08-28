@@ -1,6 +1,12 @@
 {
   "commands": [
         {
+            "name": "Vigilance - Général",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Vigilancelist"
+        },
+        {
             "name": "Vigilance - Vent violent conditions",
             "type": "info",
             "subtype": "string",

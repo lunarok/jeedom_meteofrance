@@ -71,7 +71,7 @@ class meteofrance extends eqLogic {
     $array = array();
     $geoloc = $this->getConfiguration('geoloc', 'none');
     if ($geoloc == 'none') {
-      log::add(__CLASS__, 'error', 'Pollen geoloc non configuré.');
+      log::add(__CLASS__, 'error', 'Eqlogic geoloc non configuré.');
       return;
     }
     if ($geoloc == "jeedom") {
@@ -87,12 +87,12 @@ class meteofrance extends eqLogic {
         if(is_object($geotravCmd))
         $array['ville'] = $geotravCmd->execCmd();
         else {
-          log::add(__CLASS__, 'error', 'Pollen geotravCmd object not found');
+          log::add(__CLASS__, 'error', 'Eqlogic geotravCmd object not found');
           return;
         }
       }
       else {
-        log::add(__CLASS__, 'error', 'Pollen geotrav object not found');
+        log::add(__CLASS__, 'error', 'Eqlogic geotrav object not found');
         return;
       }
     }
@@ -317,19 +317,38 @@ class meteofrance extends eqLogic {
   }
 
   public function getVigilance() {
+    $value[1] = "Vert";
+    $value[2] = "Jaune";
+    $value[3] = "Orange";
+    $value[4] = "Rouge";
+    $type[1] = "Vent violent";
+    $type[2] = "Pluie-inondation";
+    $type[3] = "Orages";
+    $type[4] = "Inondation";
+    $type[5] = "Neige-verglas";
+    $type[6] = "Canicule";
+    $type[7] = "Grand-froid";
+    $type[8] = "Avalanches";
+    $type[9] = "Vagues-submersion";
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/warning/full?domain=' . $this->getConfiguration('numDept');
     $return = self::callMeteoWS($url);
     $this->checkAndUpdateCmd('Vigilancecolor_max', $return['color_max']);
     foreach ($return['timelaps'] as $id => $vigilance) {
       $phase = array();
       foreach ($vigilance['timelaps_items'] as $id2 => $segment) {
-        $phase[] = date('H:i', $segment['begin_time']) . ' vigilance niveau ' . $segment['color_id'];
+        $phase[] = date('H:i', $segment['begin_time']) . ' vigilance niveau ' . $value[$segment['color_id']];
       }
       $this->checkAndUpdateCmd('Vigilancephases' . $vigilance['phenomenon_id'], implode(', ',$phase));
     }
+    $listVigilance = array();
     foreach ($return['phenomenons_items'] as $id => $vigilance) {
       $this->checkAndUpdateCmd('Vigilancephenomenon_max_color_id' . $vigilance['phenomenon_id'], $vigilance['phenomenon_max_color_id']);
+      if ($vigilance['phenomenon_max_color_id'] > 1) {
+        $cmd = meteofranceCmd::byEqLogicIdAndLogicalId($this->getId(),'Vigilancephases' . $vigilance['phenomenon_id']);
+        $listVigilance[] = $type[$vigilance['phenomenon_id']] . ' : ' . $value[$vigilance['phenomenon_max_color_id'] . ', ' . $cmd->execCmd()];
+      }
     }
+    $this->checkAndUpdateCmd('Vigilancelist', implode(', ',$listVigilance));
   }
 
   public function getAlerts() {

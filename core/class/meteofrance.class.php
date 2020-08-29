@@ -102,18 +102,7 @@ class meteofrance extends eqLogic {
     $return = self::callURL($url);
     log::add(__CLASS__, 'debug', 'Insee ' . print_r($return['features'][0]['properties'],true));
     $array['insee'] = $return['features'][0]['properties']['citycode'];
-    $array['ville'] = str_replace(' ','_',strtolower($array['ville']));
-    $array['ville'] = preg_replace('#Ç#', 'C', $array['ville']);
-    $array['ville'] = preg_replace('#ç#', 'c', $array['ville']);
-    $array['ville'] = preg_replace('#è|é|ê|ë#', 'e', $array['ville']);
-    $array['ville'] = preg_replace('#à|á|â|ã|ä|å#', 'a', $array['ville']);
-    $array['ville'] = preg_replace('#ì|í|î|ï#', 'i', $array['ville']);
-    $array['ville'] = preg_replace('#ð|ò|ó|ô|õ|ö#', 'o', $array['ville']);
-    $array['ville'] = preg_replace('#ù|ú|û|ü#', 'u', $array['ville']);
-    $array['ville'] = preg_replace('#ý|ÿ#', 'y', $array['ville']);
-    $array['ville'] = preg_replace('#Ý#', 'Y', $array['ville']);
-    $array['ville'] = str_replace('_', '-', $array['ville']);
-    $array['ville'] = str_replace('\'', '', $array['ville']);
+    $array['ville'] = self::lowerAccent($array['ville']);
     return $array;
   }
 
@@ -406,10 +395,62 @@ class meteofrance extends eqLogic {
     $this->checkAndUpdateCmd('Bulletintempssem', $return['groupe'][0]['titre']);
   }
 
-  public function getIcones() {
-    $return = array();
-    $return[''] = '';
+  public static function lowerAccent($_var) {
+    $return = str_replace(' ','_',strtolower($_var));
+    $return = preg_replace('#Ç#', 'C', $return);
+    $return = preg_replace('#ç#', 'c', $return);
+    $return = preg_replace('#è|é|ê|ë#', 'e', $return);
+    $return = preg_replace('#à|á|â|ã|ä|å#', 'a', $return);
+    $return = preg_replace('#ì|í|î|ï#', 'i', $return);
+    $return = preg_replace('#ð|ò|ó|ô|õ|ö#', 'o', $return);
+    $return = preg_replace('#ù|ú|û|ü#', 'u', $return);
+    $return = preg_replace('#ý|ÿ#', 'y', $return);
+    $return = preg_replace('#Ý#', 'Y', $return);
+    $return = str_replace('_', '-', $return);
+    $return = str_replace('\'', '', $return);
     return $return;
+  }
+
+  public static function getIcones($_var) {
+    $return = array();
+    $return['nuit claire'] = 'clear-night';
+    $return['tres nuageux'] = 'cloudy';
+    $return['couvert'] = 'cloudy';
+    $return['brume'] = 'fog';
+    $return['brume ou bancs de brouillard'] = 'fog';
+    $return['brouillard'] = 'fog';
+    $return['brouillard givrant'] = 'fog';
+    $return['risque de grele'] = 'hail';
+    $return['orages'] = 'lightning';
+    $return['risque d\'orages'] = 'lightning';
+    $return['pluie orageuses'] = 'lightning-rainy';
+    $return['pluies orageuses'] = 'lightning-rainy';
+    $return['averses orageuses'] = 'lightning-rainy';
+    $return['ciel voile'] = 'partlycloudy';
+    $return['ciel voile nuit'] = 'partlycloudy';
+    $return['eclaircies'] = 'partlycloudy';
+    $return['peu nuageux'] = 'partlycloudy';
+    $return['pluie forte'] = 'pouring';
+    $return['bruine / pluie faible'] = 'rainy';
+    $return['bruine'] = 'rainy';
+    $return['pluie faible'] = 'rainy';
+    $return['pluies eparses / rares averses'] = 'rainy';
+    $return['pluies eparses'] = 'rainy';
+    $return['rares averses'] = 'rainy';
+    $return['pluie moderee'] = 'rainy';
+    $return['pluie / averses'] = 'rainy';
+    $return['pluie faible'] = 'rainy';
+    $return['averses'] = 'rainy';
+    $return['pluie'] = 'rainy';
+    $return['neige'] = 'snowy';
+    $return['neige forte'] = 'snowy';
+    $return['quelques flocons'] = 'snowy';
+    $return['averses de neige'] = 'snowy';
+    $return['neige / averses de neige'] = 'snowy';
+    $return['pluie et neige'] = 'snowy-rainy';
+    $return['pluie verglacante'] = 'snowy-rainy';
+    $return['ensoleille'] = 'sunny';
+    return $return[self::lowerAccent($_var)];
   }
 
   public static function callMeteoWS($_url, $_xml = false, $_token = true) {

@@ -34,6 +34,7 @@ class meteofrance extends eqLogic {
       $meteofrance->getBulletinFrance();
       $meteofrance->getDetailsValues();
       $meteofrance->getBulletinVille();
+      $meteofrance->getDailyExtras();
     }
   }
 
@@ -65,6 +66,7 @@ class meteofrance extends eqLogic {
     $this->getBulletinSemaine();
     $this->getDetailsValues();
     $this->getBulletinVille();
+    $this->getDailyExtras();
   }
 
   public function getInsee() {
@@ -161,6 +163,17 @@ class meteofrance extends eqLogic {
     $this->checkAndUpdateCmd('BulletinvilleTS3', $return['echeance'][2]['TS']);
     $this->checkAndUpdateCmd('Bulletinvilletemperature3', $return['echeance'][2]['temperature']);
     $this->checkAndUpdateCmd('Bulletinvillevent3', $return['echeance'][2]['vent']);
+  }
+
+  public function getDailyExtras() {
+    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/forecast?lat=' . $this->getConfiguration('lat') . '&lon=' . $this->getConfiguration('lon') . '&id=&instants=&day=0';
+    $return = self::callMeteoWS($url);
+    $this->checkAndUpdateCmd('Meteoday0PluieCumul', $return['properties']['daily_forecast']['total_precipitation_24h']);
+    $this->checkAndUpdateCmd('MeteoprobaStorm', $return['properties']['probability_forecast'][0]['storm_hazard']);
+    $this->checkAndUpdateCmd('MeteonowCloud', $return['properties']['forecast'][0]['total_cloud_cover']);
+    $this->checkAndUpdateCmd('MeteonowPression', $return['properties']['forecast'][0]['P_sea']);
+    $this->checkAndUpdateCmd('MeteonowTemperature', $return['properties']['forecast'][0]['T']);
+    $this->checkAndUpdateCmd('MeteonowHumidity', $return['properties']['forecast'][0]['relative_humidity']);
   }
 
   public function getDetailsValues() {
@@ -391,6 +404,12 @@ class meteofrance extends eqLogic {
     $return = self::callMeteoWS($url, true);
     $this->checkAndUpdateCmd('Bulletindatesem', $return['groupe'][0]['date']);
     $this->checkAndUpdateCmd('Bulletintempssem', $return['groupe'][0]['titre']);
+  }
+
+  public function getIcones() {
+    $return = array();
+    $return[''] = '';
+    return $return;
   }
 
   public static function callMeteoWS($_url, $_xml = false, $_token = true) {

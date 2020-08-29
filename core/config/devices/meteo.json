@@ -19,6 +19,18 @@
             "logicalId": "MeteoprobaGel"
         },
         {
+            "name": "Météo du Jour - Probabilité Orage",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "MeteoprobaStorm"
+        },
+        {
+            "name": "Météo du Jour - Aujourd'hui - Cumul Pluie",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteoday0PluieCumul"
+        },
+        {
             "name": "Météo du Jour - Aujourd'hui - Description",
             "type": "info",
             "subtype": "string",
@@ -431,6 +443,30 @@
             "type": "info",
             "subtype": "numeric",
             "logicalId": "Meteonuit1temperatureMax"
+        },
+        {
+            "name": "Météo Actuellement - Couverture Nuageuse",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "MeteonowCloud"
+        },
+        {
+            "name": "Météo Actuellement - Pression",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "MeteonowPression"
+        },
+        {
+            "name": "Météo Actuellement - Température",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "MeteonowTemperature"
+        },
+        {
+            "name": "Météo Actuellement - Humidité",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "MeteonowHumidity"
         }
     ]
 }

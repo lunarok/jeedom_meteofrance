@@ -1,0 +1,23 @@
+<div class="eqLogic-widget eqLogic allowResize" style="width:#width#;height:#height#;#style#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="#version#" >
+		<center class="widget-name"><a href="#eqLink#" style="font-size : 1.5em;#hideEqLogicName#">#name_display#</a>
+<span class="cmd refresh pull-right cursor" data-cmd_id="#refresh#"><i class="fas fa-sync"></i></span>
+	</center>
+	<center><i class="wi #icone#" style="font-size: 42px;"></i></center>
+	<center>#condition# </center>
+	<center>#temperature#°C / #humidity#% / #uvi#UV</center>
+	<center>#windspeed# km/h</center>
+	<div>
+		<center>#forecast#</center>
+	</div>
+
+	<script>
+
+	if ('#refresh#' != ''){
+			$('.eqLogic[data-eqLogic_uid=#uid#] .refresh').on('click', function () {
+				jeedom.cmd.execute({id: '#refresh#'});
+			});
+		}else{
+			$('.eqLogic[data-eqLogic_uid=#uid#] .refresh').remove();
+		}
+	</script>
+</div>

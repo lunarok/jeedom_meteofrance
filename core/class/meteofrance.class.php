@@ -18,6 +18,7 @@
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 
 class meteofrance extends eqLogic {
+  public static $_widgetPossibility = array('custom' => true);
 
   public static function cron5() {
     foreach (eqLogic::byType(__CLASS__, true) as $meteofrance) {
@@ -413,7 +414,7 @@ class meteofrance extends eqLogic {
 
   public static function getIcones($_var) {
     $return = array();
-    $return['nuit claire'] = 'clear-night';
+    $return['nuit claire'] = 'night-clear';
     $return['tres nuageux'] = 'cloudy';
     $return['couvert'] = 'cloudy';
     $return['brume'] = 'fog';
@@ -423,33 +424,33 @@ class meteofrance extends eqLogic {
     $return['risque de grele'] = 'hail';
     $return['orages'] = 'lightning';
     $return['risque d\'orages'] = 'lightning';
-    $return['pluie orageuses'] = 'lightning-rainy';
-    $return['pluies orageuses'] = 'lightning-rainy';
-    $return['averses orageuses'] = 'lightning-rainy';
-    $return['ciel voile'] = 'partlycloudy';
-    $return['ciel voile nuit'] = 'partlycloudy';
-    $return['eclaircies'] = 'partlycloudy';
-    $return['peu nuageux'] = 'partlycloudy';
-    $return['pluie forte'] = 'pouring';
-    $return['bruine / pluie faible'] = 'rainy';
-    $return['bruine'] = 'rainy';
-    $return['pluie faible'] = 'rainy';
-    $return['pluies eparses / rares averses'] = 'rainy';
-    $return['pluies eparses'] = 'rainy';
-    $return['rares averses'] = 'rainy';
-    $return['pluie moderee'] = 'rainy';
-    $return['pluie / averses'] = 'rainy';
-    $return['pluie faible'] = 'rainy';
-    $return['averses'] = 'rainy';
-    $return['pluie'] = 'rainy';
-    $return['neige'] = 'snowy';
-    $return['neige forte'] = 'snowy';
-    $return['quelques flocons'] = 'snowy';
-    $return['averses de neige'] = 'snowy';
-    $return['neige / averses de neige'] = 'snowy';
-    $return['pluie et neige'] = 'snowy-rainy';
-    $return['pluie verglacante'] = 'snowy-rainy';
-    $return['ensoleille'] = 'sunny';
+    $return['pluie orageuses'] = 'thunderstorm';
+    $return['pluies orageuses'] = 'thunderstorm';
+    $return['averses orageuses'] = 'thunderstorm';
+    $return['ciel voile'] = 'cloud';
+    $return['ciel voile nuit'] = 'cloud';
+    $return['eclaircies'] = 'cloud';
+    $return['peu nuageux'] = 'cloud';
+    $return['pluie forte'] = 'rain';
+    $return['bruine / pluie faible'] = 'showers';
+    $return['bruine'] = 'showers';
+    $return['pluie faible'] = 'showers';
+    $return['pluies eparses / rares averses'] = 'showers';
+    $return['pluies eparses'] = 'showers';
+    $return['rares averses'] = 'showers';
+    $return['pluie moderee'] = 'rain';
+    $return['pluie / averses'] = 'rain';
+    $return['pluie faible'] = 'showers';
+    $return['averses'] = 'rain';
+    $return['pluie'] = 'rain';
+    $return['neige'] = 'snow';
+    $return['neige forte'] = 'snow';
+    $return['quelques flocons'] = 'snow';
+    $return['averses de neige'] = 'snow';
+    $return['neige / averses de neige'] = 'snow';
+    $return['pluie et neige'] = 'snow';
+    $return['pluie verglacante'] = 'sleet';
+    $return['ensoleille'] = 'day-sunny';
     return $return[self::lowerAccent($_var)];
   }
 
@@ -523,6 +524,126 @@ class meteofrance extends eqLogic {
         $cmd->save();
       }
     }
+  }
+
+  public function toHtml($_version = 'dashboard') {
+    $replace = $this->preToHtml($_version);
+    if (!is_array($replace)) {
+      return $replace;
+    }
+    $version = jeedom::versionAlias($_version);
+    if ($this->getDisplay('hideOn' . $version) == 1) {
+      return '';
+    }
+
+    $html_forecast = '';
+
+    if ($_version != 'mobile' || $this->getConfiguration('fullMobileDisplay', 0) == 1) {
+      $forcast_template = getTemplate('core', $version, 'forecast', 'weatherbit');
+      for ($i = 0; $i < 5; $i++) {
+        if ($i == 0) {
+          $replace['#day#'] = "Aujourd'hui";
+          $temperature_min = $this->getCmd(null, 'Meteoday0temperatureMin');
+          $replace['#low_temperature#'] = is_object($temperature_min) ? round($temperature_min->execCmd()) : '';
+
+          $temperature_max = $this->getCmd(null, 'Meteoday0temperatureMax');
+          $replace['#hight_temperature#'] = is_object($temperature_max) ? round($temperature_max->execCmd()) : '';
+          $replace['#tempid#'] = is_object($temperature_max) ? $temperature_max->getId() : '';
+
+          $description = $this->getCmd(null, 'Meteoday0description');
+          $replace['#icone#'] = is_object($description) ? $this->getIcones($description->execCmd()) : '';
+        } else if ($i == 1) {
+          $replace['#day#'] = '+ 1h';
+          $temperature_min = $this->getCmd(null, 'hourly1temp');
+          $replace['#low_temperature#'] = is_object($temperature_min) ? round($temperature_min->execCmd()) : '';
+
+          $temperature_max = $this->getCmd(null, 'hourly1app_temp');
+          $replace['#hight_temperature#'] = is_object($temperature_max) ? round($temperature_max->execCmd()) : '';
+          $replace['#tempid#'] = is_object($temperature_max) ? $temperature_max->getId() : '';
+
+          $description = $this->getCmd(null, 'Meteoday0description');
+          $replace['#icone#'] = is_object($description) ? $this->getIcones($description->execCmd()) : '';
+        } else {
+          if ($i == 2) {
+            $step = 'daily1';
+          } else if ($i == 3) {
+            $step = 'daily2';
+          } else {
+            $step = 'daily3';
+          }
+          $j = $i - 1;
+          $replace['#day#'] = date_fr(date('l', strtotime('+' . $j . ' days')));
+          $temperature_min = $this->getCmd(null, $step . 'app_min_temp');
+          $replace['#low_temperature#'] = is_object($temperature_min) ? round($temperature_min->execCmd()) : '';
+
+          $temperature_max = $this->getCmd(null, $step . 'app_max_temp');
+          $replace['#hight_temperature#'] = is_object($temperature_max) ? round($temperature_max->execCmd()) : '';
+          $replace['#tempid#'] = is_object($temperature_max) ? $temperature_max->getId() : '';
+
+          $icone = $this->getCmd(null, $step . 'weather::code');
+          $replace['#icone#'] = $this->getIcones($step);
+        }
+
+        $html_forecast .= template_replace($replace, $forcast_template);
+      }
+    }
+
+    $replace['#forecast#'] = $html_forecast;
+    $replace['#city#'] = $this->getName();
+
+    $temperature = $this->getCmd(null, 'MeteonowTemperature');
+    $replace['#temperature#'] = is_object($temperature) ? round($temperature->execCmd()) : '';
+    $replace['#tempid#'] = is_object($temperature) ? $temperature->getId() : '';
+
+    $humidity = $this->getCmd(null, 'MeteonowHumidity');
+    $replace['#humidity#'] = is_object($humidity) ? $humidity->execCmd() : '';
+
+    $uvindex = $this->getCmd(null, 'Meteoday0indiceUV');
+    $replace['#uvi#'] = is_object($uvindex) ? round($uvindex->execCmd()) : '';
+
+    $pressure = $this->getCmd(null, 'MeteonowPression');
+    $replace['#pressure#'] = is_object($pressure) ? $pressure->execCmd() : '';
+    $replace['#pressureid#'] = is_object($pressure) ? $pressure->getId() : '';
+
+    $wind_speed = $this->getCmd(null, 'Meteoday0vitesseVent');
+    $replace['#windspeed#'] = is_object($wind_speed) ? $wind_speed->execCmd() * 3.6 : '';
+    $replace['#windid#'] = is_object($wind_speed) ? $wind_speed->getId() : '';
+
+    $sunrise = $this->getCmd(null, 'Ephemerissunrise_time');
+    $replace['#sunrise#'] = is_object($sunrise) ? substr_replace($sunrise->execCmd(),':',-2,0) : '';
+    $replace['#sunriseid#'] = is_object($sunrise) ? $sunrise->getId() : '';
+
+    $sunset = $this->getCmd(null, 'Ephemerissunset_time');
+    $replace['#sunset#'] = is_object($sunset) ? substr_replace($sunset->execCmd(),':',-2,0) : '';
+    $replace['#sunsetid#'] = is_object($sunset) ? $sunset->getId() : '';
+
+    $wind_direction = $this->getCmd(null, 'Meteoday0directionVent');
+    $replace['#wind_direction#'] = is_object($wind_direction) ? $wind_direction->execCmd() : 0;
+
+    $refresh = $this->getCmd(null, 'refresh');
+    $replace['#refresh#'] = is_object($refresh) ? $refresh->getId() : '';
+
+    $condition = $this->getCmd(null, 'Meteoday0description');
+    if (is_object($condition)) {
+      $replace['#condition#'] = $condition->execCmd();
+      $replace['#conditionid#'] = $condition->getId();
+      $replace['#collectDate#'] = $condition->getCollectDate();
+    } else {
+      $replace['#condition#'] = '';
+      $replace['#collectDate#'] = '';
+    }
+
+    $description = $this->getCmd(null, 'Meteoday0description');
+    $replace['#icone#'] = is_object($description) ? $this->getIcones($description->execCmd()) : '';
+
+    $parameters = $this->getDisplay('parameters');
+    if (is_array($parameters)) {
+      foreach ($parameters as $key => $value) {
+        $replace['#' . $key . '#'] = $value;
+      }
+    }
+
+    return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $version, 'current', 'weatherbit')));
   }
 
 }

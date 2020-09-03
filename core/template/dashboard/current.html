@@ -1,0 +1,115 @@
+<div class="eqLogic-widget eqLogic allowResize" style="width:#width#;height:#height#;#style#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="#version#" >
+ <center class="widget-name"><a href="#eqLink#" style="font-size : 1.2em;#hideEqLogicName#"> #city# </a>
+    <span class="cmd refresh pull-right cursor" data-cmd_id="#refresh#"><i class="fas fa-sync"></i></span>
+    </center>
+ <div style="position : relative; left : 15px;" class="tooltips" title="#collectDate#">
+    <span class="pull-left">
+      <br>
+        <i class="wi #icone#" style="font-size: 42px;"></i>
+    </span>
+    <div class="pull-right" style="margin-right: 20px;margin-top: 0px;">
+        <div id="windDirection#uid#" style="width: 80px; height: 80px;" class="cmd noRefresh" data-type="info" data-subtype="numeric" data-cmd_id="#windid#"></div>
+        <div class="cmd noRefresh" data-type="info" data-subtype="string" data-cmd_id="#sunid#">
+            <span style="font-size: 0.8em;position: relative;left:2px;"><i class="wi wi-sunrise"></i> #sunrise# | <i class="wi wi-sunset"></i> #sunset#</span>
+        </div>
+    </div>
+    <span style="margin-left: 5px;"class="cmd noRefresh" data-type="info" data-subtype="string" data-cmd_id="#conditionid#">  #condition# </span><br/>
+    <span style="margin-left: 5px;font-size: 0.8em;" class="cmd noRefresh" data-type="info" data-subtype="string" data-cmd_id="#tempid#">  <i class="wi wi-thermometer"></i> #temperature# °C / <i class="wi wi-humidity"></i> #humidity# % / <i class="wi wi-hot"></i> #uvi# UV  </span><br/>
+    <span style="margin-left: 5px;font-size: 0.8em;" class="cmd noRefresh" data-type="info" data-subtype="string" data-cmd_id="#pressureid#">  <i class="wi wi-windy"></i> #windspeed# km/h | <i class="wi wi-barometer"></i> #pressure# hPa  </span>
+</div><br/>
+<div style="margin-top: -15px;">
+    <center>#forecast#</center>
+</div>
+
+<link rel="stylesheet" type="text/css" href="plugins/weatherbit/desktop/weather-icons/css/weather-icons.min.css" />
+
+<script>
+if ('#refresh#' != ''){
+			$('.eqLogic[data-eqLogic_uid=#uid#] .refresh').on('click', function () {
+				jeedom.cmd.execute({id: '#refresh#'});
+			});
+		}else{
+			$('.eqLogic[data-eqLogic_uid=#uid#] .refresh').remove();
+		}
+
+
+ if($('#windDirection#uid#').html() != undefined){
+	 new Highcharts.Chart({
+				chart: {
+					renderTo: 'windDirection#uid#',
+					type: 'gauge',
+					backgroundColor: 'transparent',
+					plotBackgroundColor: null,
+					plotBackgroundImage: null,
+					plotBorderWidth: 0,
+					plotShadow: false,
+					spacingTop: 0,
+					spacingLeft: 0,
+					spacingRight: 0,
+					spacingBottom: 0
+				},
+				title: {
+					text: null
+				},
+				credits: {
+					enabled: false
+				},
+				pane: {
+					startAngle: 0,
+					endAngle: 360,
+					background: null
+				},
+				exporting : {
+					enabled: false
+				},
+				plotOptions: {
+					series: {
+						dataLabels: {
+							enabled: false
+						}
+					},
+          gauge: {
+            dial: {
+              backgroundColor: 'red',
+              borderColor: 'red',
+            },
+            pivot: {
+              backgroundColor: 'silver'
+            }
+          }
+				},
+				yAxis: {
+					min: 0,
+					max: 360,
+					tickWidth: 2,
+					tickLength: 10,
+					tickInterval: 90,
+					lineWidth: 4,
+					labels: {
+            distance: -16,
+						formatter: function () {
+							if (this.value == 360) {
+								return '<span style="font-weight:bold;">N</span>';
+							} else if (this.value == 90) {
+								return '<span style="font-weight:bold;">E</span>';
+							} else if (this.value == 180) {
+								return '<span style="font-weight:bold;">S</span>';
+							} else if (this.value == 270) {
+								return '<span style="font-weight:bold;">W</span>';
+							}
+						}
+					},
+					title: {
+						text: null
+					}},
+					series: [{
+						name: 'Vent',
+						data: [#wind_direction#]
+					}]
+				});
+			}
+
+</script>
+
+
+</div>

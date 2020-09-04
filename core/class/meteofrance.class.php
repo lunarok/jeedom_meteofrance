@@ -23,6 +23,7 @@ class meteofrance extends eqLogic {
   public static function cron5() {
     foreach (eqLogic::byType(__CLASS__, true) as $meteofrance) {
       $meteofrance->getRain();
+      $meteofrance->refreshWidget();
     }
   }
 
@@ -36,6 +37,7 @@ class meteofrance extends eqLogic {
       $meteofrance->getDetailsValues();
       $meteofrance->getBulletinVille();
       $meteofrance->getDailyExtras();
+      $meteofrance->refreshWidget();
     }
   }
 
@@ -68,6 +70,7 @@ class meteofrance extends eqLogic {
     $this->getDetailsValues();
     $this->getBulletinVille();
     $this->getDailyExtras();
+    $this->refreshWidget();
   }
 
   public function getInsee() {

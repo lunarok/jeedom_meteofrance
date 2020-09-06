@@ -542,7 +542,7 @@ class meteofrance extends eqLogic {
     $html_forecast = '';
 
     if ($_version != 'mobile' || $this->getConfiguration('fullMobileDisplay', 0) == 1) {
-      $forcast_template = getTemplate('core', $version, 'forecast', 'weatherbit');
+      $forcast_template = getTemplate('core', $version, 'forecast', 'meteofrance');
       for ($i = 0; $i < 5; $i++) {
         if ($i == 0) {
           $replace['#day#'] = "Aujourd'hui";
@@ -646,7 +646,7 @@ class meteofrance extends eqLogic {
       }
     }
 
-    return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $version, 'current', 'weatherbit')));
+    return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $version, 'current', 'meteofrance')));
   }
 
 }

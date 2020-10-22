@@ -568,7 +568,7 @@ class meteofrance extends eqLogic {
           $replace['#icone#'] = 'https://meteofrance.com/modules/custom/mf_tools_common_theme_public/svg/weather/' . $icone->execCmd() . '.svg';
         } else if ($i == 1) {
           $replace['#day#'] = '+ 1h';
-          $temperature_min = $this->getCmd(null, 'hourly1temp');
+          $temperature_min = $this->getCmd(null, 'Meteodayh1temperature');
           $replace['#low_temperature#'] = is_object($temperature_min) ? round($temperature_min->execCmd()) : '';
 
           $temperature_max = $this->getCmd(null, 'Meteodayh1temperatureRes');
@@ -608,6 +608,10 @@ class meteofrance extends eqLogic {
     $temperature = $this->getCmd(null, 'MeteonowTemperature');
     $replace['#temperature#'] = is_object($temperature) ? round($temperature->execCmd()) : '';
     $replace['#tempid#'] = is_object($temperature) ? $temperature->getId() : '';
+
+    $temperature = $this->getCmd(null, 'MeteonowTemperatureRes');
+    $replace['#ressentie#'] = is_object($temperature) ? round($temperature->execCmd()) : '';
+    $replace['#ressid#'] = is_object($temperature) ? $temperature->getId() : '';
 
     $humidity = $this->getCmd(null, 'MeteonowHumidity');
     $replace['#humidity#'] = is_object($humidity) ? $humidity->execCmd() : '';

@@ -568,22 +568,22 @@ class meteofrance extends eqLogic {
           $replace['#icone#'] = is_object($description) ? $this->getIcones($description->execCmd()) : '';
         } else {
           if ($i == 2) {
-            $step = 'daily1';
+            $step = 'Meteoday1';
           } else if ($i == 3) {
-            $step = 'daily2';
+            $step = 'Meteoday2';
           } else {
-            $step = 'daily3';
+            $step = 'Meteoday3';
           }
           $j = $i - 1;
           $replace['#day#'] = date_fr(date('l', strtotime('+' . $j . ' days')));
-          $temperature_min = $this->getCmd(null, $step . 'app_min_temp');
+          $temperature_min = $this->getCmd(null, $step . 'temperatureMin');
           $replace['#low_temperature#'] = is_object($temperature_min) ? round($temperature_min->execCmd()) : '';
 
-          $temperature_max = $this->getCmd(null, $step . 'app_max_temp');
+          $temperature_max = $this->getCmd(null, $step . 'temperatureMax');
           $replace['#hight_temperature#'] = is_object($temperature_max) ? round($temperature_max->execCmd()) : '';
           $replace['#tempid#'] = is_object($temperature_max) ? $temperature_max->getId() : '';
 
-          $icone = $this->getCmd(null, $step . 'weather::code');
+          $icone = $this->getCmd(null, $step . 'picto');
           $replace['#icone#'] = $this->getIcones($step);
         }
 

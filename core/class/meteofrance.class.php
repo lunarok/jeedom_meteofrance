@@ -241,6 +241,8 @@ class meteofrance extends eqLogic {
     $this->checkAndUpdateCmd('Meteonuit1forceRafales', $return['result']['previsions']['1_nuit']['forceRafales']);
     $this->checkAndUpdateCmd('Meteonuit1temperatureMin', $return['result']['previsions']['1_nuit']['temperatureMin']);
     $this->checkAndUpdateCmd('Meteonuit1temperatureMax', $return['result']['previsions']['1_nuit']['temperatureMax']);
+    $this->checkAndUpdateCmd('Meteoday3temperatureMin', $return['result']['resumes']['3_resume']['temperatureMin']);
+    $this->checkAndUpdateCmd('Meteoday3temperatureMax', $return['result']['resumes']['3_resume']['temperatureMax']);
 
     foreach(array_slice($return['result']['previsions48h'], 0, 1) as $value) {
       log::add(__CLASS__, 'debug', 'Proba ' . print_r($value,true));
@@ -651,7 +653,6 @@ class meteofrance extends eqLogic {
     if (is_object($echeance)) {
       $heure = substr_replace($echeance->execCmd(),':',-2,0);
       $replace['#heure#'] = $heure;
-      $replace['#h30#'] = date('H:i',strtotime('+ 30 minutes', mktime($heure[0] . $heure[1], $heure[3] . $heure[4])));
       $replace['#h1h#'] = date('H:i',strtotime('+ 1 hour', mktime($heure[0] . $heure[1], $heure[3] . $heure[4])));
     }
 

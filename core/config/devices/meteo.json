@@ -467,6 +467,18 @@
             "type": "info",
             "subtype": "numeric",
             "logicalId": "MeteonowHumidity"
+        },
+        {
+            "name": "Météo du Jour - J+3 - Température Minimum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteoday3temperatureMin"
+        },
+        {
+            "name": "Météo du Jour - J+3 - Température Maximum",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteoday3temperatureMax"
         }
     ]
 }

@@ -14,30 +14,12 @@
         </div>
     </div>
     <span style="margin-left: 5px;"class="cmd noRefresh" data-type="info" data-subtype="string" data-cmd_id="#conditionid#">  #condition# </span><br/>
-    <span style="margin-left: 5px;font-size: 0.8em;" class="cmd noRefresh" data-type="info" data-subtype="string" data-cmd_id="#tempid#">  <i class="wi wi-thermometer"></i> #temperature# °C / <i class="wi wi-humidity"></i> #humidity# % / <i class="wi wi-hot"></i> #uvi# UV  </span><br/>
+    <span style="margin-left: 5px;font-size: 0.8em;" class="cmd noRefresh" data-type="info" data-subtype="string" data-cmd_id="#tempid#">  <i class="wi wi-thermometer"></i> #temperature# °C (#ressentie# °C) / <i class="wi wi-humidity"></i> #humidity# % / <i class="wi wi-hot"></i> #uvi# UV  </span><br/>
     <span style="margin-left: 5px;font-size: 0.8em;" class="cmd noRefresh" data-type="info" data-subtype="string" data-cmd_id="#pressureid#">  <i class="wi wi-windy"></i> #windspeed# km/h | <i class="wi wi-barometer"></i> #pressure# hPa  </span>
 </div><br/>
 <div style="margin-top: -15px;">
     <center>#forecast#</center>
 </div>
-
-<table style="border-collapse: collapse;border: 0px; width: 100%;">
-			<tr>
-				<td class="tableCmdcss" style="height:20px;border: 0px; text-align: left" colspan="4">#heure#</td>
-				<td class="tableCmdcss" style="height:20px;border: 0px; text-align: right" colspan="4">#h1h#</td>
-			</tr>
-			<tr>
-				<td style="width: 7%;border: 0px; border-collapse: collapse; height:20px;#prev1Color#" title="#prev1Text#" class="tooltips"></td>
-				<td style="width: 7%;border: 0px; border-collapse: collapse; height:20px;#prev2Color#" title="#prev2Text#" class="tooltips"></td>
-				<td style="width: 7%;border: 0px; border-collapse: collapse; height:20px;#prev3Color#" title="#prev3Text#" class="tooltips"></td>
-				<td style="width: 7%;border: 0px; border-collapse: collapse; height:20px;#prev4Color#" title="#prev4Text#" class="tooltips"></td>
-				<td style="width: 7%;border: 0px; border-collapse: collapse; height:20px;#prev5Color#" title="#prev5Text#" class="tooltips"></td>
-				<td style="width: 7%;border: 0px; border-collapse: collapse; height:20px;#prev6Color#" title="#prev6Text#" class="tooltips"></td>
-				<td style="width: 7%;border: 0px; border-collapse: collapse; height:20px;#prev7Color#" title="#prev7Text#" class="tooltips"></td>
-				<td style="width: 7%;border: 0px; border-collapse: collapse; height:20px;#prev8Color#" title="#prev8Text#" class="tooltips"></td>
-				<td style="width: 7%;border: 0px; border-collapse: collapse; height:20px;#prev9Color#" title="#prev9Text#" class="tooltips"></td>
-			</tr>
-		</table>
 
 <link rel="stylesheet" type="text/css" href="plugins/weatherbit/desktop/weather-icons/css/weather-icons.min.css" />
 
@@ -129,5 +111,22 @@ if ('#refresh#' != ''){
 
 </script>
 
-
 </div>
+
+<table style="border-collapse: collapse;border: 0px; width: 100%;">
+			<tr>
+				<td class="tableCmdcss" style="height:20px;border: 0px; text-align: left" colspan="4">#heure#</td>
+				<td class="tableCmdcss" style="height:20px;border: 0px; text-align: right" colspan="4">#h1h#</td>
+			</tr>
+			<tr>
+				<td style="width: 7%;border: 0px; border-collapse: collapse; height:20px;#prev1Color#" title="#prev1Text#" class="tooltips"></td>
+				<td style="width: 7%;border: 0px; border-collapse: collapse; height:20px;#prev2Color#" title="#prev2Text#" class="tooltips"></td>
+				<td style="width: 7%;border: 0px; border-collapse: collapse; height:20px;#prev3Color#" title="#prev3Text#" class="tooltips"></td>
+				<td style="width: 7%;border: 0px; border-collapse: collapse; height:20px;#prev4Color#" title="#prev4Text#" class="tooltips"></td>
+				<td style="width: 7%;border: 0px; border-collapse: collapse; height:20px;#prev5Color#" title="#prev5Text#" class="tooltips"></td>
+				<td style="width: 7%;border: 0px; border-collapse: collapse; height:20px;#prev6Color#" title="#prev6Text#" class="tooltips"></td>
+				<td style="width: 7%;border: 0px; border-collapse: collapse; height:20px;#prev7Color#" title="#prev7Text#" class="tooltips"></td>
+				<td style="width: 7%;border: 0px; border-collapse: collapse; height:20px;#prev8Color#" title="#prev8Text#" class="tooltips"></td>
+				<td style="width: 7%;border: 0px; border-collapse: collapse; height:20px;#prev9Color#" title="#prev9Text#" class="tooltips"></td>
+			</tr>
+		</table>

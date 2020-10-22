@@ -167,6 +167,14 @@ class meteofrance extends eqLogic {
     $this->checkAndUpdateCmd('MeteonowPression', $return['properties']['forecast'][0]['P_sea']);
     $this->checkAndUpdateCmd('MeteonowTemperature', $return['properties']['forecast'][0]['T']);
     $this->checkAndUpdateCmd('MeteonowHumidity', $return['properties']['forecast'][0]['relative_humidity']);
+    $this->checkAndUpdateCmd('Meteoday0icon', $return['properties']['forecast'][0]['weather_icon']);
+    $this->checkAndUpdateCmd('hourly1icon', $return['properties']['forecast'][1]['weather_icon']);
+    $this->checkAndUpdateCmd('Meteoday1icon', $return['properties']['forecast'][0]['weather_icon']);
+    $this->checkAndUpdateCmd('Meteoday2icon', $return['properties']['forecast'][0]['weather_icon']);
+    $this->checkAndUpdateCmd('Meteoday3icon', $return['properties']['forecast'][0]['weather_icon']);
+    $this->checkAndUpdateCmd('Meteodayh1temperature', $return['properties']['forecast'][1]['T']);
+    $this->checkAndUpdateCmd('Meteodayh1temperatureRes', $return['properties']['forecast'][1]['T_windchill']);
+    $this->checkAndUpdateCmd('MeteonowTemperatureRes', $return['properties']['forecast'][0]['T_windchill']);
   }
 
   public function getDetailsValues() {
@@ -556,19 +564,19 @@ class meteofrance extends eqLogic {
           $replace['#hight_temperature#'] = is_object($temperature_max) ? round($temperature_max->execCmd()) : '';
           $replace['#tempid#'] = is_object($temperature_max) ? $temperature_max->getId() : '';
 
-          $description = $this->getCmd(null, 'Meteoday0description');
-          $replace['#icone#'] = is_object($description) ? $this->getIcones($description->execCmd()) : '';
+          $icone = $this->getCmd(null, 'Meteoday0icon');
+          $replace['#icone#'] = 'https://meteofrance.com/modules/custom/mf_tools_common_theme_public/svg/weather/' . $icone->execCmd() . '.svg';
         } else if ($i == 1) {
           $replace['#day#'] = '+ 1h';
           $temperature_min = $this->getCmd(null, 'hourly1temp');
           $replace['#low_temperature#'] = is_object($temperature_min) ? round($temperature_min->execCmd()) : '';
 
-          $temperature_max = $this->getCmd(null, 'hourly1app_temp');
+          $temperature_max = $this->getCmd(null, 'Meteodayh1temperatureRes');
           $replace['#hight_temperature#'] = is_object($temperature_max) ? round($temperature_max->execCmd()) : '';
           $replace['#tempid#'] = is_object($temperature_max) ? $temperature_max->getId() : '';
 
-          $description = $this->getCmd(null, 'Meteoday0description');
-          $replace['#icone#'] = is_object($description) ? $this->getIcones($description->execCmd()) : '';
+          $icone = $this->getCmd(null, 'hourly1icon');
+          $replace['#icone#'] = 'https://meteofrance.com/modules/custom/mf_tools_common_theme_public/svg/weather/' . $icone->execCmd() . '.svg';
         } else {
           if ($i == 2) {
             $step = 'Meteoday1';
@@ -586,8 +594,8 @@ class meteofrance extends eqLogic {
           $replace['#hight_temperature#'] = is_object($temperature_max) ? round($temperature_max->execCmd()) : '';
           $replace['#tempid#'] = is_object($temperature_max) ? $temperature_max->getId() : '';
 
-          $icone = $this->getCmd(null, $step . 'picto');
-          $replace['#icone#'] = $this->getIcones($step);
+          $icone = $this->getCmd(null, $step . 'icon');
+          $replace['#icone#'] = 'https://meteofrance.com/modules/custom/mf_tools_common_theme_public/svg/weather/' . $icone->execCmd() . '.svg';
         }
 
         $html_forecast .= template_replace($replace, $forcast_template);

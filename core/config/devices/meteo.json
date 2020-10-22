@@ -479,6 +479,54 @@
             "type": "info",
             "subtype": "numeric",
             "logicalId": "Meteoday3temperatureMax"
+        },
+        {
+            "name": "Météo du Jour - H+1 - Température",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteodayh1temperature"
+        },
+        {
+            "name": "Météo du Jour - H+1 - Température Ressentie",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "Meteodayh1temperatureRes"
+        },
+        {
+            "name": "Météo Actuellement - Température Ressentie",
+            "type": "info",
+            "subtype": "numeric",
+            "logicalId": "MeteonowTemperatureRes"
+        },
+        {
+            "name": "Météo Actuellement - Icone",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteoday0icon"
+        },
+        {
+            "name": "Météo du Jour - H+1 - Icone",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "hourly1icon"
+        },
+        {
+            "name": "Météo du Jour - J+1 - Icone",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteoday1icon"
+        },
+        {
+            "name": "Météo du Jour - J+2 - Icone",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteoday2icon"
+        },
+        {
+            "name": "Météo du Jour - J+3 - Icone",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteoday3icon"
         }
     ]
 }

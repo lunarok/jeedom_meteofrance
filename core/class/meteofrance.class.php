@@ -651,8 +651,8 @@ class meteofrance extends eqLogic {
       $replace['#collectDate#'] = '';
     }
 
-    $description = $this->getCmd(null, 'Meteoday0description');
-    $replace['#icone#'] = is_object($description) ? $this->getIcones($description->execCmd()) : '';
+    $icone = $this->getCmd(null, 'Meteoday0icon');
+    $replace['#icone#'] = 'https://meteofrance.com/modules/custom/mf_tools_common_theme_public/svg/weather/' . $icone->execCmd() . '.svg';
 
     $parameters = $this->getDisplay('parameters');
     if (is_array($parameters)) {

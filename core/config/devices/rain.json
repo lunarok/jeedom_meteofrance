@@ -1,6 +1,12 @@
 {
   "commands": [
         {
+            "name": "Pluie 1h - Heure début des prévisions",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Rainheure"
+        },
+        {
             "name": "Pluie 1h - Previsions Textuelles 0-5mn",
             "type": "info",
             "subtype": "string",

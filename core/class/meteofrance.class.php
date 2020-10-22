@@ -277,6 +277,7 @@ class meteofrance extends eqLogic {
     $this->checkAndUpdateCmd('Raincumul', $cumul);
     $this->checkAndUpdateCmd('Rainnext', $next);
     $this->checkAndUpdateCmd('Raintype', $type);
+    $this->checkAndUpdateCmd('Rainheure',  date('Hi',strtotime($return['properties']['forecast'][0]['time'])));
   }
 
   public function getMarine() {
@@ -643,6 +644,31 @@ class meteofrance extends eqLogic {
     if (is_array($parameters)) {
       foreach ($parameters as $key => $value) {
         $replace['#' . $key . '#'] = $value;
+      }
+    }
+
+    $echeance = $this->getCmd(null,'Rainheure');
+    if (is_object($echeance)) {
+      $heure = substr_replace($echeance->execCmd(),':',-2,0);
+      $replace['#heure#'] = $heure;
+      $replace['#h30#'] = date('H:i',strtotime('+ 30 minutes', mktime($heure[0] . $heure[1], $heure[3] . $heure[4])));
+      $replace['#h1h#'] = date('H:i',strtotime('+ 1 hour', mktime($heure[0] . $heure[1], $heure[3] . $heure[4])));
+    }
+
+    $color = Array();
+    $color[0] = '';
+    $color[1] = '';
+    $color[2] = ' background: #AAE8FF';
+    $color[3] = ' background: #48BFEA';
+    $color[4] = ' background: #0094CE';
+
+    for($i=1; $i <= 9; $i++){
+      $prev = $this->getCmd(null,'Rainrain' . $i);
+      $text = $this->getCmd(null,'Raindesc' . $i);
+      if(is_object($prev)){
+        $replace['#prev' . ($i*5) . '#'] = $prev->execCmd();
+        $replace['#prev' . ($i*5) . 'Color#'] = $color[$prev->execCmd()];
+        $replace['#prev' . ($i*5) . 'Text#'] = $text->execCmd();
       }
     }
 

@@ -666,9 +666,9 @@ class meteofrance extends eqLogic {
       $prev = $this->getCmd(null,'Rainrain' . $i);
       $text = $this->getCmd(null,'Raindesc' . $i);
       if(is_object($prev)){
-        $replace['#prev' . ($i*5) . '#'] = $prev->execCmd();
-        $replace['#prev' . ($i*5) . 'Color#'] = $color[$prev->execCmd()];
-        $replace['#prev' . ($i*5) . 'Text#'] = $text->execCmd();
+        $replace['#prev' . $i . '#'] = $prev->execCmd();
+        $replace['#prev' . $i . 'Color#'] = $color[$prev->execCmd()];
+        $replace['#prev' . $i . 'Text#'] = $text->execCmd();
       }
     }
 

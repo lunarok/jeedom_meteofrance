@@ -568,6 +568,9 @@ class meteofrance extends eqLogic {
           $replace['#hight_temperature#'] = is_object($temperature_max) ? round($temperature_max->execCmd()) : '';
           $replace['#tempid#'] = is_object($temperature_max) ? $temperature_max->getId() : '';
 
+          $desc = $this->getCmd(null, 'Meteoday0description');
+          $replace['#condition#'] = is_object($desc) ? $desc->execCmd() : 0;
+
           $icone = $this->getCmd(null, 'Meteoday0icon');
           $replace['#icone#'] = 'https://meteofrance.com/modules/custom/mf_tools_common_theme_public/svg/weather/' . $icone->execCmd() . '.svg';
         } else if ($i == 1) {

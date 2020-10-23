@@ -698,6 +698,23 @@ class meteofrance extends eqLogic {
       }
     }
 
+    $color = Array();
+    $color[1] = ' color: #00ff1e';
+    $color[2] = ' color: #FFFF00';
+    $color[3] = ' color: #FFA500';
+    $color[4] = ' color: #E50000';
+
+    $vigilance = $this->getCmd(null, 'Vigilancephenomenon_max_color_id1');
+    $replace['#vig1Colors#'] = $color[$vigilance->execCmd()];
+    $vigilance = $this->getCmd(null, 'Vigilancephenomenon_max_color_id2');
+    $replace['#vig2Colors#'] = $color[$vigilance->execCmd()];
+    $vigilance = $this->getCmd(null, 'Vigilancephenomenon_max_color_id3');
+    $replace['#vig3Colors#'] = $color[$vigilance->execCmd()];
+    $vigilance = $this->getCmd(null, 'Vigilancephenomenon_max_color_id4');
+    $replace['#vig4Colors#'] = $color[$vigilance->execCmd()];
+    $vigilance = $this->getCmd(null, 'Vigilancephenomenon_max_color_id5');
+    $replace['#vig5Colors#'] = $color[$vigilance->execCmd()];
+
     return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $version, 'current', 'meteofrance')));
   }
 

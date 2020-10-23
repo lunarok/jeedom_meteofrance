@@ -527,6 +527,18 @@
             "type": "info",
             "subtype": "string",
             "logicalId": "Meteoday3icon"
+        },
+        {
+            "name": "Météo du Jour - J+3 - Description",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteoday3description"
+        },
+        {
+            "name": "Météo du Jour - H+1 - Description",
+            "type": "info",
+            "subtype": "string",
+            "logicalId": "Meteodayh1description"
         }
     ]
 }

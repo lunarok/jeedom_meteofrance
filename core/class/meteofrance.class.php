@@ -29,7 +29,6 @@ class meteofrance extends eqLogic {
 
   public static function cronHourly() {
     foreach (eqLogic::byType(__CLASS__, true) as $meteofrance) {
-      $meteofrance->getVigilance();
       $meteofrance->getMarine();
       $meteofrance->getTide();
       $meteofrance->getAlerts();
@@ -38,11 +37,6 @@ class meteofrance extends eqLogic {
       $meteofrance->getBulletinVille();
       $meteofrance->getDailyExtras();
       $meteofrance->refreshWidget();
-    }
-  }
-
-  public static function cronDaily() {
-    foreach (eqLogic::byType(__CLASS__, true) as $meteofrance) {
       $meteofrance->getEphemeris();
       $meteofrance->getBulletinSemaine();
     }
@@ -54,18 +48,31 @@ class meteofrance extends eqLogic {
     $this->getBulletinDetails($args);
   }
 
-  public function postSave() {
-    $this->getInformations();
+  public function postAjax() {
+    $cron = cron::byClassAndFunction('meteofrance', 'cronTrigger', array('meteofrance_id' => $this->getId()));
+    if (!is_object($cron)) {
+      if ($updateOnly == 1) {
+        return;
+      }
+      $cron = new cron();
+      $cron->setClass('meteofrance');
+      $cron->setFunction('cronTrigger');
+      $cron->setOption(array('meteofrance_id' => $this->getId()));
+    }
+    $time = time() + 60;
+    $cron->setSchedule(date('i', $time) . ' ' . date('H', $time) . ' ' . date('d', $time) . ' ' . date('m', $time) . ' * ' . date('Y', $time));
+    $cron->save();
   }
 
-  public function postAjax() {
-    $this->loadCmdFromConf('bulletin');
-    $this->loadCmdFromConf('bulletinville');
-    $this->loadCmdFromConf('ephemeris');
-    $this->loadCmdFromConf('marine');
-    $this->loadCmdFromConf('meteo');
-    $this->loadCmdFromConf('rain');
-    $this->loadCmdFromConf('vigilance');
+  public static function cronTrigger($_options) {
+    $meteofrance = meteofrance::byId($_options['meteofrance_id']);
+    $meteofrance->loadCmdFromConf('bulletin');
+    $meteofrance->loadCmdFromConf('bulletinville');
+    $meteofrance->loadCmdFromConf('ephemeris');
+    $meteofrance->loadCmdFromConf('marine');
+    $meteofrance->loadCmdFromConf('meteo');
+    $meteofrance->loadCmdFromConf('rain');
+    $meteofrance->loadCmdFromConf('vigilance');
   }
 
   public function getInformations() {

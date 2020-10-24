@@ -79,30 +79,17 @@
    createCmd('meteo');
  });
 
- function createCmd(type) {
-  $.ajax({// fonction permettant de faire de l'ajax
-    type: "POST", // methode de transmission des données au fichier php
-    url: "plugins/meteofrance/core/ajax/meteofrance.ajax.php", // url du fichier php
-    data: {
-      action: "createcmd",
-      id: $('.eqLogicAttr[data-l1key=id]').value(),
-      type: type,
-    },
-    dataType: 'json',
-    error: function(request, status, error) {
-      handleAjaxError(request, status, error);
-    },
-    success: function(data) { // si l'appel a bien fonctionné
-
-      if (data.state != 'ok') {
-        $('#div_alert').showAlert({message: data.result, level: 'danger'});
-        return;
-      }
-      $('#div_alert').showAlert({message: 'Ajout ok', level: 'success'});
-      window.location.reload();
-    }
-  });
-}
+ $('body').on('meteofrance::includeDevice', function (_event,_options) {
+     if (modifyWithoutSave) {
+         $('#div_inclusionAlert').showAlert({message: '{{Un périphérique vient d\'être crééer. Veuillez réactualiser la page}}', level: 'warning'});
+     } else {
+         if (_options == '') {
+             window.location.reload();
+         } else {
+             window.location.href = 'index.php?v=d&p=mqtthub&m=mqtthub&id=' + _options;
+         }
+     }
+ });
 
  $("#butCol").click(function(){
    $("#hidCol").toggle("slow");

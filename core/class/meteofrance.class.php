@@ -73,6 +73,11 @@ class meteofrance extends eqLogic {
     $meteofrance->loadCmdFromConf('meteo');
     $meteofrance->loadCmdFromConf('rain');
     $meteofrance->loadCmdFromConf('vigilance');
+    event::add('mqtthub::includeDevice',
+          array(
+              'state' => 1
+          )
+      );
   }
 
   public function getInformations() {

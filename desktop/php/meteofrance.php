@@ -138,66 +138,6 @@ $eqLogics = eqLogic::byType('meteofrance');
               </div>
             </div>
 
-            <div class="form-group" id="zoneRain">
-              <label class="col-sm-3 control-label"></label>
-              <div class="col-sm-3">
-                <input type="checkbox" class="eqLogicAttr form-control configuration" data-l1key="configuration" data-l2key="couvertPluie" style="display : none;" id="rain"/>
-                <a class="btn btn-default" id='btRain'><i class="fas fa-umbrella"></i> {{Créer les commandes Pluie 1h}}</a>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="col-sm-3 control-label"></label>
-              <div class="col-sm-3">
-                <a class="btn btn-default" id='btVigilance'><i class="fas fa-exclamation"></i> {{Créer les commandes Vigilance}}</a>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="col-sm-3 control-label"></label>
-              <div class="col-sm-3">
-                <a class="btn btn-default" id='btEphemeris'><i class="fas fa-moon"></i> {{Créer les commandes Ephéméride}}</a>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="col-sm-3 control-label"></label>
-              <div class="col-sm-3">
-                <a class="btn btn-default" id='btMeteo'><i class="fas fa-sun"></i> {{Créer les commandes Météo}}</a>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="col-sm-3 control-label"></label>
-              <div class="col-sm-3">
-                <a class="btn btn-default" id='btBulletin'><i class="fas fa-temperature-high"></i> {{Créer les commandes Bulletin Météo}}</a>
-              </div>
-            </div>
-
-            <div class="form-group" id="zoneBulletin">
-              <label class="col-sm-3 control-label"></label>
-              <div class="col-sm-3">
-                <input type="checkbox" class="eqLogicAttr form-control configuration" data-l1key="configuration" data-l2key="bulletinVille" style="display : none;" id="ville"/>
-                <a class="btn btn-default" id='btBulletinVille'><i class="fas fa-temperature-low"></i> {{Créer les commandes Bulletin Météo Ville}}</a>
-              </div>
-            </div>
-
-            <div class="form-group" id="zoneMarine">
-              <label class="col-sm-3 control-label"></label>
-              <div class="col-sm-3">
-                <input type="checkbox" class="eqLogicAttr form-control configuration" data-l1key="configuration" data-l2key="bulletinCote" style="display : none;" id="marine"/>
-                <a class="btn btn-default" id='btMarine'><i class="fas fa-ship"></i> {{Créer les commandes Météo Marine}}</a>
-              </div>
-            </div>
-
-            <div class="form-group" id="zoneCrue">
-              <label class="col-sm-3 control-label"></label>
-              <div class="col-sm-3">
-                <input type="checkbox" class="eqLogicAttr form-control configuration" data-l1key="configuration" data-l2key="crue" style="display : none;" id="crue"/>
-                <a class="btn btn-default" id='btCrue'><i class="fas fa-water"></i> {{Créer les commandes Vigicrues}}</a>
-              </div>
-            </div>
-
           </fieldset>
         </form>
       </div>

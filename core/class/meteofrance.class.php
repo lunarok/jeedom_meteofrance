@@ -58,6 +58,16 @@ class meteofrance extends eqLogic {
     $this->getInformations();
   }
 
+  public function postAjax() {
+    $this->loadCmdFromConf('bulletin');
+    $this->loadCmdFromConf('bulletinville');
+    $this->loadCmdFromConf('ephemeris');
+    $this->loadCmdFromConf('marine');
+    $this->loadCmdFromConf('meteo');
+    $this->loadCmdFromConf('rain');
+    $this->loadCmdFromConf('vigilance');
+  }
+
   public function getInformations() {
     $this->getRain();
     $this->getVigilance();

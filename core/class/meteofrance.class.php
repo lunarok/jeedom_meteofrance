@@ -48,7 +48,7 @@ class meteofrance extends eqLogic {
     $this->getBulletinDetails($args);
   }
 
-  public function postAjax() {
+  public function postSave() {
     $cron = cron::byClassAndFunction('meteofrance', 'cronTrigger', array('meteofrance_id' => $this->getId()));
     if (!is_object($cron)) {
       if ($updateOnly == 1) {
@@ -59,7 +59,7 @@ class meteofrance extends eqLogic {
       $cron->setFunction('cronTrigger');
       $cron->setOption(array('meteofrance_id' => $this->getId()));
     }
-    $time = time() + 60;
+    $time = time() + 90;
     $cron->setSchedule(date('i', $time) . ' ' . date('H', $time) . ' ' . date('d', $time) . ' ' . date('m', $time) . ' * ' . date('Y', $time));
     $cron->save();
   }

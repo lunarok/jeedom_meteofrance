@@ -86,7 +86,7 @@
          if (_options == '') {
              window.location.reload();
          } else {
-             window.location.href = 'index.php?v=d&p=mqtthub&m=mqtthub&id=' + _options;
+             window.location.href = 'index.php?v=d&p=meteofrance&m=meteofrance&id=' + _options;
          }
      }
  });

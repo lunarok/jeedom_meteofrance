@@ -29,16 +29,7 @@ class meteofrance extends eqLogic {
 
   public static function cronHourly() {
     foreach (eqLogic::byType(__CLASS__, true) as $meteofrance) {
-      $meteofrance->getMarine();
-      $meteofrance->getTide();
-      $meteofrance->getAlerts();
-      $meteofrance->getBulletinFrance();
-      $meteofrance->getDetailsValues();
-      $meteofrance->getBulletinVille();
-      $meteofrance->getDailyExtras();
-      $meteofrance->refreshWidget();
-      $meteofrance->getEphemeris();
-      $meteofrance->getBulletinSemaine();
+      $meteofrance->getInformations();
     }
   }
 
@@ -505,7 +496,7 @@ class meteofrance extends eqLogic {
     $request_http->setNoSslCheck(true);
     $request_http->setNoReportError(true);
     $return = $request_http->exec(15,2);
-    if ($result === false) {
+    if ($return === false) {
       log::add(__CLASS__, 'debug', 'Unable to fetch ' . $_url);
       return;
     } else {
@@ -745,6 +736,7 @@ class meteofrance extends eqLogic {
 class meteofranceCmd extends cmd {
   public function execute($_options = null) {
     if ($this->getLogicalId() == 'refresh') {
+      $this->getEqLogic()->getRain();
       $this->getEqLogic()->getInformations();
     }
   }

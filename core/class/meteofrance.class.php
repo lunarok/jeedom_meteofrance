@@ -516,7 +516,7 @@ class meteofrance extends eqLogic {
     $request_http->setNoSslCheck(true);
     $request_http->setNoReportError(true);
     $return = $request_http->exec(15,2);
-    if ($result === false) {
+    if ($return === false) {
       log::add(__CLASS__, 'debug', 'Unable to fetch ' . $_url);
       return;
     } else {

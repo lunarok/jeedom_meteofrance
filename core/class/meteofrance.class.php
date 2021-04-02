@@ -210,7 +210,7 @@ class meteofrance extends eqLogic {
     $this->checkAndUpdateCmd('Meteoday2temperatureMax', $return['properties']['daily_forecast'][2]['T_max']);
     $this->checkAndUpdateCmd('Meteoday2indiceUV', $return['properties']['daily_forecast'][2]['uv_index']);
     $this->checkAndUpdateCmd('Meteoday3temperatureMin', $return['properties']['daily_forecast'][3]['T_min']);
-    $this->checkAndUpdateCmd('Meteoday3temperatureMax', $return['properties']['daily_forecast'][3]]['T_max']);
+    $this->checkAndUpdateCmd('Meteoday3temperatureMax', $return['properties']['daily_forecast'][3]['T_max']);
     $this->checkAndUpdateCmd('Meteoday3indiceUV', $return['properties']['daily_forecast'][3]['uv_index']);
     $this->checkAndUpdateCmd('Meteoday0temperatureMin', $return['properties']['daily_forecast'][0]['T_min']);
     $this->checkAndUpdateCmd('Meteoday0temperatureMax', $return['properties']['daily_forecast'][0]['T_max']);

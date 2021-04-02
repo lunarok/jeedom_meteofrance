@@ -1,25 +1,25 @@
 {
   "commands": [
         {
-            "name": "Météo du Jour - Probabilité Pluie",
+            "name": "Météo 3h - Probabilité Pluie",
             "type": "info",
             "subtype": "numeric",
             "logicalId": "MeteoprobaPluie"
         },
         {
-            "name": "Météo du Jour - Probabilité Neige",
+            "name": "Météo 3h - Probabilité Neige",
             "type": "info",
             "subtype": "numeric",
             "logicalId": "MeteoprobaNeige"
         },
         {
-            "name": "Météo du Jour - Probabilité Gel",
+            "name": "Météo 3h - Probabilité Gel",
             "type": "info",
             "subtype": "numeric",
             "logicalId": "MeteoprobaGel"
         },
         {
-            "name": "Météo du Jour - Probabilité Orage",
+            "name": "Météo 3h - Probabilité Orage",
             "type": "info",
             "subtype": "numeric",
             "logicalId": "MeteoprobaStorm"

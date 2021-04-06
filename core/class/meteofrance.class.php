@@ -26,6 +26,13 @@ class meteofrance extends eqLogic {
       $meteofrance->refreshWidget();
     }
   }
+  
+  public static function cron15() {
+    foreach (eqLogic::byType(__CLASS__, true) as $meteofrance) {
+      $meteofrance->getVigilance();
+      $meteofrance->refreshWidget();
+    }
+  }
 
   public static function cronHourly() {
     foreach (eqLogic::byType(__CLASS__, true) as $meteofrance) {

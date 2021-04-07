@@ -358,6 +358,7 @@ class meteofrance extends eqLogic {
     $this->checkAndUpdateCmd('Meteomidi1temperatureMax', $return['result']['forecast'][$i]['T_windchill']);
     $i++;
 
+    log::add(__CLASS__, 'debug', 'Meteosoir1description : ' . $i . $return['result']['forecast'][$i]['weather_description']);
     $this->checkAndUpdateCmd('Meteosoir1description', $return['result']['forecast'][$i]['weather_description']);
     $this->checkAndUpdateCmd('Meteosoir1directionVent', $return['result']['forecast'][$i]['wind_direction']);
     $this->checkAndUpdateCmd('Meteosoir1vitesseVent', $return['result']['forecast'][$i]['wind_speed']);

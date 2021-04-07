@@ -239,19 +239,19 @@ class meteofrance extends eqLogic {
     $return = self::callMeteoWS($url);
     switch ($return['properties']['forecast'][0]['moment_day']) {
       case 'nuit':
-        $step = 0;
+        $step = 'nuit';
         break;
 
       case 'matin':
-        $step = 1;
+        $step = 'matin';
         break;
 
       case 'après-midi':
-        $step = 2;
+        $step = 'nuit';
         break;
 
       case 'soirée':
-        $step = 3;
+        $step = 'après-midi';
         break;
     }
     $i = 0;

@@ -237,6 +237,7 @@ class meteofrance extends eqLogic {
   public function getDetailsValues() {
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/forecast?lat=' . $this->getConfiguration('lat') . '&lon=' . $this->getConfiguration('lon') . '&id=&instants=morning,afternoon,evening,night';
     $return = self::callMeteoWS($url);
+    $step = 'soirée';
     switch ($return['properties']['forecast'][0]['moment_day']) {
       case 'nuit':
         $step = 'nuit';
@@ -247,15 +248,12 @@ class meteofrance extends eqLogic {
         break;
 
       case 'après-midi':
-        $step = 'nuit';
-        break;
-
-      case 'soirée':
         $step = 'après-midi';
         break;
     }
     $i = 0;
-
+    log::add(__CLASS__, 'debug', 'Moment journée : ' . $step);
+    
     if ($step == 'nuit') {
       $this->checkAndUpdateCmd('Meteonuit0description', $return['result']['previsions'][$i]['weather_description']);
       $this->checkAndUpdateCmd('Meteonuit0directionVent', $return['result']['previsions'][$i]['wind_direction']);

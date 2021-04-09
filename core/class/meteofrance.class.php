@@ -26,7 +26,7 @@ class meteofrance extends eqLogic {
       $meteofrance->refreshWidget();
     }
   }
-  
+
   public static function cron15() {
     foreach (eqLogic::byType(__CLASS__, true) as $meteofrance) {
       $meteofrance->getVigilance();
@@ -253,28 +253,28 @@ class meteofrance extends eqLogic {
     }
     $i = 0;
     log::add(__CLASS__, 'debug', 'Moment journée : ' . $step);
-    
+
     if ($step == 'nuit') {
-      $this->checkAndUpdateCmd('Meteonuit0description', $return['result']['forecast'][$i]['weather_description']);
-      $this->checkAndUpdateCmd('Meteonuit0directionVent', $return['result']['forecast'][$i]['wind_direction']);
-      $this->checkAndUpdateCmd('Meteonuit0vitesseVent', $return['result']['forecast'][$i]['wind_speed']);
-      $this->checkAndUpdateCmd('Meteonuit0forceRafales', $return['result']['forecast'][$i]['wind_speed_gust']);
-      $this->checkAndUpdateCmd('Meteonuit0temperatureMin', $return['result']['forecast'][$i]['T']);
-      $this->checkAndUpdateCmd('Meteonuit0temperatureMax', $return['result']['forecast'][$i]['T_windchill']);
+      $this->checkAndUpdateCmd('Meteonuit0description', $return['properties']['forecast'][$i]['weather_description']);
+      $this->checkAndUpdateCmd('Meteonuit0directionVent', $return['properties']['forecast'][$i]['wind_direction']);
+      $this->checkAndUpdateCmd('Meteonuit0vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
+      $this->checkAndUpdateCmd('Meteonuit0forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
+      $this->checkAndUpdateCmd('Meteonuit0temperatureMin', $return['properties']['forecast'][$i]['T']);
+      $this->checkAndUpdateCmd('Meteonuit0temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
       $i++;
-      $this->checkAndUpdateCmd('Meteomatin0description', $return['result']['forecast'][$i]['weather_description']);
-      $this->checkAndUpdateCmd('Meteomatin0directionVent', $return['result']['forecast'][$i]['wind_direction']);
-      $this->checkAndUpdateCmd('Meteomatin0vitesseVent', $return['result']['forecast'][$i]['wind_speed']);
-      $this->checkAndUpdateCmd('Meteomatin0forceRafales', $return['result']['forecast'][$i]['wind_speed_gust']);
-      $this->checkAndUpdateCmd('Meteomatin0temperatureMin', $return['result']['forecast'][$i]['T']);
-      $this->checkAndUpdateCmd('Meteomatin0temperatureMax', $return['result']['forecast'][$i]['T_windchill']);
+      $this->checkAndUpdateCmd('Meteomatin0description', $return['properties']['forecast'][$i]['weather_description']);
+      $this->checkAndUpdateCmd('Meteomatin0directionVent', $return['properties']['forecast'][$i]['wind_direction']);
+      $this->checkAndUpdateCmd('Meteomatin0vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
+      $this->checkAndUpdateCmd('Meteomatin0forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
+      $this->checkAndUpdateCmd('Meteomatin0temperatureMin', $return['properties']['forecast'][$i]['T']);
+      $this->checkAndUpdateCmd('Meteomatin0temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
       $i++;
-      $this->checkAndUpdateCmd('Meteomidi0description', $return['result']['forecast'][$i]['weather_description']);
-      $this->checkAndUpdateCmd('Meteomidi0directionVent', $return['result']['forecast'][$i]['wind_direction']);
-      $this->checkAndUpdateCmd('Meteomidi0vitesseVent', $return['result']['forecast'][$i]['wind_speed']);
-      $this->checkAndUpdateCmd('Meteomidi0forceRafales', $return['result']['forecast'][$i]['wind_speed_gust']);
-      $this->checkAndUpdateCmd('Meteomidi0temperatureMin', $return['result']['forecast'][$i]['T']);
-      $this->checkAndUpdateCmd('Meteomidi0temperatureMax', $return['result']['forecast'][$i]['T_windchill']);
+      $this->checkAndUpdateCmd('Meteomidi0description', $return['properties']['forecast'][$i]['weather_description']);
+      $this->checkAndUpdateCmd('Meteomidi0directionVent', $return['properties']['forecast'][$i]['wind_direction']);
+      $this->checkAndUpdateCmd('Meteomidi0vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
+      $this->checkAndUpdateCmd('Meteomidi0forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
+      $this->checkAndUpdateCmd('Meteomidi0temperatureMin', $return['properties']['forecast'][$i]['T']);
+      $this->checkAndUpdateCmd('Meteomidi0temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
       $i++;
     } else {
       $this->checkAndUpdateCmd('Meteonuit0description', '');
@@ -286,19 +286,19 @@ class meteofrance extends eqLogic {
     }
 
     if ($step == 'matin') {
-      $this->checkAndUpdateCmd('Meteomatin0description', $return['result']['forecast'][$i]['weather_description']);
-      $this->checkAndUpdateCmd('Meteomatin0directionVent', $return['result']['forecast'][$i]['wind_direction']);
-      $this->checkAndUpdateCmd('Meteomatin0vitesseVent', $return['result']['forecast'][$i]['wind_speed']);
-      $this->checkAndUpdateCmd('Meteomatin0forceRafales', $return['result']['forecast'][$i]['wind_speed_gust']);
-      $this->checkAndUpdateCmd('Meteomatin0temperatureMin', $return['result']['forecast'][$i]['T']);
-      $this->checkAndUpdateCmd('Meteomatin0temperatureMax', $return['result']['forecast'][$i]['T_windchill']);
+      $this->checkAndUpdateCmd('Meteomatin0description', $return['properties']['forecast'][$i]['weather_description']);
+      $this->checkAndUpdateCmd('Meteomatin0directionVent', $return['properties']['forecast'][$i]['wind_direction']);
+      $this->checkAndUpdateCmd('Meteomatin0vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
+      $this->checkAndUpdateCmd('Meteomatin0forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
+      $this->checkAndUpdateCmd('Meteomatin0temperatureMin', $return['properties']['forecast'][$i]['T']);
+      $this->checkAndUpdateCmd('Meteomatin0temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
       $i++;
-      $this->checkAndUpdateCmd('Meteomidi0description', $return['result']['forecast'][$i]['weather_description']);
-      $this->checkAndUpdateCmd('Meteomidi0directionVent', $return['result']['forecast'][$i]['wind_direction']);
-      $this->checkAndUpdateCmd('Meteomidi0vitesseVent', $return['result']['forecast'][$i]['wind_speed']);
-      $this->checkAndUpdateCmd('Meteomidi0forceRafales', $return['result']['forecast'][$i]['wind_speed_gust']);
-      $this->checkAndUpdateCmd('Meteomidi0temperatureMin', $return['result']['forecast'][$i]['T']);
-      $this->checkAndUpdateCmd('Meteomidi0temperatureMax', $return['result']['forecast'][$i]['T_windchill']);
+      $this->checkAndUpdateCmd('Meteomidi0description', $return['properties']['forecast'][$i]['weather_description']);
+      $this->checkAndUpdateCmd('Meteomidi0directionVent', $return['properties']['forecast'][$i]['wind_direction']);
+      $this->checkAndUpdateCmd('Meteomidi0vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
+      $this->checkAndUpdateCmd('Meteomidi0forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
+      $this->checkAndUpdateCmd('Meteomidi0temperatureMin', $return['properties']['forecast'][$i]['T']);
+      $this->checkAndUpdateCmd('Meteomidi0temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
       $i++;
     } else {
       $this->checkAndUpdateCmd('Meteomatin0description', '');
@@ -310,12 +310,12 @@ class meteofrance extends eqLogic {
     }
 
     if ($step == 'après-midi') {
-      $this->checkAndUpdateCmd('Meteomidi0description', $return['result']['forecast'][$i]['weather_description']);
-      $this->checkAndUpdateCmd('Meteomidi0directionVent', $return['result']['forecast'][$i]['wind_direction']);
-      $this->checkAndUpdateCmd('Meteomidi0vitesseVent', $return['result']['forecast'][$i]['wind_speed']);
-      $this->checkAndUpdateCmd('Meteomidi0forceRafales', $return['result']['forecast'][$i]['wind_speed_gust']);
-      $this->checkAndUpdateCmd('Meteomidi0temperatureMin', $return['result']['forecast'][$i]['T']);
-      $this->checkAndUpdateCmd('Meteomidi0temperatureMax', $return['result']['forecast'][$i]['T_windchill']);
+      $this->checkAndUpdateCmd('Meteomidi0description', $return['properties']['forecast'][$i]['weather_description']);
+      $this->checkAndUpdateCmd('Meteomidi0directionVent', $return['properties']['forecast'][$i]['wind_direction']);
+      $this->checkAndUpdateCmd('Meteomidi0vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
+      $this->checkAndUpdateCmd('Meteomidi0forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
+      $this->checkAndUpdateCmd('Meteomidi0temperatureMin', $return['properties']['forecast'][$i]['T']);
+      $this->checkAndUpdateCmd('Meteomidi0temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
       $i++;
     } else {
       $this->checkAndUpdateCmd('Meteomidi0description', '');
@@ -326,45 +326,45 @@ class meteofrance extends eqLogic {
       $this->checkAndUpdateCmd('Meteomidi0temperatureMax', '');
     }
 
-    $this->checkAndUpdateCmd('Meteosoir0description', $return['result']['forecast'][$i]['weather_description']);
-    $this->checkAndUpdateCmd('Meteosoir0directionVent', $return['result']['forecast'][$i]['wind_direction']);
-    $this->checkAndUpdateCmd('Meteosoir0vitesseVent', $return['result']['forecast'][$i]['wind_speed']);
-    $this->checkAndUpdateCmd('Meteosoir0forceRafales', $return['result']['forecast'][$i]['wind_speed_gust']);
-    $this->checkAndUpdateCmd('Meteosoir0temperatureMin', $return['result']['forecast'][$i]['T']);
-    $this->checkAndUpdateCmd('Meteosoir0temperatureMax', $return['result']['forecast'][$i]['T_windchill']);
+    $this->checkAndUpdateCmd('Meteosoir0description', $return['properties']['forecast'][$i]['weather_description']);
+    $this->checkAndUpdateCmd('Meteosoir0directionVent', $return['properties']['forecast'][$i]['wind_direction']);
+    $this->checkAndUpdateCmd('Meteosoir0vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
+    $this->checkAndUpdateCmd('Meteosoir0forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
+    $this->checkAndUpdateCmd('Meteosoir0temperatureMin', $return['properties']['forecast'][$i]['T']);
+    $this->checkAndUpdateCmd('Meteosoir0temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
     $i++;
 
-    $this->checkAndUpdateCmd('Meteonuit1description', $return['result']['forecast'][$i]['weather_description']);
-    $this->checkAndUpdateCmd('Meteonuit1directionVent', $return['result']['forecast'][$i]['wind_direction']);
-    $this->checkAndUpdateCmd('Meteonuit1vitesseVent', $return['result']['forecast'][$i]['wind_speed']);
-    $this->checkAndUpdateCmd('Meteonuit1forceRafales', $return['result']['forecast'][$i]['wind_speed_gust']);
-    $this->checkAndUpdateCmd('Meteonuit1temperatureMin', $return['result']['forecast'][$i]['T']);
-    $this->checkAndUpdateCmd('Meteonuit1temperatureMax', $return['result']['forecast'][$i]['T_windchill']);
+    $this->checkAndUpdateCmd('Meteonuit1description', $return['properties']['forecast'][$i]['weather_description']);
+    $this->checkAndUpdateCmd('Meteonuit1directionVent', $return['properties']['forecast'][$i]['wind_direction']);
+    $this->checkAndUpdateCmd('Meteonuit1vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
+    $this->checkAndUpdateCmd('Meteonuit1forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
+    $this->checkAndUpdateCmd('Meteonuit1temperatureMin', $return['properties']['forecast'][$i]['T']);
+    $this->checkAndUpdateCmd('Meteonuit1temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
     $i++;
 
-    $this->checkAndUpdateCmd('Meteomatin1description', $return['result']['forecast'][$i]['weather_description']);
-    $this->checkAndUpdateCmd('Meteomatin1directionVent', $return['result']['forecast'][$i]['wind_direction']);
-    $this->checkAndUpdateCmd('Meteomatin1vitesseVent', $return['result']['forecast'][$i]['wind_speed']);
-    $this->checkAndUpdateCmd('Meteomatin1forceRafales', $return['result']['forecast'][$i]['wind_speed_gust']);
-    $this->checkAndUpdateCmd('Meteomatin1temperatureMin', $return['result']['forecast'][$i]['T']);
-    $this->checkAndUpdateCmd('Meteomatin1temperatureMax', $return['result']['forecast'][$i]['T_windchill']);
+    $this->checkAndUpdateCmd('Meteomatin1description', $return['properties']['forecast'][$i]['weather_description']);
+    $this->checkAndUpdateCmd('Meteomatin1directionVent', $return['properties']['forecast'][$i]['wind_direction']);
+    $this->checkAndUpdateCmd('Meteomatin1vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
+    $this->checkAndUpdateCmd('Meteomatin1forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
+    $this->checkAndUpdateCmd('Meteomatin1temperatureMin', $return['properties']['forecast'][$i]['T']);
+    $this->checkAndUpdateCmd('Meteomatin1temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
     $i++;
 
-    $this->checkAndUpdateCmd('Meteomidi1description', $return['result']['forecast'][$i]['weather_description']);
-    $this->checkAndUpdateCmd('Meteomidi1directionVent', $return['result']['forecast'][$i]['wind_direction']);
-    $this->checkAndUpdateCmd('Meteomidi1vitesseVent', $return['result']['forecast'][$i]['wind_speed']);
-    $this->checkAndUpdateCmd('Meteomidi1forceRafales', $return['result']['forecast'][$i]['wind_speed_gust']);
-    $this->checkAndUpdateCmd('Meteomidi1temperatureMin', $return['result']['forecast'][$i]['T']);
-    $this->checkAndUpdateCmd('Meteomidi1temperatureMax', $return['result']['forecast'][$i]['T_windchill']);
+    $this->checkAndUpdateCmd('Meteomidi1description', $return['properties']['forecast'][$i]['weather_description']);
+    $this->checkAndUpdateCmd('Meteomidi1directionVent', $return['properties']['forecast'][$i]['wind_direction']);
+    $this->checkAndUpdateCmd('Meteomidi1vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
+    $this->checkAndUpdateCmd('Meteomidi1forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
+    $this->checkAndUpdateCmd('Meteomidi1temperatureMin', $return['properties']['forecast'][$i]['T']);
+    $this->checkAndUpdateCmd('Meteomidi1temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
     $i++;
 
-    log::add(__CLASS__, 'debug', 'Meteosoir1description : ' . $i . $return['result']['forecast'][$i]['weather_description']);
-    $this->checkAndUpdateCmd('Meteosoir1description', $return['result']['forecast'][$i]['weather_description']);
-    $this->checkAndUpdateCmd('Meteosoir1directionVent', $return['result']['forecast'][$i]['wind_direction']);
-    $this->checkAndUpdateCmd('Meteosoir1vitesseVent', $return['result']['forecast'][$i]['wind_speed']);
-    $this->checkAndUpdateCmd('Meteosoir1forceRafales', $return['result']['forecast'][$i]['wind_speed_gust']);
-    $this->checkAndUpdateCmd('Meteosoir1temperatureMin', $return['result']['forecast'][$i]['T']);
-    $this->checkAndUpdateCmd('Meteosoir1temperatureMax', $return['result']['forecast'][$i]['T_windchill']);
+    log::add(__CLASS__, 'debug', 'Meteosoir1description : ' . $i . $return['properties']['forecast'][$i]['weather_description']);
+    $this->checkAndUpdateCmd('Meteosoir1description', $return['properties']['forecast'][$i]['weather_description']);
+    $this->checkAndUpdateCmd('Meteosoir1directionVent', $return['properties']['forecast'][$i]['wind_direction']);
+    $this->checkAndUpdateCmd('Meteosoir1vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
+    $this->checkAndUpdateCmd('Meteosoir1forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
+    $this->checkAndUpdateCmd('Meteosoir1temperatureMin', $return['properties']['forecast'][$i]['T']);
+    $this->checkAndUpdateCmd('Meteosoir1temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
   }
 
   public function getRain() {

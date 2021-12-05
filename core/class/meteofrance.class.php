@@ -647,6 +647,26 @@ class meteofrance extends eqLogic {
     }
   }
 
+  public function getMFimg($filename) {
+    $url = 'https://meteofrance.com/modules/custom/mf_tools_common_theme_public/svg/weather';
+    $localdir = __DIR__ ."/../../data/icones";
+    if(!file_exists("$localdir/$filename")) {
+      $content = file_get_contents("$url/$filename");
+      if($content === false) {
+        log::add(__CLASS__,'debug',"Unable to get file: $url/$filename");
+        return("$url/$filename");
+      }
+      if(!is_dir(__DIR__ ."/../../data/icones"))
+        @mkdir(__DIR__ ."/../../data/icones",0777,true);
+      $res = file_put_contents("$localdir/$filename",$content);
+      if($res === false) {
+        log::add(__CLASS__,'debug',"Unable to save file: $localdir/$filename");
+        return("$url/$filename");
+      }
+    }
+    return("/plugins/" . __CLASS__ ."/data/icones/$filename");
+  }
+  
   public function toHtml($_version = 'dashboard') {
     $replace = $this->preToHtml($_version);
     if (!is_array($replace)) {
@@ -675,7 +695,10 @@ class meteofrance extends eqLogic {
           $replace['#condition#'] = is_object($desc) ? $desc->execCmd() : 0;
 
           $icone = $this->getCmd(null, 'Meteoday0icon');
-          $replace['#icone#'] = 'https://meteofrance.com/modules/custom/mf_tools_common_theme_public/svg/weather/' . $icone->execCmd() . '.svg';
+          if(is_object($icone)) {
+            $img = self::getMFimg($icone->execCmd() .'.svg');
+            $replace['#icone#'] = $img;
+          }
         } else if ($i == 1) {
           $replace['#day#'] = '+ 1h';
           $temperature_min = $this->getCmd(null, 'Meteodayh1temperature');
@@ -689,7 +712,10 @@ class meteofrance extends eqLogic {
           $replace['#condition#'] = is_object($desc) ? $desc->execCmd() : 0;
 
           $icone = $this->getCmd(null, 'hourly1icon');
-          $replace['#icone#'] = 'https://meteofrance.com/modules/custom/mf_tools_common_theme_public/svg/weather/' . $icone->execCmd() . '.svg';
+          if(is_object($icone)) {
+            $img = self::getMFimg($icone->execCmd() .'.svg');
+            $replace['#icone#'] = $img;
+          }
         } else {
           if ($i == 2) {
             $step = 'Meteoday1';
@@ -711,7 +737,10 @@ class meteofrance extends eqLogic {
           $replace['#condition#'] = is_object($desc) ? $desc->execCmd() : 0;
 
           $icone = $this->getCmd(null, $step . 'icon');
-          $replace['#icone#'] = 'https://meteofrance.com/modules/custom/mf_tools_common_theme_public/svg/weather/' . $icone->execCmd() . '.svg';
+          if(is_object($icone)) {
+            $img = self::getMFimg($icone->execCmd() .'.svg');
+            $replace['#icone#'] = $img;
+          }
         }
 
         $html_forecast .= template_replace($replace, $forcast_template);
@@ -768,7 +797,10 @@ class meteofrance extends eqLogic {
     }
 
     $icone = $this->getCmd(null, 'Meteoday0icon');
-    $replace['#icone#'] = 'https://meteofrance.com/modules/custom/mf_tools_common_theme_public/svg/weather/' . $icone->execCmd() . '.svg';
+    if(is_object($icone)) {
+      $img = self::getMFimg($icone->execCmd() .'.svg');
+      $replace['#icone#'] = $img;
+    }
 
     $parameters = $this->getDisplay('parameters');
     if (is_array($parameters)) {

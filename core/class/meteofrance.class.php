@@ -664,7 +664,7 @@ class meteofrance extends eqLogic {
         return("$url/$filename");
       }
     }
-    return("/plugins/" . __CLASS__ ."/data/icones/$filename");
+    return(network::getNetworkAccess() ."/plugins/" .__CLASS__ ."/data/icones/$filename");
   }
   
   public function toHtml($_version = 'dashboard') {

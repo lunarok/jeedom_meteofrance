@@ -664,7 +664,7 @@ class meteofrance extends eqLogic {
         return("$url/$filename");
       }
     }
-    return("/plugins/" . __CLASS__ ."/data/icones/$filename");
+    return(network::getNetworkAccess() ."/plugins/" .__CLASS__ ."/data/icones/$filename");
   }
   
   public function toHtml($_version = 'dashboard') {
@@ -769,7 +769,7 @@ class meteofrance extends eqLogic {
     $replace['#pressureid#'] = is_object($pressure) ? $pressure->getId() : '';
 
     $wind_speed = $this->getCmd(null, 'Meteoday0vitesseVent');
-    $replace['#windspeed#'] = is_object($wind_speed) ? $wind_speed->execCmd() : '';
+    $replace['#windspeed#'] = is_object($wind_speed) ? $wind_speed->execCmd()*3.6 : '';
     $replace['#windid#'] = is_object($wind_speed) ? $wind_speed->getId() : '';
 
     $sunrise = $this->getCmd(null, 'Ephemerissunrise_time');

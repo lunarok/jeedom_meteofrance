@@ -502,12 +502,22 @@ class meteofrance extends eqLogic {
   public function getBulletinFrance() {
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/report?domain=france&report_type=forecast&report_subtype=BGP';
     $return = self::callMeteoWS($url, true);
-    $this->checkAndUpdateCmd('Bulletinfrdate0', $return['groupe'][0]['date']);
-    $this->checkAndUpdateCmd('Bulletinfrtitre0', $return['groupe'][0]['titre']);
-    $this->checkAndUpdateCmd('Bulletinfrtemps0', $return['groupe'][0]['temps']);
-    $this->checkAndUpdateCmd('Bulletinfrdate1', $return['groupe'][1]['date']);
-    $this->checkAndUpdateCmd('Bulletinfrtitre1', $return['groupe'][1]['titre']);
-    $this->checkAndUpdateCmd('Bulletinfrtemps1', $return['groupe'][1]['temps']);
+    if(isset($return['groupe'][0])) {
+      $this->checkAndUpdateCmd('Bulletinfrdate0', $return['groupe'][0]['date']);
+      $this->checkAndUpdateCmd('Bulletinfrtitre0', $return['groupe'][0]['titre']);
+      $this->checkAndUpdateCmd('Bulletinfrtemps0', $return['groupe'][0]['temps']);
+      $this->checkAndUpdateCmd('Bulletinfrdate1', $return['groupe'][1]['date']);
+      $this->checkAndUpdateCmd('Bulletinfrtitre1', $return['groupe'][1]['titre']);
+      $this->checkAndUpdateCmd('Bulletinfrtemps1', $return['groupe'][1]['temps']);
+    }
+    else {
+      $this->checkAndUpdateCmd('Bulletinfrdate0', $return['groupe']['date']);
+      $this->checkAndUpdateCmd('Bulletinfrtitre0', $return['groupe']['titre']);
+      $this->checkAndUpdateCmd('Bulletinfrtemps0', $return['groupe']['temps']);
+      $this->checkAndUpdateCmd('Bulletinfrdate1', '');
+      $this->checkAndUpdateCmd('Bulletinfrtitre1', '');
+      $this->checkAndUpdateCmd('Bulletinfrtemps1', '');
+    }
   }
 
   public function getBulletinSemaine() {

@@ -23,6 +23,7 @@ class meteofrance extends eqLogic {
   public static function cron5() {
     foreach (eqLogic::byType(__CLASS__, true) as $meteofrance) {
       $meteofrance->getRain();
+      $meteofrance->getNowDetails();
       $meteofrance->refreshWidget();
     }
   }
@@ -90,6 +91,7 @@ class meteofrance extends eqLogic {
     $this->getDetailsValues();
     $this->getBulletinVille();
     $this->getDailyExtras();
+    $this->getNowDetails();
     $this->refreshWidget();
   }
 
@@ -180,15 +182,30 @@ class meteofrance extends eqLogic {
     $this->checkAndUpdateCmd('Bulletinvillevent3', $return['echeance'][2]['vent']);
   }
 
+  public function getNowDetails() {
+    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/forecast?lat=' . $this->getConfiguration('lat') . '&lon=' . $this->getConfiguration('lon') . '&id=&instants=&day=2';
+    $return = self::callMeteoWS($url);
+    log::add(__CLASS__, 'debug', 'getNowDetails');
+    foreach ($return['properties']['forecast'] as $value) {
+      //log::add(__CLASS__, 'debug', 'getNowDetails : ' . $value['time']);
+      $d = new DateTime($value['time'], new DateTimeZone('Europe/Paris'));
+      $now = new DateTime('now', new DateTimeZone('Europe/Paris'));
+      $diff = ($d->getTimestamp() - $now->getTimestamp()) / 60;
+      if ($diff > 0 && $diff < 60) {
+        $this->checkAndUpdateCmd('MeteonowCloud', $value['total_cloud_cover']);
+        $this->checkAndUpdateCmd('MeteonowPression', $value['P_sea']);
+        $this->checkAndUpdateCmd('MeteonowTemperature', $value['T']);
+        $this->checkAndUpdateCmd('MeteonowHumidity', $value['relative_humidity']);
+        break;
+      }
+    }
+  }
+
   public function getDailyExtras() {
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/forecast?lat=' . $this->getConfiguration('lat') . '&lon=' . $this->getConfiguration('lon') . '&id=&instants=&day=2';
     $return = self::callMeteoWS($url);
     $this->checkAndUpdateCmd('Meteoday0PluieCumul', $return['properties']['daily_forecast'][0]['total_precipitation_24h']);
     $this->checkAndUpdateCmd('MeteoprobaStorm', $return['properties']['probability_forecast'][0]['storm_hazard']);
-    $this->checkAndUpdateCmd('MeteonowCloud', $return['properties']['forecast'][0]['total_cloud_cover']);
-    $this->checkAndUpdateCmd('MeteonowPression', $return['properties']['forecast'][0]['P_sea']);
-    $this->checkAndUpdateCmd('MeteonowTemperature', $return['properties']['forecast'][0]['T']);
-    $this->checkAndUpdateCmd('MeteonowHumidity', $return['properties']['forecast'][0]['relative_humidity']);
     $this->checkAndUpdateCmd('Meteoday0icon', $return['properties']['forecast'][0]['weather_icon']);
     $this->checkAndUpdateCmd('hourly1icon', $return['properties']['forecast'][1]['weather_icon']);
     $this->checkAndUpdateCmd('Meteodayh1description', $return['properties']['forecast'][1]['weather_description']);

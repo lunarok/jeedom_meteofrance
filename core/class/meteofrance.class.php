@@ -196,6 +196,7 @@ class meteofrance extends eqLogic {
         $this->checkAndUpdateCmd('MeteonowPression', $value['P_sea']);
         $this->checkAndUpdateCmd('MeteonowTemperature', $value['T']);
         $this->checkAndUpdateCmd('MeteonowHumidity', $value['relative_humidity']);
+        $this->checkAndUpdateCmd('MeteonowTemperatureRes', $value['T_windchill']);
         break;
       }
     }
@@ -211,7 +212,6 @@ class meteofrance extends eqLogic {
     $this->checkAndUpdateCmd('Meteodayh1description', $return['properties']['forecast'][1]['weather_description']);
     $this->checkAndUpdateCmd('Meteodayh1temperature', $return['properties']['forecast'][1]['T']);
     $this->checkAndUpdateCmd('Meteodayh1temperatureRes', $return['properties']['forecast'][1]['T_windchill']);
-    $this->checkAndUpdateCmd('MeteonowTemperatureRes', $return['properties']['forecast'][0]['T_windchill']);
     $this->checkAndUpdateCmd('Meteoday0directionVent', $return['properties']['forecast'][0]['wind_direction']);
     $this->checkAndUpdateCmd('Meteoday0vitesseVent', $return['properties']['forecast'][0]['wind_speed']);
     $this->checkAndUpdateCmd('Meteoday0forceRafales', $return['properties']['forecast'][0]['wind_speed_gust']);

@@ -17,7 +17,7 @@
  */
 
 try {
-    require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
+    require_once __DIR__ . '/../../../../core/php/core.inc.php';
     include_file('core', 'authentification', 'php');
 
     if (!isConnect('admin')) {
@@ -25,8 +25,12 @@ try {
     }
 
     throw new Exception(__('Aucune methode correspondante à : ', __FILE__) . init('action'));
-    /*     * *********Catch exeption*************** */
+    /*     * *********Catch exception*************** */
 } catch (Exception $e) {
-    ajax::error(displayExeption($e), $e->getCode());
+    if(version_compare(jeedom::version(), '4.4', '>=')) {
+      ajax::error(displayException($e), $e->getCode());
+    } else {
+      ajax::error(displayExeption($e), $e->getCode());
+    }
 }
 ?>

@@ -124,7 +124,7 @@ class meteofrance extends eqLogic {
         return;
       }
     }
-    $url = 'https://api-adresse.data.gouv.fr/search/?q=' . str_replace(' ', '-', $array['ville']) . '&postcode=' . $array['zip'] . '&limit=1';
+    $url = 'https://api-adresse.data.gouv.fr/search/?q=' . self::lowerAccent(str_replace(' ', '-', $array['ville'])) . '&postcode=' . $array['zip'] . '&limit=1';
     $return = self::callURL($url);
     log::add(__CLASS__, 'debug', 'Insee ' . print_r($return['features'][0]['properties'],true));
     $array['insee'] = $return['features'][0]['properties']['citycode'];

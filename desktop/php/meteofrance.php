@@ -3,8 +3,9 @@
 if (!isConnect('admin')) {
   throw new Exception('{{401 - Accès non autorisé}}');
 }
-sendVarToJS('eqType', 'meteofrance');
-$eqLogics = eqLogic::byType('meteofrance');
+$plugin = plugin::byId('meteofrance');
+sendVarToJS('eqType', $plugin->getId());
+$eqLogics = eqLogic::byType($plugin->getId());
 
 ?>
 
@@ -45,12 +46,11 @@ $eqLogics = eqLogic::byType('meteofrance');
     <div class="eqLogicThumbnailContainer">
       <?php
       foreach ($eqLogics as $eqLogic) {
-        $opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
-        echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff ; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;' . $opacity . '" >';
-        echo "<center>";
-        echo '<img src="plugins/meteofrance/plugin_info/meteofrance_icon.png" height="105" width="95" />';
-        echo "</center>";
-        echo '<span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;"><center>' . $eqLogic->getHumanName(true, true) . '</center></span>';
+        $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+        echo '<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="' . $eqLogic->getId() . '">';
+        echo '<img src="' . $plugin->getPathImgIcon() . '"/>';
+        echo '<br>';
+        echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
         echo '</div>';
       }
       ?>
@@ -146,10 +146,11 @@ $eqLogics = eqLogic::byType('meteofrance');
         <table id="table_cmd" class="table table-bordered table-condensed">
           <thead>
             <tr>
-              <th style="width: 100px;">#</th>
+              <th style="width: 100px;">#ID</th>
               <th style="width: 500px;">{{Nom}}</th>
               <th style="width: 200px;">{{Options}}</th>
-              <th style="width: 150px;"></th>
+              <th>{{Etat}}</th>
+              <th style="width: 150px;">{{Actions}}</th>
             </tr>
           </thead>
           <tbody>

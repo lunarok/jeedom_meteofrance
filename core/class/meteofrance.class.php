@@ -187,8 +187,10 @@ class meteofrance extends eqLogic {
     }
     $url = 'https://rpcache-aa.meteofrance.com/wsft/files/agat/ville/bulvillefr_' . $this->getConfiguration('bulletinVille') . '.xml';
     $return = self::callMeteoWS($url, true, false);
+    /*
     $hdle = fopen(__DIR__ ."/" .__FUNCTION__ .".json", "wb");
     if($hdle !== FALSE) { fwrite($hdle, json_encode($return)); fclose($hdle); }
+     */
     $this->checkAndUpdateCmd('BulletinvilletitreEcheance1', $return['echeance'][0]['titreEcheance']);
     $this->checkAndUpdateCmd('Bulletinvillepression1', $return['echeance'][0]['pression']);
     $this->checkAndUpdateCmd('BulletinvilleTS1', $return['echeance'][0]['TS']);
@@ -528,8 +530,10 @@ class meteofrance extends eqLogic {
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/warning/full?domain=' .$dept;
     log::add(__CLASS__, 'debug', __FUNCTION__ .' URL:' .$url);
     $return = self::callMeteoWS($url);
+    /*
     $hdle = fopen(__DIR__ ."/" .__FUNCTION__ .'-' .$dept .".json","wb");
     if($hdle !== FALSE) { fwrite($hdle, json_encode($return)); fclose($hdle); }
+     */
     $this->checkAndUpdateCmd('Vigilancecolor_max', $return['color_max']);
     foreach ($return['timelaps'] as $id => $vigilance) {
       $phase = array();
@@ -598,8 +602,10 @@ class meteofrance extends eqLogic {
   public function getBulletinSemaine() {
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/report?domain=france&report_type=forecast&report_subtype=BGP_mensuel';
     $return = self::callMeteoWS($url, true);
+    /*
     $hdle = fopen(__DIR__ ."/" .__FUNCTION__ .".json", "wb");
     if($hdle !== FALSE) { fwrite($hdle, json_encode($return)); fclose($hdle); }
+     */
     $this->checkAndUpdateCmd('Bulletindatesem', $return['groupe'][0]['date']);
     if(isset($return['groupe'][0]['temps'])) {
       $this->checkAndUpdateCmd('Bulletintempssem', $return['groupe'][0]['temps']);

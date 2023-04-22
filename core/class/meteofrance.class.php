@@ -48,6 +48,19 @@ class meteofrance extends eqLogic {
   }
 
   public function postSave() {
+    if(is_object($this)) {
+      $eqLogicId = $this->getId();
+      $mfCmd = meteofranceCmd::byEqLogicIdAndLogicalId($eqLogicId, 'refresh');
+      if (!is_object($mfCmd)) {
+        $mfCmd = new meteofranceCmd();
+        $mfCmd->setName(__('Rafraichir', __FILE__));
+        $mfCmd->setEqLogic_id($eqLogicId);
+        $mfCmd->setLogicalId('refresh');
+        $mfCmd->setType('action');
+        $mfCmd->setSubType('other');
+        $mfCmd->save();
+       }
+    }
     $cron = cron::byClassAndFunction('meteofrance', 'cronTrigger', array('meteofrance_id' => $this->getId()));
     if (!is_object($cron)) {
       if ($updateOnly == 1) {
@@ -124,13 +137,15 @@ class meteofrance extends eqLogic {
         return;
       }
     }
-    $url = 'https://api-adresse.data.gouv.fr/search/?q=' . str_replace(' ', '-', $array['ville']) . '&postcode=' . $array['zip'] . '&limit=1';
+    $url = 'https://api-adresse.data.gouv.fr/search/?q=' .urlencode($array['ville']) .'&postcode=' .$array['zip'] .'&limit=1';
     $return = self::callURL($url);
     log::add(__CLASS__, 'debug', 'Insee ' . print_r($return['features'][0]['properties'],true));
     $array['insee'] = $return['features'][0]['properties']['citycode'];
     $array['ville'] = self::lowerAccent($array['ville']);
     $array['lon'] = $return['features'][0]['geometry']['coordinates'][0];
     $array['lat'] = $return['features'][0]['geometry']['coordinates'][1];
+    log::add(__CLASS__, 'debug', 'Insee:' .$array['insee'] .' Ville:' .$array['ville']
+      .' Latitude:' .$array['lat'] .' Longitude:' .$array['lon']);
     return $array;
   }
 
@@ -148,14 +163,21 @@ class meteofrance extends eqLogic {
   }
 
   public function getBulletinDetails($_array = array()) {
+    // log::add(__CLASS__, 'debug', __FUNCTION__ .' ' .json_encode($_array));
     $url = "http://meteofrance.com/previsions-meteo-france/" . $_array['ville'] . "/" . $_array['zip'];
+    // $url = "http://meteofrance.com/previsions-meteo-france/nancy/54000";
+    // $url = "http://meteofrance.com/previsions-meteo-france/perpignan/66000";
+    // log::add(__CLASS__, 'debug', 'Bulletin Ville URL ' . $url);
     $dom = new DOMDocument;
-    $dom->loadHTMLFile($url);
+    $dom->loadHTMLFile($url,LIBXML_NOERROR);
+    $dom->saveHTMLFile(__DIR__ .'/' .$_array['zip'] .'.html');
     $xpath = new DomXPath($dom);
-    log::add(__CLASS__, 'debug', 'Bulletin Ville URL ' . $url);
-    log::add(__CLASS__, 'debug', 'Bulletin Ville ' . $xpath->query("//html/body/script[1]")[0]->nodeValue);
+
+    // log::add(__CLASS__, 'debug', 'Bulletin Ville ' . $xpath->query("//html/body/script[1]")[0]->nodeValue);
     $json = json_decode($xpath->query("//html/body/script[1]")[0]->nodeValue, true);
-    //log::add(__CLASS__, 'debug', 'Bulletin Ville Result ' . $json['id_bulletin_ville']);
+    // $hdle = fopen(__DIR__ ."/" .__FUNCTION__ .".json", "wb");
+    // if($hdle !== FALSE) { fwrite($hdle, json_encode($json)); fclose($hdle); }
+    // log::add(__CLASS__, 'error', 'Bulletin Ville Result ' . $json['id_bulletin_ville']);
     $this->setConfiguration('bulletinVille', $json['id_bulletin_ville']);
   }
 
@@ -165,18 +187,24 @@ class meteofrance extends eqLogic {
     }
     $url = 'https://rpcache-aa.meteofrance.com/wsft/files/agat/ville/bulvillefr_' . $this->getConfiguration('bulletinVille') . '.xml';
     $return = self::callMeteoWS($url, true, false);
+    $hdle = fopen(__DIR__ ."/" .__FUNCTION__ .".json", "wb");
+    if($hdle !== FALSE) { fwrite($hdle, json_encode($return)); fclose($hdle); }
     $this->checkAndUpdateCmd('BulletinvilletitreEcheance1', $return['echeance'][0]['titreEcheance']);
     $this->checkAndUpdateCmd('Bulletinvillepression1', $return['echeance'][0]['pression']);
     $this->checkAndUpdateCmd('BulletinvilleTS1', $return['echeance'][0]['TS']);
     $this->checkAndUpdateCmd('Bulletinvilletemperature1', $return['echeance'][0]['temperature']);
     $this->checkAndUpdateCmd('Bulletinvillevent1', $return['echeance'][0]['vent']);
     $this->checkAndUpdateCmd('BulletinvilletitreEcheance2', $return['echeance'][1]['titreEcheance']);
-    $this->checkAndUpdateCmd('Bulletinvillepression2', $return['echeance'][1]['pression']);
+    if(isset($return['echeance'][1]['pression']))
+      $this->checkAndUpdateCmd('Bulletinvillepression2', $return['echeance'][1]['pression']);
+    else $this->checkAndUpdateCmd('Bulletinvillepression2', '');
     $this->checkAndUpdateCmd('BulletinvilleTS2', $return['echeance'][1]['TS']);
     $this->checkAndUpdateCmd('Bulletinvilletemperature2', $return['echeance'][1]['temperature']);
     $this->checkAndUpdateCmd('Bulletinvillevent2', $return['echeance'][1]['vent']);
     $this->checkAndUpdateCmd('BulletinvilletitreEcheance3', $return['echeance'][2]['titreEcheance']);
-    $this->checkAndUpdateCmd('Bulletinvillepression3', $return['echeance'][2]['pression']);
+    if(isset($return['echeance'][2]['pression']))
+      $this->checkAndUpdateCmd('Bulletinvillepression3', $return['echeance'][2]['pression']);
+    else $this->checkAndUpdateCmd('Bulletinvillepression3', '');
     $this->checkAndUpdateCmd('BulletinvilleTS3', $return['echeance'][2]['TS']);
     $this->checkAndUpdateCmd('Bulletinvilletemperature3', $return['echeance'][2]['temperature']);
     $this->checkAndUpdateCmd('Bulletinvillevent3', $return['echeance'][2]['vent']);
@@ -185,21 +213,46 @@ class meteofrance extends eqLogic {
   public function getNowDetails() {
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/forecast?lat=' . $this->getConfiguration('lat') . '&lon=' . $this->getConfiguration('lon') . '&id=&instants=&day=2';
     $return = self::callMeteoWS($url);
-    log::add(__CLASS__, 'debug', 'getNowDetails');
-    foreach ($return['properties']['forecast'] as $value) {
+    $nb = count($return['properties']['forecast']);
+    log::add(__CLASS__, 'debug', __FUNCTION__);
+    for($i=0;$i<$nb;$i++) {
+      $value= $return['properties']['forecast'][$i];
       //log::add(__CLASS__, 'debug', 'getNowDetails : ' . $value['time']);
+      $forecastTS = strtotime($value['time']);
+      $now = time();
+      if($now >= $forecastTS && $now < $forecastTS + 3600) {
+        // log::add(__CLASS__,'debug', date("H:i:s",$now) ." Now forecast Value: " .$value['time'] ." (" .date("H:i:s",$forecastTS) .") Idx:$i/$nb");
+        $this->checkAndUpdateCmd('MeteonowCloud', $value['total_cloud_cover']);
+        $this->checkAndUpdateCmd('MeteonowPression', $value['P_sea']);
+        $this->checkAndUpdateCmd('MeteonowTemperature', $value['T']);
+        $this->checkAndUpdateCmd('MeteonowHumidity', $value['relative_humidity']);
+        $this->checkAndUpdateCmd('MeteonowTemperatureRes', $value['T_windchill']);
+          // Dans une heure
+        $value2= $return['properties']['forecast'][$i+1];
+        $this->checkAndUpdateCmd('Meteodayh1description', $value2['weather_description']);
+        $this->checkAndUpdateCmd('Meteodayh1temperature', $value2['T']);
+        $this->checkAndUpdateCmd('Meteodayh1temperatureRes', $value2['T_windchill']);
+        break;
+      }
+    }
+
+    /*
+    foreach ($return['properties']['forecast'] as $value) {
       $d = new DateTime($value['time'], new DateTimeZone('Europe/Paris'));
       $now = new DateTime('now', new DateTimeZone('Europe/Paris'));
       $diff = ($d->getTimestamp() - $now->getTimestamp()) / 60;
+      $now = mktime(date('H',time()),0,0);
       if ($diff > 0 && $diff < 60) {
         $this->checkAndUpdateCmd('MeteonowCloud', $value['total_cloud_cover']);
         $this->checkAndUpdateCmd('MeteonowPression', $value['P_sea']);
         $this->checkAndUpdateCmd('MeteonowTemperature', $value['T']);
         $this->checkAndUpdateCmd('MeteonowHumidity', $value['relative_humidity']);
         $this->checkAndUpdateCmd('MeteonowTemperatureRes', $value['T_windchill']);
+        // message::add(__CLASS__, date("H:i:s",$now) ." 2 Now forecast: " .$value['time'] ." (" .date("H:i:s",$d->getTimestamp()) .")" );
         break;
       }
     }
+     */
   }
 
   public function getDailyExtras() {
@@ -209,9 +262,9 @@ class meteofrance extends eqLogic {
     $this->checkAndUpdateCmd('MeteoprobaStorm', $return['properties']['probability_forecast'][0]['storm_hazard']);
     $this->checkAndUpdateCmd('Meteoday0icon', $return['properties']['forecast'][0]['weather_icon']);
     $this->checkAndUpdateCmd('hourly1icon', $return['properties']['forecast'][1]['weather_icon']);
-    $this->checkAndUpdateCmd('Meteodayh1description', $return['properties']['forecast'][1]['weather_description']);
-    $this->checkAndUpdateCmd('Meteodayh1temperature', $return['properties']['forecast'][1]['T']);
-    $this->checkAndUpdateCmd('Meteodayh1temperatureRes', $return['properties']['forecast'][1]['T_windchill']);
+    // $this->checkAndUpdateCmd('Meteodayh1description', $return['properties']['forecast'][1]['weather_description']);
+    // $this->checkAndUpdateCmd('Meteodayh1temperature', $return['properties']['forecast'][1]['T']);
+    // $this->checkAndUpdateCmd('Meteodayh1temperatureRes', $return['properties']['forecast'][1]['T_windchill']);
     $this->checkAndUpdateCmd('Meteoday0directionVent', $return['properties']['forecast'][0]['wind_direction']);
     $this->checkAndUpdateCmd('Meteoday0vitesseVent', $return['properties']['forecast'][0]['wind_speed']);
     $this->checkAndUpdateCmd('Meteoday0forceRafales', $return['properties']['forecast'][0]['wind_speed_gust']);
@@ -470,8 +523,13 @@ class meteofrance extends eqLogic {
     $type[7] = "Grand-froid";
     $type[8] = "Avalanches";
     $type[9] = "Vagues-submersion";
-    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/warning/full?domain=' . $this->getConfiguration('numDept');
+    $dept = $this->getConfiguration('numDept');
+    // $dept = 66;
+    $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/warning/full?domain=' .$dept;
+    log::add(__CLASS__, 'debug', __FUNCTION__ .' URL:' .$url);
     $return = self::callMeteoWS($url);
+    $hdle = fopen(__DIR__ ."/" .__FUNCTION__ .'-' .$dept .".json","wb");
+    if($hdle !== FALSE) { fwrite($hdle, json_encode($return)); fclose($hdle); }
     $this->checkAndUpdateCmd('Vigilancecolor_max', $return['color_max']);
     foreach ($return['timelaps'] as $id => $vigilance) {
       $phase = array();
@@ -540,8 +598,12 @@ class meteofrance extends eqLogic {
   public function getBulletinSemaine() {
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/report?domain=france&report_type=forecast&report_subtype=BGP_mensuel';
     $return = self::callMeteoWS($url, true);
+    $hdle = fopen(__DIR__ ."/" .__FUNCTION__ .".json", "wb");
+    if($hdle !== FALSE) { fwrite($hdle, json_encode($return)); fclose($hdle); }
     $this->checkAndUpdateCmd('Bulletindatesem', $return['groupe'][0]['date']);
-    $this->checkAndUpdateCmd('Bulletintempssem', $return['groupe'][0]['titre']);
+    if(isset($return['groupe'][0]['temps'])) {
+      $this->checkAndUpdateCmd('Bulletintempssem', $return['groupe'][0]['temps']);
+    }
   }
 
   public static function lowerAccent($_var) {

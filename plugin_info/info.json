@@ -9,5 +9,7 @@
 	"language" : ["fr_FR","en_US"],
 	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile","v4"],
     "changelog" : "https://lunarok.github.io/jeedom_docs/plugins/meteofrance/changelog.html",
-    "documentation" : "https://lunarok.github.io/jeedom_docs/plugins/meteofrance/"
+    "documentation" : "https://lunarok.github.io/jeedom_docs/plugins/meteofrance/",
+	"changelog_beta" : "https://lunarok.github.io/jeedom_docs/plugins/meteofrance/changelog.html",
+    "documentation_beta" : "https://lunarok.github.io/jeedom_docs/plugins/meteofrance/"
 }

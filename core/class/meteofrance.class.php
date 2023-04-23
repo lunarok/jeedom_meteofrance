@@ -84,11 +84,14 @@ class meteofrance extends eqLogic {
     $meteofrance->loadCmdFromConf('meteo');
     $meteofrance->loadCmdFromConf('rain');
     $meteofrance->loadCmdFromConf('vigilance');
+    /*
     event::add('meteofrance::includeDevice',
           array(
               'state' => 1
           )
       );
+     */
+    $meteofrance->getInformations();
   }
 
   public function getInformations() {
@@ -825,13 +828,13 @@ class meteofrance extends eqLogic {
     $lat = $this->getConfiguration('lat'); $lon = $this->getConfiguration('lon');
     $ville = $this->getConfiguration('ville'); $zip = $this->getConfiguration('zip');
     $insee = $this->getConfiguration('insee');
+    if($ville == '' || $lon == '' || $lat == '' || $zip == '')  {
+      $replace['#cmd#'] = '<div style="background-color: red;color:white;margin:5px">Erreur de configuration de l\'équipement Météo France.<br/>Vérifiez la localisation utilisée puis sauvegarder l\'équipement.</div>'."Ville: $ville<br/>Zip: $zip<br/>Insee: $insee<br/>Lat: $lat<br/>Long: $lon";
+      return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $version, 'eqLogic')));
+    }
     $lastCmd = $this->getCmd(null, 'AlertdateProduction'); // Pour test si la dernière commande créée par cronTrigger existe
     if(!is_object($lastCmd)) {
       $replace['#cmd#'] = '<div style="background-color: red;color:white;margin:5px">Création des commandes pour l\'équipement Météo France non terminée.</div>'."Ville: $ville<br/>Zip: $zip<br/>Insee: $insee<br/>Lat: $lat<br/>Long: $lon";
-      return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $version, 'eqLogic')));
-    }
-    if($ville == '' || $lon == '' || $lat == '' || $zip == '')  {
-      $replace['#cmd#'] = '<div style="background-color: red;color:white;margin:5px">Erreur de configuration de l\'équipement Météo France.</div>'."Ville: $ville<br/>Zip: $zip<br/>Insee: $insee<br/>Lat: $lat<br/>Long: $lon";
       return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $version, 'eqLogic')));
     }
 
@@ -906,6 +909,8 @@ class meteofrance extends eqLogic {
 
     $replace['#forecast#'] = $html_forecast;
     $replace['#city#'] = $this->getName();
+    $replace['#cityName#'] = $ville;
+    $replace['#cityZip#'] = $zip;
 
     $temperature = $this->getCmd(null, 'MeteonowTemperature');
     $replace['#temperature#'] = is_object($temperature) ? round($temperature->execCmd()) : '';

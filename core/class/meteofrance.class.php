@@ -113,7 +113,7 @@ class meteofrance extends eqLogic {
     $array['lon'] = ''; $array['lat'] = '';
     $geoloc = $this->getConfiguration('geoloc', 'none');
     if ($geoloc == 'none') {
-      log::add(__CLASS__, 'error', 'Eqlogic geoloc non configuré.');
+      log::add(__CLASS__, 'debug', 'Localisation non configurée.');
       return $array;
     }
     if ($geoloc == "jeedom") {
@@ -137,6 +137,10 @@ class meteofrance extends eqLogic {
         log::add(__CLASS__, 'error', 'Eqlogic geotrav object not found');
         return $array;
       }
+    }
+    if($array['ville'] == '' || $array['zip'] == '') {
+      log::add(__CLASS__, 'error', 'Localisation incorrectement configurée. Ville: '.$array['ville'] .'Code postal: '.$array['zip']);
+      return $array;
     }
     $url = 'https://api-adresse.data.gouv.fr/search/?q=' .urlencode($array['ville']) .'&postcode=' .$array['zip'] .'&limit=1';
     $return = self::callURL($url);

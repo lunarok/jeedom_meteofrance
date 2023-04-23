@@ -790,6 +790,8 @@ class meteofrance extends eqLogic {
   public function getMFimg($filename) {
     $url = 'https://meteofrance.com/modules/custom/mf_tools_common_theme_public/svg/weather';
     $localdir = __DIR__ ."/../../data/icones";
+    if(strlen($filename) < 5) // 0.svg .svg ...
+      return("plugins/" .__CLASS__ ."/data/icones/0.svg");
     if(!file_exists("$localdir/$filename")) {
       $content = @file_get_contents("$url/$filename");
       if($content === false) {

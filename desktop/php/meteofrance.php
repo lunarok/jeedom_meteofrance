@@ -124,7 +124,9 @@ $eqLogics = eqLogic::byType($plugin->getId());
                     foreach (eqLogic::byType('geotrav') as $geoloc) {
                       if ($geoloc->getConfiguration('type') == 'location') {
                         $none = 1;
-                        echo '<option value="' . $geoloc->getId() . '">' . $geoloc->getName() . '</option>';
+                        echo '<option value="' . $geoloc->getId() . '"';
+                        if(!$geoloc->getIsEnable(0)) echo ' disabled';
+                        echo '>' . $geoloc->getName() . '</option>';
                       }
                     }
                   }

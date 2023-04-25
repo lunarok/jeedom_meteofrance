@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Calque_1"
+   data-name="Calque 1"
+   viewBox="0 0 85.23 85.24"
+   width="50"
+   height="50"
+   version="1.1"
+   sodipodi:docname="0.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata15">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Plan de travail 1</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="945"
+     inkscape:window-height="698"
+     id="namedview13"
+     showgrid="false"
+     inkscape:zoom="4.72"
+     inkscape:cx="25"
+     inkscape:cy="25"
+     inkscape:window-x="507"
+     inkscape:window-y="84"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="Calque_1" />
+  <defs
+     id="defs4">
+    <style
+       id="style2">.p1j-1{fill:#eeeb61;opacity:0.51;isolation:isolate;}.p1j-2{fill:#f5b21a;stroke:#fde901;stroke-miterlimit:10;}</style>
+  </defs>
+  <title
+     id="title6">Plan de travail 1</title>
+  <circle
+     class="p1j-1"
+     cx="42.62"
+     cy="42.64"
+     r="26.14"
+     id="circle8" />
+  <circle
+     class="p1j-2"
+     cx="42.62"
+     cy="42.64"
+     r="19.94"
+     id="circle10" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:40.91519928px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.70480001"
+     x="32.140594"
+     y="57.428646"
+     id="text4531"><tspan
+       sodipodi:role="line"
+       id="tspan4529"
+       x="32.140594"
+       y="57.428646"
+       style="stroke-width:1.70480001">?</tspan></text>
+</svg>

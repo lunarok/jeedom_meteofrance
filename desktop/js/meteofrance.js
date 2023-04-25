@@ -181,6 +181,8 @@ function addCmdToTable(_cmd) {
         }
       }
       tr += '</td><td>';
+      tr += '<span class="cmdAttr" data-l1key="htmlstate"></span>'; 
+      tr += '</td><td>';
       if (is_numeric(_cmd.id)) {
         tr += '<a class="btn btn-default btn-xs cmdAction" data-action="configure"><i class="fas fa-cogs"></i></a> ';
         tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fas fa-rss"></i>{{Tester}}</a>';

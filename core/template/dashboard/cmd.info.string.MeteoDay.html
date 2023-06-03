@@ -1,0 +1,87 @@
+<div class="cmd cmd-widget #history#" data-type="info" data-subtype="string" data-template="custom" data-cmd_id="#id#" data-cmd_uid="#uid#" data-version="#version#" data-eqLogic_id="#eqLogic_id#">
+  <div class="title #hide_name#">
+    <div  class="cmdName">#name_display#</div>
+  </div>
+  <div class="dateText"></div>
+  <div class="weatherIcon" style="margin-top: -5px;margin-bottom: -5px"></div>
+  <div title="Température Min - Max" class="Tvalue"></div>
+  <div title="Indice UV" class="UVindex"></div>
+  <div title="Humidité" class="humidity"></div>
+  <div title="Message" class="errorMessage"></div>
+  <template>
+    <div>color : rgb(20,20,20) ({{Couleur de fond}})</div>
+    <div>fontColor : rgb(20,20,20) ({{Couleur du texte}})</div>
+    <div>displayDate : 0/1 ({{Affichage du jour}})</div>
+    <div>displayTime : 0/1 ({{Affichage de l'heure}})</div>
+    <div>displayDescription : 0/1 ({{Affichage de la description}})</div>
+    <div>displayTemperature : 0/1 ({{Affichage de la température}})</div>
+    <div>displayUV : 0/1 ({{Affichage de l'indice UV}})</div>
+    <div>displayHumidity : 0/1 ({{Affichage de l'humidité}})</div>
+  </template>
+  <script>
+    /* JSON structure:
+    { "dt":1685145600,
+      "T":{"min":10.5,"max":24.6,"sea":null},
+      "humidity":{"min":40,"max":75},
+      "precipitation":{"24h":0},
+      "uv":8,
+      "sun":{"rise":1685158861,"set":1685215434}
+      "weather12H":{"icon":"p1j","desc":"Ensoleillé"},
+    }
+   */
+    jeedom.cmd.addUpdateFunction('#id#',function(_options) {
+      let cmd = $('.cmd[data-cmd_id=#id#]');
+      try {
+        let obj = JSON.parse(_options.display_value);
+        if(obj != null) {
+          cmd.find('.weatherIcon').empty().append('<img src="plugins/meteofrance/data/icones/' +obj.weather12H.icon +'.svg">');
+          let weatherIconTitle = obj.weather12H.desc;
+
+          let cd = new Date(obj.dt * 1000);
+          let dateTime = '';
+          let dayTxt = cd.toLocaleDateString('fr-FR', {month: 'short', day: 'numeric',weekday: 'short'});
+          let day = dayTxt.charAt(0).toUpperCase() + dayTxt.slice(1); // ucfirst
+          if('#displayDate#' != '0') dateTime += day;
+          else weatherIconTitle += '<br/>' +day;
+          if('#displayTime#' != '0') {
+            if(dateTime.length) dateTime += '<br/>';
+            dateTime += cd.toLocaleTimeString('fr-FR', {hour: '2-digit'});
+          }
+          else weatherIconTitle += '<br/>Heure: ' +cd.toLocaleTimeString('fr-FR', {hour: '2-digit'});
+          if('#displayDescription#' != '0') {
+            if(dateTime.length) dateTime += '<br/>';
+            dateTime += obj.weather12H.desc;
+          }
+          cmd.find('.dateText').empty().append(dateTime);
+
+          let temp = Math.round(obj.T.min) + '°C - ' +Math.round(obj.T.max) +'°C';
+          if('#displayTemperature#' != '0') cmd.find('.Tvalue').empty().append(temp);
+          else weatherIconTitle += '<br/>Température: ' +temp;
+
+          let uv = (obj.uv)? obj.uv : '-'; 
+          if('#displayUV#' != '0') {
+            cmd.find('.UVindex').empty().append('UV: ' + uv);
+          }
+          else weatherIconTitle += '<br/>UV: ' +uv;
+          let humidityTxt = obj.humidity.min +'% - ' + obj.humidity.max +'%';
+          if('#displayHumidity#' != '0')
+            cmd.find('.humidity').empty().append(humidityTxt);
+          else weatherIconTitle += '<br/>Humidité: ' + humidityTxt;
+
+          cmd.find('.weatherIcon').attr('title', weatherIconTitle);
+          cmd.find('.dateText').attr('title', '{{Date de valeur}} : '+_options.valueDate+'<br/>{{Date de collecte}} : '+_options.collectDate);
+        }
+        if ($.issetWidgetOptParam('#color#', 'color')) {
+          cmd.style('background-color', '#color#', 'important')
+        }
+        if ($.issetWidgetOptParam('#fontColor#', 'fontColor')) {
+          cmd.style('color', '#fontColor#', 'important')
+        }
+      }
+      catch(err) {
+        cmd.find('.errorMessage').empty().append('<strong>JSON data:' +_options.display_value.substr(0,30) +'...</strong><br>' +err.message);
+      }
+    });
+    jeedom.cmd.refreshValue([{cmd_id :'#id#',display_value: '#state#', valueDate: '#valueDate#', collectDate: '#collectDate#', alertLevel: '#alertLevel#', unit: '#unite#'}])
+  </script>
+</div>

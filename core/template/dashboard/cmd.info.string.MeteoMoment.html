@@ -1,0 +1,97 @@
+<div class="cmd cmd-widget #history#" data-type="info" data-subtype="string" data-template="custom" data-cmd_id="#id#" data-cmd_uid="#uid#" data-version="#version#" data-eqLogic_id="#eqLogic_id#">
+  <div class="title #hide_name#">
+    <div  class="cmdName">#name_display#</div>
+  </div>
+  <div class="dateText"></div>
+  <div class="weatherIcon" style="margin-top: -5px;margin-bottom: -5px"></div>
+  <div title="Température" class="Tvalue"></div>
+  <div class="wind" style="margin-top: 4px"></div>
+  <div title="Message" class="errorMessage"></div>
+  <template>
+    <div>color : rgb(20,20,20) ({{Couleur de fond}})</div>
+    <div>fontColor : rgb(20,20,20) ({{Couleur du texte}})</div>
+    <div>displayDate : 0/1 ({{Affichage du jour}})</div>
+    <div>displayTime : 0/1 ({{Affichage de l'heure}})</div>
+    <div>displayDescription : 0/1 ({{Affichage de la description}})</div>
+    <div>displayTemperature : 0/1 ({{Affichage de la température}})</div>
+    <div>displayMoment : 0/1 ({{Affichage moment de la journée}})</div>
+    <div>displayWind : 0/1 ({{Affichage du vent}})</div>
+  </template>
+  <script>
+    /* JSON structure:
+    { "dt":1685797200,"T":{"value":24,"windchill":25},"humidity":40,"sea_level":1015.5,
+      "wind":{"speed":4,"gust":0,"direction":50,"icon":"NE"},
+      "rain":{"1h":0},"snow":{"1h":0},"iso0":3450,"rain snow limit":"Non pertinent",
+      "clouds":10,
+      "dt_beg":1685235600,"dt_end":1685235600,
+      "moment_day":"Soirée",
+      "weather":{"icon":"p1j","desc":"Ensoleillé"},
+   }
+   */
+    jeedom.cmd.addUpdateFunction('#id#',function(_options) {
+      let cmd = $('.cmd[data-cmd_id=#id#]');
+      try {
+        let obj = JSON.parse(_options.display_value);
+        if(obj != null) {
+          cmd.find('.weatherIcon').empty().append('<img src="plugins/meteofrance/data/icones/' +obj.weather.icon +'.svg">');
+          let weatherIconTitle = obj.weather.desc;
+
+          let cd = new Date(obj.dt * 1000);
+          let dateTime = '';
+          let dayTxt = cd.toLocaleDateString('fr-FR', {month: 'short', day: 'numeric',weekday: 'short'});
+          let day = dayTxt.charAt(0).toUpperCase() + dayTxt.slice(1); // ucfirst
+          if('#displayDate#' != '0') dateTime += day;
+          else weatherIconTitle += '<br/>' +day;
+          if('#displayMoment#' != '0') {
+            if(dateTime.length) dateTime += '<br/>';
+            dateTime += obj.moment_day;
+          }
+          else weatherIconTitle += '<br/>' +obj.moment_day;
+          if('#displayTime#' != '0') {
+            if(dateTime.length) dateTime += '<br/>';
+            let cdbeg = new Date(obj.dt_beg * 1000);
+            dateTime += cdbeg.toLocaleTimeString('fr-FR', {hour: '2-digit'});
+            let cdend = new Date(obj.dt_end * 1000);
+            let timeend = cdend.toLocaleTimeString('fr-FR', {hour: '2-digit'});
+            dateTime += ' - ' +timeend;
+          }
+          else weatherIconTitle += '<br/>Heure: ' +cd.toLocaleTimeString('fr-FR', {hour: '2-digit'});
+          if('#displayDescription#' != '0') {
+            if(dateTime.length) dateTime += '<br/>';
+            dateTime += obj.weather.desc;
+          }
+          cmd.find('.dateText').empty().append(dateTime);
+              
+          let temp = Math.round(obj.T.value) + '°C';
+          if('#displayTemperature#' != '0') {
+            cmd.find('.Tvalue').empty().append(temp);
+            cmd.find('.Tvalue').attr('title',' Temp. ressentie: '+obj.T.windchill +'°C');
+          }
+          else weatherIconTitle += '<br/>Température: ' +temp +' Ressentie: '+obj.T.windchill +'°C';
+
+          let vent = Math.round(obj.wind.speed*3.6) +'km/h';
+          let raf = obj.wind.gust;
+          if(raf>0) vent += '<br/>Rafales: '+ Math.round(raf*3.6) +'km/h'; 
+          if('#displayWind#' != '0') {
+            let wind = '<svg data-v-47880d39="" width="15" height="15" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve" class="icon-wind-direction" style="transform: rotate(' +(obj.wind.direction+180) +'deg);"><g data-v-47880d39="" fill="#3C73A5"><path data-v-47880d39="" d="M510.5,749.6c-14.9-9.9-38.1-9.9-53.1,1.7l-262,207.3c-14.9,11.6-21.6,6.6-14.9-11.6L474,48.1c5-16.6,14.9-18.2,21.6,0l325,898.7c6.6,16.6-1.7,23.2-14.9,11.6L510.5,749.6z"></path><path data-v-47880d39="" d="M817.2,990c-8.3,0-16.6-3.3-26.5-9.9L497.2,769.5c-5-3.3-18.2-3.3-23.2,0L210.3,976.7c-19.9,16.6-41.5,14.9-51.4,0c-6.6-9.9-8.3-21.6-3.3-38.1L449.1,39.8C459,13.3,477.3,10,483.9,10c6.6,0,24.9,3.3,34.8,29.8l325,898.7c5,14.9,5,28.2-1.7,38.1C837.1,985,827.2,990,817.2,990z M485.6,716.4c14.9,0,28.2,5,39.8,11.6l255.4,182.4L485.6,92.9l-267,814.2l223.9-177.4C454.1,721.4,469,716.4,485.6,716.4z"></path></g></svg>';
+                cmd.find('.wind').empty().append(wind +'<br/>' +vent);
+          }
+          else weatherIconTitle += '<br/>Vent: ' +obj.wind.icon +' '+vent;
+              
+          cmd.find('.weatherIcon').attr('title', weatherIconTitle);
+        cmd.find('.dateText').attr('title', '{{Date de valeur}} : '+_options.valueDate+'<br/>{{Date de collecte}} : '+_options.collectDate);
+      }
+      if ($.issetWidgetOptParam('#color#', 'color')) {
+        cmd.style('background-color', '#color#', 'important')
+      }
+      if ($.issetWidgetOptParam('#fontColor#', 'fontColor')) {
+        cmd.style('color', '#fontColor#', 'important')
+      }
+    }
+    catch(err) {
+      cmd.find('.errorMessage').empty().append('<strong>JSON data:' +_options.display_value.substr(0,30) +'...</strong><br>' +err.message);
+    }
+  });
+  jeedom.cmd.refreshValue([{cmd_id :'#id#',display_value: '#state#', valueDate: '#valueDate#', collectDate: '#collectDate#', alertLevel: '#alertLevel#', unit: '#unite#'}])
+  </script>
+</div>

@@ -37,7 +37,7 @@ class meteofrance extends eqLogic {
   public function checkAndUpdateCmd($_logicalId, $_value, $_updateTime = null) {
 		$cmd = $this->getCmd('info', $_logicalId);
 		if (!is_object($cmd)) {
-      message::add(__CLASS__, "Equipment: " .$this->getName() ." Unexistant command $_logicalId");
+      log::add(__CLASS__, 'debug', "Equipment: " .$this->getName() ." Unexistant command $_logicalId");
     }
     parent::checkAndUpdateCmd($_logicalId, $_value, $_updateTime);
   }
@@ -1313,7 +1313,7 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
             $replaceFC['#low_temperature#'] = $dec['T']['value']."°C";
             $replaceFC['#high_temperature#'] = ''; // "(" .$dec['T']['windchill']."°C)";
             $replaceFC['#condition#'] = $dec['weather']['desc'];
-message::add(__CLASS__, __FUNCTION__ .' ' .$dec['weather']['icon'] .' ' .$dec['weather']['desc']);
+// message::add(__CLASS__, __FUNCTION__ .' ' .$dec['weather']['icon'] .' ' .$dec['weather']['desc']);
             $replaceFC['#day#'] = '<br/>';
             $replaceFC['#moment#'] = '';
             $replaceFC['#time#'] = date('H:i',$lastTS);
@@ -1350,7 +1350,7 @@ message::add(__CLASS__, __FUNCTION__ .' ' .$dec['weather']['icon'] .' ' .$dec['w
             $img = self::getMFimg($dec['weather']['icon'] .'.svg');
             $replaceFC['#iconeFC#'] = $img;
             $replaceFC['#condition#'] = $dec['weather']['desc'];
-message::add(__CLASS__, __FUNCTION__ .' ' .$dec['weather']['icon'] .' ' .$dec['weather']['desc']);
+// message::add(__CLASS__, __FUNCTION__ .' ' .$dec['weather']['icon'] .' ' .$dec['weather']['desc']);
             $replaceFC['#conditionid#'] = $jsonCmd->getId();
             $replaceFC['#low_temperature#'] = $dec['T']['value']."°C";
             $replaceFC['#high_temperature#'] = ''; // "(" .$dec['T']['windchill']."°C)";
@@ -1378,7 +1378,7 @@ message::add(__CLASS__, __FUNCTION__ .' ' .$dec['weather']['icon'] .' ' .$dec['w
             $img = self::getMFimg($dec['weather12H']['icon'] .'.svg');
             $replaceFC['#iconeFC#'] = $img;
             $replaceFC['#condition#'] = $dec['weather12H']['desc'];
-message::add(__CLASS__, __FUNCTION__ .' ' .$dec['weather12H']['icon'] .' ' .$dec['weather12H']['desc']);
+// message::add(__CLASS__, __FUNCTION__ .' ' .$dec['weather12H']['icon'] .' ' .$dec['weather12H']['desc']);
             $replaceFC['#conditionid#'] = $jsonCmd->getId();
             $replaceFC['#low_temperature#'] = $dec['T']['min'];
             $replaceFC['#high_temperature#'] = $dec['T']['max'];

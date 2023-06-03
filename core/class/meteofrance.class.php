@@ -1315,7 +1315,7 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
             $replaceFC['#condition#'] = $dec['weather']['desc'];
 // message::add(__CLASS__, __FUNCTION__ .' ' .$dec['weather']['icon'] .' ' .$dec['weather']['desc']);
             $replaceFC['#day#'] = '<br/>';
-            $replaceFC['#moment#'] = '';
+            $replaceFC['#moment#'] = '<br/>';
             $replaceFC['#time#'] = date('H:i',$lastTS);
           }
         }
@@ -1360,10 +1360,7 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
         }
       }
           // Meteo par jour
-      $nbDays = $this->getConfiguration('dailyForecastNumber',4);
-      $start = $this->getConfiguration('todayForecast',0);
-      if($start == 0) { $start = 1; $nbDays += 1; }
-      else { $start=0; }
+      $nbDays = 10; // $this->getConfiguration('dailyForecastNumber',4);
       for($i=0;$i<$nbDays;$i++) {
         $replaceFC =array();
         $replaceFC['#sep#'] = '|';
@@ -1373,7 +1370,7 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
           if($dec !== false) {
             if($dec['dt'] < $lastTS) continue;
             $replaceFC['#day#'] = date_fr(date('D  j', $dec['dt']));
-            $replaceFC['#moment#'] = '';
+            $replaceFC['#moment#'] = '<br/>';
             $replaceFC['#time#'] = date('H:i',$dec['dt']);
             $img = self::getMFimg($dec['weather12H']['icon'] .'.svg');
             $replaceFC['#iconeFC#'] = $img;

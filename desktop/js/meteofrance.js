@@ -171,14 +171,14 @@ function addCmdToTable(_cmd) {
       var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
       tr += '<td>';
       tr += '<span class="cmdAttr" data-l1key="id"></span>';
-      tr += '</td><td>';
+      tr += '</td><td>'+_cmd.logicalId+'</td><td>';
       tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" style="width : 400px;" placeholder="{{Nom de la commande}}"></td>';
       tr += '</td><td>';
-      if (_cmd.subType == 'numeric' || _cmd.subType == 'binary') {
+      if (_cmd.subType == 'numeric' || _cmd.subType == 'binary' || _cmd.subType == 'string') {
         tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized" checked/>{{Historiser}}</label></span>';
-        if ( typeof _cmd.configuration['logicalId'] != "undefined" && _cmd.configuration['logicalId'].substr(0,6) == 'pollen' ) {
+        // if ( typeof _cmd.configuration['logicalId'] != "undefined" && _cmd.configuration['logicalId'].substr(0,6) == 'pollen' ) {
           tr += '<br/><span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span>';
-        }
+        // }
       }
       tr += '</td><td>';
       tr += '<span class="cmdAttr" data-l1key="htmlstate"></span>'; 

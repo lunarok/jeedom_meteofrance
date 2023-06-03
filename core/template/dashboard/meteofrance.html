@@ -47,7 +47,7 @@
   } else {
     $('.eqLogic[data-eqLogic_uid=#uid#] .refresh').remove();
   }
-
+/*
   if($('#wind_direction#uid#').html() != undefined){
     new Highcharts.Chart({
       chart: {
@@ -94,12 +94,13 @@
       series: [{ name: 'Vent', data: [#wind_direction#] }]
     });
   }
+ */
 </script>
   <!-- Pluie dans l'heure -->
   <div style="margin-top: 8px;">
     <table border=0 style="border-spacing: 2px; width: 100%;">
       <tr>
-        <td class="tableCmdcss" style="width: 10%;height:20px;text-align: left">#heure#</td>
+        <td class="tableCmdcss" style="width: 10%;height:20px;text-align: left">&nbsp;#heure#</td>
         <td class="tableCmdcss" style="width: 8%;font-size: .8em;height:20px;text-align: right">#h10m#</td>
         <td class="tableCmdcss" style="width: 8%;height:20px;text-align: right">&nbsp;</td>
         <td class="tableCmdcss" style="width: 8%;font-size: .8em;height:20px;text-align: right">#h20m#</td>
@@ -107,7 +108,7 @@
         <td class="tableCmdcss" style="width: 8%;font-size: .8em;height:20px;text-align: right">#h30m#</td>
         <td class="tableCmdcss" style="width: 16%;font-size: .8em;height:20px;text-align: right">#h40m#</td>
         <td class="tableCmdcss" style="width: 16%;font-size: .8em;height:20px;text-align: right">#h50m#</td>
-        <td class="tableCmdcss" style="width: 18%;height:20px;text-align: right">#h1h# <i class="wi wi-raindrops" title="Prévisions pluie"style="font-size: 24px;color: #3C73A5"></i> </td>
+        <td class="tableCmdcss" style="width: 18%;height:20px;text-align: right">#h1h# <i class="wi wi-raindrops" title="Prévisions pluie"style="font-size: 24px;color: #3C73A5"></i>&nbsp;</td>
       </tr>
       <tr>
         <td style="height:20px;#prev1Color#" title="#prev1Text#" class="tooltips"></td>

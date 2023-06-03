@@ -24,6 +24,7 @@ if (!isConnect()) {
 ?>
 <form class="form-horizontal">
   <fieldset>
+<!--
     <div class="form-group">
       <label class="col-md-4 control-label">{{Clé publique de l'application vigilance Meteo France}}
         <sup><i class="fas fa-question-circle tooltips" title="{{Renseignez la clé publique}}"></i></sup>
@@ -40,6 +41,7 @@ if (!isConnect()) {
         <input type="password" class="configKey form-control" data-l1key="alertPrivateKey"/>
       </div>
     </div>
+-->
     <div class="form-group">
       <label class="col-md-4 control-label">{{Commentaires}}
       </label>

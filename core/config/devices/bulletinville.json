@@ -1,93 +1,108 @@
 {
   "commands": [
-        {
-            "name": "Bulletin Ville - Nom de la période 1",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "BulletinvilletitreEcheance1"
-        },
-        {
-            "name": "Bulletin Ville - Pression atmosphérique de la période 1",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Bulletinvillepression1"
-        },
-        {
-            "name": "Bulletin Ville - Ciel de la période 1",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "BulletinvilleTS1"
-        },
-        {
-            "name": "Bulletin Ville - Température de la période 1",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Bulletinvilletemperature1"
-        },
-        {
-            "name": "Bulletin Ville - Vent de la période 1",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Bulletinvillevent1"
-        },{
-            "name": "Bulletin Ville - Nom de la période 2",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "BulletinvilletitreEcheance2"
-        },
-        {
-            "name": "Bulletin Ville - Pression atmosphérique de la période 2",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Bulletinvillepression2"
-        },
-        {
-            "name": "Bulletin Ville - Ciel de la période 2",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "BulletinvilleTS2"
-        },
-        {
-            "name": "Bulletin Ville - Température de la période 2",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Bulletinvilletemperature2"
-        },
-        {
-            "name": "Bulletin Ville - Vent de la période 2",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Bulletinvillevent2"
-        },
-        {
-            "name": "Bulletin Ville - Nom de la période 3",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "BulletinvilletitreEcheance3"
-        },
-        {
-            "name": "Bulletin Ville - Pression atmosphérique de la période 3",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Bulletinvillepression3"
-        },
-        {
-            "name": "Bulletin Ville - Ciel de la période 3",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "BulletinvilleTS3"
-        },
-        {
-            "name": "Bulletin Ville - Température de la période 3",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Bulletinvilletemperature3"
-        },
-        {
-            "name": "Bulletin Ville - Vent de la période 3",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Bulletinvillevent3"
-        }
-    ]
+    {
+        "name": "Bulletin Ville - Nom de la période 1",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "BulletinvilletitreEcheance1"
+    },
+    {
+        "name": "Bulletin Ville - Pression atmosphérique de la période 1",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Bulletinvillepression1"
+    },
+    {
+        "name": "Bulletin Ville - Ciel de la période 1",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "BulletinvilleTS1"
+    },
+    {
+        "name": "Bulletin Ville - Température de la période 1",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Bulletinvilletemperature1"
+    },
+    {
+        "name": "Bulletin Ville - Vent de la période 1",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Bulletinvillevent1"
+    },{
+        "name": "Bulletin Ville - Nom de la période 2",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "BulletinvilletitreEcheance2"
+    },
+    {
+        "name": "Bulletin Ville - Pression atmosphérique de la période 2",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Bulletinvillepression2"
+    },
+    {
+        "name": "Bulletin Ville - Ciel de la période 2",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "BulletinvilleTS2"
+    },
+    {
+        "name": "Bulletin Ville - Température de la période 2",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Bulletinvilletemperature2"
+    },
+    {
+        "name": "Bulletin Ville - Vent de la période 2",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Bulletinvillevent2"
+    },
+    {
+        "name": "Bulletin Ville - Nom de la période 3",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "BulletinvilletitreEcheance3"
+    },
+    {
+        "name": "Bulletin Ville - Pression atmosphérique de la période 3",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Bulletinvillepression3"
+    },
+    {
+        "name": "Bulletin Ville - Ciel de la période 3",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "BulletinvilleTS3"
+    },
+    {
+        "name": "Bulletin Ville - Température de la période 3",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Bulletinvilletemperature3"
+    },
+    {
+        "name": "Bulletin Ville - Vent de la période 3",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Bulletinvillevent3"
+    }
+  ]
 }

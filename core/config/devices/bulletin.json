@@ -1,52 +1,60 @@
 {
   "commands": [
-        {
-            "name": "Bulletin France - Nom de la période 1",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Bulletinfrdate0"
-        },
-        {
-            "name": "Bulletin France - Titre de la période 1",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Bulletinfrtitre0"
-        },
-        {
-            "name": "Bulletin France - Texte de la période 1",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Bulletinfrtemps0"
-        },
-        {
-            "name": "Bulletin France - Nom de la période 2",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Bulletinfrdate1"
-        },
-        {
-            "name": "Bulletin France - Titre de la période 2",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Bulletinfrtitre1"
-        },
-        {
-            "name": "Bulletin France - Texte de la période 2",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Bulletinfrtemps1"
-        },
-        {
-            "name": "Bulletin - Semaine Prochaine Date",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Bulletindatesem"
-        },
-        {
-            "name": "Bulletin - Semaine Prochaine Texte",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Bulletintempssem"
-        }
-    ]
+    {
+        "name": "Bulletin France - Nom de la période 1",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Bulletinfrdate0"
+    },
+    {
+        "name": "Bulletin France - Titre de la période 1",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Bulletinfrtitre0"
+    },
+    {
+        "name": "Bulletin France - Texte de la période 1",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Bulletinfrtemps0"
+    },
+    {
+        "name": "Bulletin France - Nom de la période 2",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Bulletinfrdate1"
+    },
+    {
+        "name": "Bulletin France - Titre de la période 2",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Bulletinfrtitre1"
+    },
+    {
+        "name": "Bulletin France - Texte de la période 2",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Bulletinfrtemps1"
+    },
+    {
+        "name": "Bulletin - Semaine Prochaine Date",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Bulletindatesem"
+    },
+    {
+        "name": "Bulletin - Semaine Prochaine Texte",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Bulletintempssem"
+    }
+  ]
 }

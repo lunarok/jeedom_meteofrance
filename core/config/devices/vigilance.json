@@ -1,142 +1,170 @@
 {
   "commands": [
-        {
-            "name": "Vigilance - Général",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Vigilancelist"
-        },
-        {
-            "name": "Vigilance - Vent violent conditions",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Vigilancephases1"
-        },
-        {
-            "name": "Vigilance - Vent violent niveau",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Vigilancephenomenon_max_color_id1"
-        },
-        {
-            "name": "Vigilance - Pluie-inondation conditions",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Vigilancephases2"
-        },
-        {
-            "name": "Vigilance - Pluie-inondation niveau",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Vigilancephenomenon_max_color_id2"
-        },
-        {
-            "name": "Vigilance - Orages conditions",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Vigilancephases3"
-        },
-        {
-            "name": "Vigilance - Orages niveau",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Vigilancephenomenon_max_color_id3"
-        },
-        {
-            "name": "Vigilance - Inondation conditions",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Vigilancephases4"
-        },
-        {
-            "name": "Vigilance - Inondation niveau",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Vigilancephenomenon_max_color_id4"
-        },
-        {
-            "name": "Vigilance - Neige-verglas conditions",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Vigilancephases5"
-        },
-        {
-            "name": "Vigilance - Neige-verglas niveau",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Vigilancephenomenon_max_color_id5"
-        },
-        {
-            "name": "Vigilance - Canicule conditions",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Vigilancephases6"
-        },
-        {
-            "name": "Vigilance - Canicule niveau",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Vigilancephenomenon_max_color_id6"
-        },
-        {
-            "name": "Vigilance - Grand-froid conditions",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Vigilancephases7"
-        },
-        {
-            "name": "Vigilance - Grand-froid niveau",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Vigilancephenomenon_max_color_id7"
-        },
-        {
-            "name": "Vigilance - Avalanches conditions",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Vigilancephases8"
-        },
-        {
-            "name": "Vigilance - Avalanches niveau",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Vigilancephenomenon_max_color_id8"
-        },
-        {
-            "name": "Vigilance - Vagues-submersion conditions",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Vigilancephases9"
-        },
-        {
-            "name": "Vigilance - Vagues-submersion niveau",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Vigilancephenomenon_max_color_id9"
-        },
-        {
-            "name": "Alertes - Titre",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Alerttitre"
-        },
-        {
-            "name": "Alertes - Texte",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Alerttexte"
-        },
-        {
-            "name": "Alertes - Date de fin",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "AlertdateDeFin"
-        },
-        {
-            "name": "Alertes - Date annonce",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "AlertdateProduction"
-        }
-    ]
+    { "name": "Vigilance - Général",
+      "type": "info",
+      "subtype": "string",
+      "isVisible": 0,
+      "logicalId": "Vigilancelist"
+    },
+    { "name": "Vigilance - Niveau maximum",
+      "type": "info",
+      "subtype": "string",
+      "isVisible": 0,
+      "logicalId": "Vigilancecolor_max"
+    },
+    {
+        "name": "Vigilance - Vent violent conditions",
+        "type": "info",
+        "subtype": "string",
+      "isVisible": 0,
+        "logicalId": "Vigilancephases1"
+    },
+    {
+        "name": "Vigilance - Vent violent niveau",
+        "type": "info",
+        "subtype": "numeric",
+      "isVisible": 0,
+        "logicalId": "Vigilancephenomenon_max_color_id1"
+    },
+    {
+        "name": "Vigilance - Pluie-inondation conditions",
+        "type": "info",
+        "subtype": "string",
+      "isVisible": 0,
+        "logicalId": "Vigilancephases2"
+    },
+    {
+        "name": "Vigilance - Pluie-inondation niveau",
+        "type": "info",
+        "subtype": "numeric",
+      "isVisible": 0,
+        "logicalId": "Vigilancephenomenon_max_color_id2"
+    },
+    {
+        "name": "Vigilance - Orages conditions",
+        "type": "info",
+        "subtype": "string",
+      "isVisible": 0,
+        "logicalId": "Vigilancephases3"
+    },
+    {
+        "name": "Vigilance - Orages niveau",
+        "type": "info",
+        "subtype": "numeric",
+      "isVisible": 0,
+        "logicalId": "Vigilancephenomenon_max_color_id3"
+    },
+    {
+        "name": "Vigilance - Inondation conditions",
+        "type": "info",
+        "subtype": "string",
+      "isVisible": 0,
+        "logicalId": "Vigilancephases4"
+    },
+    {
+        "name": "Vigilance - Inondation niveau",
+        "type": "info",
+        "subtype": "numeric",
+      "isVisible": 0,
+        "logicalId": "Vigilancephenomenon_max_color_id4"
+    },
+    {
+        "name": "Vigilance - Neige-verglas conditions",
+        "type": "info",
+        "subtype": "string",
+      "isVisible": 0,
+        "logicalId": "Vigilancephases5"
+    },
+    {
+        "name": "Vigilance - Neige-verglas niveau",
+        "type": "info",
+        "subtype": "numeric",
+      "isVisible": 0,
+        "logicalId": "Vigilancephenomenon_max_color_id5"
+    },
+    {
+        "name": "Vigilance - Canicule conditions",
+        "type": "info",
+        "subtype": "string",
+      "isVisible": 0,
+        "logicalId": "Vigilancephases6"
+    },
+    {
+        "name": "Vigilance - Canicule niveau",
+        "type": "info",
+        "subtype": "numeric",
+      "isVisible": 0,
+        "logicalId": "Vigilancephenomenon_max_color_id6"
+    },
+    {
+        "name": "Vigilance - Grand-froid conditions",
+        "type": "info",
+        "subtype": "string",
+      "isVisible": 0,
+        "logicalId": "Vigilancephases7"
+    },
+    {
+        "name": "Vigilance - Grand-froid niveau",
+        "type": "info",
+        "subtype": "numeric",
+      "isVisible": 0,
+        "logicalId": "Vigilancephenomenon_max_color_id7"
+    },
+    {
+        "name": "Vigilance - Avalanches conditions",
+        "type": "info",
+        "subtype": "string",
+      "isVisible": 0,
+        "logicalId": "Vigilancephases8"
+    },
+    {
+        "name": "Vigilance - Avalanches niveau",
+        "type": "info",
+        "subtype": "numeric",
+      "isVisible": 0,
+        "logicalId": "Vigilancephenomenon_max_color_id8"
+    },
+    {
+        "name": "Vigilance - Vagues-submersion conditions",
+        "type": "info",
+        "subtype": "string",
+      "isVisible": 0,
+        "logicalId": "Vigilancephases9"
+    },
+    {
+        "name": "Vigilance - Vagues-submersion niveau",
+        "type": "info",
+        "subtype": "numeric",
+      "isVisible": 0,
+        "logicalId": "Vigilancephenomenon_max_color_id9"
+    },
+    {
+        "name": "Alertes - Titre",
+        "type": "info",
+        "subtype": "string",
+      "isVisible": 0,
+        "logicalId": "Alerttitre"
+    },
+    {
+        "name": "Alertes - Texte",
+        "type": "info",
+        "subtype": "string",
+      "isVisible": 0,
+        "logicalId": "Alerttexte"
+    },
+    {
+        "name": "Alertes - Date de fin",
+        "type": "info",
+        "subtype": "string",
+      "isVisible": 0,
+        "logicalId": "AlertdateDeFin"
+    },
+    {
+        "name": "Alertes - Date annonce",
+        "type": "info",
+        "subtype": "string",
+      "isVisible": 0,
+        "logicalId": "AlertdateProduction"
+    }
+  ]
 }

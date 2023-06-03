@@ -200,12 +200,14 @@ $eqLogics = eqLogic::byType($plugin->getId());
                   <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="momentForecastDaysNumber" placeholder="Défaut: 2"/>
                 </div>
 						  </div>
+<!--
               <div class="form-group">
                 <label class="col-sm-4 control-label">{{Nombre de jours de prévisions}}</label>
                 <div class="col-sm-3">
                   <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="dailyForecastNumber" placeholder="Défaut: 4"/>
                 </div>
 						  </div>
+-->
               <div class="form-group">
 							  <label class="col-sm-4 control-label" ></label>
                 <div class="col-sm-6">

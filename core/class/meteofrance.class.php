@@ -1360,7 +1360,7 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
         }
       }
           // Meteo par jour
-      $nbDays = 10; // $this->getConfiguration('dailyForecastNumber',4);
+      $nbDays = $this->getConfiguration('dailyForecastNumber',12);
       for($i=0;$i<$nbDays;$i++) {
         $replaceFC =array();
         $replaceFC['#sep#'] = '|';

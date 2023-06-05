@@ -302,12 +302,14 @@ class meteofrance extends eqLogic {
   }
 
   public function getBulletinVille() {
-    if ($this->getConfiguration('bulletinVille','') == '') {
+    $bulletinVille = $this->getConfiguration('bulletinVille','');
+    message::add(__CLASS__, "BulletinVille: $bulletinVille");
+    if ($bulletinVille == '') {
       return;
     }
-    $url = 'https://rpcache-aa.meteofrance.com/wsft/files/agat/ville/bulvillefr_' . $this->getConfiguration('bulletinVille') . '.xml';
+    $url = "https://rpcache-aa.meteofrance.com/wsft/files/agat/ville/bulvillefr_$bulletinVille.xml";
     log::add(__CLASS__, 'debug', __FUNCTION__ ." URL: $url");
-    $return = self::callMeteoWS($url,true,false,__FUNCTION__ .".json");
+    $return = self::callMeteoWS($url,true,false,__FUNCTION__ ."-$bulletinVille.json");
     $this->checkAndUpdateCmd('BulletinvilletitreEcheance1', $return['echeance'][0]['titreEcheance']);
     $this->checkAndUpdateCmd('Bulletinvillepression1', $return['echeance'][0]['pression']);
     $this->checkAndUpdateCmd('BulletinvilleTS1', $return['echeance'][0]['TS']);
@@ -517,7 +519,7 @@ class meteofrance extends eqLogic {
     }
 
  /* // TODO verify usefulness and delete old unused commands
-  * Fonctionnel mais en commentaire pour ne pas renseigner les commandes obsoletes
+*/
     $step = $return['forecast'][0]['moment_day'];
     log::add(__CLASS__, 'debug', '    Moment journée : ' . $step);
     $cmd = $this->getCmd(null, 'Meteonuit0description');
@@ -645,7 +647,6 @@ class meteofrance extends eqLogic {
       $this->checkAndUpdateCmd('Meteosoir1temperatureMin', $value['T']['value']);
       $this->checkAndUpdateCmd('Meteosoir1temperatureMax', $value['T']['windchill']);
     }
-*/
   }
 
   public function getRain() {
@@ -1569,7 +1570,7 @@ class meteofranceCmd extends cmd {
           $eqLogic->checkAndUpdateCmd($cmdLogicalId,"Obsolete command");
       }
 */
-      $eqLogic()->getInformations();
+      $eqLogic->getInformations();
     }
   }
 }

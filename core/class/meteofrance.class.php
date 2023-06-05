@@ -303,12 +303,11 @@ class meteofrance extends eqLogic {
 
   public function getBulletinVille() {
     $bulletinVille = $this->getConfiguration('bulletinVille','');
-    message::add(__CLASS__, "BulletinVille: $bulletinVille");
     if ($bulletinVille == '') {
       return;
     }
     $url = "https://rpcache-aa.meteofrance.com/wsft/files/agat/ville/bulvillefr_$bulletinVille.xml";
-    log::add(__CLASS__, 'debug', __FUNCTION__ ." URL: $url");
+    log::add(__CLASS__, 'debug', __FUNCTION__ ." BulletinVille: $bulletinVille URL: $url");
     $return = self::callMeteoWS($url,true,false,__FUNCTION__ ."-$bulletinVille.json");
     $this->checkAndUpdateCmd('BulletinvilletitreEcheance1', $return['echeance'][0]['titreEcheance']);
     $this->checkAndUpdateCmd('Bulletinvillepression1', $return['echeance'][0]['pression']);

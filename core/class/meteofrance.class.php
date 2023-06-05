@@ -42,14 +42,14 @@ class meteofrance extends eqLogic {
     parent::checkAndUpdateCmd($_logicalId, $_value, $_updateTime);
   }
 
-  public static function getJsonTabInfo($cmd_id, $request) {
+  public static function getJsonInfo($cmd_id, $request) {
     $id = cmd::humanReadableToCmd('#' .$cmd_id .'#');
-    $owmCmd = cmd::byId(trim(str_replace('#', '', $id)));
-    if(is_object($owmCmd)) {
-      $owmJson = $owmCmd->execCmd();
-      $json =json_decode($owmJson,true);
+    $cmd = cmd::byId(trim(str_replace('#', '', $id)));
+    if(is_object($cmd)) {
+      $cmdJson = $cmd->execCmd();
+      $json =json_decode($cmdJson,true);
       if($json === null)
-        log::add(__CLASS__, 'debug', "Unable to decode json: " .substr($owmJson,0,50));
+        log::add(__CLASS__, 'debug', "Unable to decode JSON: " .substr($cmdJson,0,50));
       else {
         $tags = explode('>', $request);
         foreach ($tags as $tag) {
@@ -76,7 +76,7 @@ class meteofrance extends eqLogic {
     if(date('i') == 0) return; // will be executed by cronHourly
     foreach (eqLogic::byType(__CLASS__, true) as $meteofrance) {
       $meteofrance->getRain();
-      $meteofrance->getNowDetails();
+      $meteofrance->getHourlyDailyForecasts();
       $meteofrance->refreshWidget();
     }
   }
@@ -151,7 +151,9 @@ class meteofrance extends eqLogic {
     $meteofrance->loadCmdFromConf('bulletin');
     $meteofrance->loadCmdFromConf('bulletinville');
     $meteofrance->loadCmdFromConf('ephemeris');
-    $meteofrance->loadCmdFromConf('marine');
+	  if ($meteofrance->getConfiguration('bulletinCote')) {
+      $meteofrance->loadCmdFromConf('marine');
+    }
     $meteofrance->loadCmdFromConf('meteo');
     $meteofrance->loadCmdFromConf('rain');
     $meteofrance->loadCmdFromConf('vigilance');
@@ -173,16 +175,18 @@ class meteofrance extends eqLogic {
   public function getInformations() {
     $this->getRain(); 
     $this->getVigilance();
-    $this->getMarine();
-    $this->getTide();
+	  if($this->getConfiguration('bulletinCote')) {
+      $this->getMarine();
+      $this->getTide();
+    }
     $this->getAlerts();
     $this->getEphemeris();
     $this->getBulletinFrance();
     $this->getBulletinSemaine();
-    $this->getDetailsValues();
+    $this->getInstantsValues();
     $this->getBulletinVille();
     $this->getDailyExtras();
-    $this->getNowDetails();
+    $this->getHourlyDailyForecasts();
     $this->refreshWidget();
   }
 
@@ -325,7 +329,7 @@ class meteofrance extends eqLogic {
     $this->checkAndUpdateCmd('Bulletinvillevent3', $return['echeance'][2]['vent']);
   }
 
-  public function getNowDetails() { // hourly and daily forecast
+  public function getHourlyDailyForecasts() { // hourly and daily forecast
     $lat = $this->getConfiguration('lat'); $lon = $this->getConfiguration('lon');
     if($lat == '' || $lon == '') {
       log::add(__CLASS__, 'debug', __FUNCTION__ ." " .$this->getName() ." Invalid latitude/longitude: $lat/$lon");
@@ -337,14 +341,12 @@ class meteofrance extends eqLogic {
     $return = self::callMeteoWS($url,false,true,__FUNCTION__ ."-$ville.json");
     $timezone = $return['position']['timezone'];
     $nb = count($return['forecast']);
-    $updated_on = self::convertMFdt2UnixTS($return['updated_on'],$timezone);
+    $updated_on = $return['updated_on'];
     log::add(__CLASS__, 'debug', "  updated_on: " .date('d-m-Y H:i:s', $updated_on) ." Nbforecast: $nb Timezone: $timezone");
     $now = time();
     $found = 0; $j = 0;
       // Prévisions par heure
     for($i=0;$i<$nb-1;$i++) {
-      // $forecastTS = self::convertMFdt2UnixTS($return['forecast'][$i]['dt'],$timezone);
-      // $forecastNextTS = self::convertMFdt2UnixTS($return['forecast'][$i+1]['dt'],$timezone);
       $forecastTS = $return['forecast'][$i]['dt'];
       $forecastNextTS = $return['forecast'][$i+1]['dt'];
       log::add(__CLASS__, 'debug', "    $i forecast:" .date('d-m-Y H:i:s', $forecastTS) ." Desc: " .$return['forecast'][$i]['weather']['desc']);
@@ -399,12 +401,13 @@ class meteofrance extends eqLogic {
       $this->checkAndUpdateCmd('Meteodayh1temperatureRes', -66);
       $this->checkAndUpdateCmd('hourly1icon', "0");
     }
-      // TODO update the daily_forecast commands
+      // Update the daily_forecast commands
     $nbD = count($return['daily_forecast']);
     log::add(__CLASS__, 'debug', "  NbDaily_forecast: $nbD");
     for($i=0;$i<$nbD;$i++) {
       $value= $return['daily_forecast'][$i];
-      $forecastTS = self::convertMFdt2UnixTS($value['dt'],$timezone);
+      $forecastTS = $value['dt'];
+      $value['dt12H'] = mktime(12,0,0,date('m',$forecastTS),date('d',$forecastTS),date('Y',$forecastTS));
       log::add(__CLASS__, 'debug', "    $i daily_forecast:" .date('d-m-Y H:i:s', $forecastTS));
       if($i < 4) {
         $this->checkAndUpdateCmd('Meteoday' .$i .'PluieCumul', $value['precipitation']['24h']);
@@ -419,7 +422,17 @@ class meteofrance extends eqLogic {
         $this->checkAndUpdateCmd("Meteoday${i}temperatureMin", $value['T']['min']);
         $this->checkAndUpdateCmd("Meteoday${i}temperatureMax", $value['T']['max']);
       }
-      $value['dt'] = $forecastTS+43200;
+      /* JSON structure
+        { "dt":1686096000,
+          "T":{"min":12.1,"max":26.1,"sea":null},
+          "humidity":{"min":40,"max":75},
+          "precipitation":{"24h":0},
+          "uv":8,
+          "weather12H":{"icon":"p1j","desc":"Ensoleill\u00e9"},
+          "sun":{"rise":1686108819,"set":1686166464},
+          "dt12H":1686132000
+        }
+       */
       $this->checkAndUpdateCmd("MeteoDay${i}Json", json_encode($value));
     }
   }
@@ -449,7 +462,7 @@ class meteofrance extends eqLogic {
     }
   }
 
-  public function getDetailsValues() { // Instant forecast (morning,afternoon,evening,night)
+  public function getInstantsValues() { // Instant forecast (morning,afternoon,evening,night)
     $lat = $this->getConfiguration('lat'); $lon = $this->getConfiguration('lon');
     $ville = $this->getConfiguration('ville');
     log::add(__CLASS__, 'debug', __FUNCTION__ ." $ville $lat/$lon");
@@ -463,10 +476,8 @@ class meteofrance extends eqLogic {
     $nb = count($return['forecast']);
     $updated_on = $return['updated_on'];
     log::add(__CLASS__, 'debug', "  updated_on: " .date('d-m-Y H:i:s', $updated_on) ." Nbforecast: $nb");
-    // add dt_beg, dt_end and moment_day in json
+    // add moment_day in json
     for($i=0;$i<$nb-1;$i++) {
-      $return['forecast'][$i]['dt_beg'] = $return['forecast'][$i]['dt'] - 3*3600;
-      $return['forecast'][$i]['dt_end'] = $return['forecast'][$i+1]['dt'] - 3*3600;
       switch(date('H',$return['forecast'][$i]['dt'])) {
         case 0: case 1: case 2: case 3: case 4: case 5:
           $return['forecast'][$i]['moment_day'] = "Nuit";
@@ -485,8 +496,8 @@ class meteofrance extends eqLogic {
     $now = time();
     $found = 0; $j=0;
     for($i=0;$i<$nb;$i++) {
-      $forecastTS = $return['forecast'][$i]['dt_beg'];
-      $forecastNextTS = $return['forecast'][$i]['dt_end'];
+      $forecastTS = $return['forecast'][$i]['dt'] - 3*3600;
+      $forecastNextTS = $return['forecast'][$i+1]['dt'] - 3*3600;
       $value = $return['forecast'][$i];
       log::add(__CLASS__, 'debug', "    $i forecast:" .date('d-m-Y H:i:s', $forecastTS) ." Desc: " .$value['weather']['desc']);
       if(($now >= $forecastTS && $now < $forecastNextTS) || ($i==0 && $now < $forecastTS)) {
@@ -504,128 +515,136 @@ class meteofrance extends eqLogic {
         $this->checkAndUpdateCmd("MeteoInstant${i}Json", '');
       }
     }
+
  /* // TODO verify usefulness and delete old unused commands
-    $step = 'soirée';
-    switch ($return['properties']['forecast'][0]['moment_day']) {
-      case 'nuit': $step = 'nuit'; break;
-      case 'matin': $step = 'matin'; break;
-      case 'après-midi': $step = 'après-midi'; break;
-    }
-    $i = 0;
-    log::add(__CLASS__, 'debug', '    Moment journée : ' . $step);
-
-    if ($step == 'nuit') {
-      $this->checkAndUpdateCmd('Meteonuit0description', $return['properties']['forecast'][$i]['weather_description']);
-      $this->checkAndUpdateCmd('Meteonuit0directionVent', $return['properties']['forecast'][$i]['wind_direction']);
-      $this->checkAndUpdateCmd('Meteonuit0vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
-      $this->checkAndUpdateCmd('Meteonuit0forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
-      $this->checkAndUpdateCmd('Meteonuit0temperatureMin', $return['properties']['forecast'][$i]['T']);
-      $this->checkAndUpdateCmd('Meteonuit0temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
-      $i++;
-      $this->checkAndUpdateCmd('Meteomatin0description', $return['properties']['forecast'][$i]['weather_description']);
-      $this->checkAndUpdateCmd('Meteomatin0directionVent', $return['properties']['forecast'][$i]['wind_direction']);
-      $this->checkAndUpdateCmd('Meteomatin0vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
-      $this->checkAndUpdateCmd('Meteomatin0forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
-      $this->checkAndUpdateCmd('Meteomatin0temperatureMin', $return['properties']['forecast'][$i]['T']);
-      $this->checkAndUpdateCmd('Meteomatin0temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
-      $i++;
-      $this->checkAndUpdateCmd('Meteomidi0description', $return['properties']['forecast'][$i]['weather_description']);
-      $this->checkAndUpdateCmd('Meteomidi0directionVent', $return['properties']['forecast'][$i]['wind_direction']);
-      $this->checkAndUpdateCmd('Meteomidi0vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
-      $this->checkAndUpdateCmd('Meteomidi0forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
-      $this->checkAndUpdateCmd('Meteomidi0temperatureMin', $return['properties']['forecast'][$i]['T']);
-      $this->checkAndUpdateCmd('Meteomidi0temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
-      $i++;
-    } else {
-      $this->checkAndUpdateCmd('Meteonuit0description', '');
-      $this->checkAndUpdateCmd('Meteonuit0directionVent', '');
-      $this->checkAndUpdateCmd('Meteonuit0vitesseVent', '');
-      $this->checkAndUpdateCmd('Meteonuit0forceRafales', '');
-      $this->checkAndUpdateCmd('Meteonuit0temperatureMin', '');
-      $this->checkAndUpdateCmd('Meteonuit0temperatureMax', '');
-    }
-
-    if ($step == 'matin') {
-      $this->checkAndUpdateCmd('Meteomatin0description', $return['properties']['forecast'][$i]['weather_description']);
-      $this->checkAndUpdateCmd('Meteomatin0directionVent', $return['properties']['forecast'][$i]['wind_direction']);
-      $this->checkAndUpdateCmd('Meteomatin0vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
-      $this->checkAndUpdateCmd('Meteomatin0forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
-      $this->checkAndUpdateCmd('Meteomatin0temperatureMin', $return['properties']['forecast'][$i]['T']);
-      $this->checkAndUpdateCmd('Meteomatin0temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
-      $i++;
-      $this->checkAndUpdateCmd('Meteomidi0description', $return['properties']['forecast'][$i]['weather_description']);
-      $this->checkAndUpdateCmd('Meteomidi0directionVent', $return['properties']['forecast'][$i]['wind_direction']);
-      $this->checkAndUpdateCmd('Meteomidi0vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
-      $this->checkAndUpdateCmd('Meteomidi0forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
-      $this->checkAndUpdateCmd('Meteomidi0temperatureMin', $return['properties']['forecast'][$i]['T']);
-      $this->checkAndUpdateCmd('Meteomidi0temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
-      $i++;
-    } else {
-      $this->checkAndUpdateCmd('Meteomatin0description', '');
-      $this->checkAndUpdateCmd('Meteomatin0directionVent', '');
-      $this->checkAndUpdateCmd('Meteomatin0vitesseVent', '');
-      $this->checkAndUpdateCmd('Meteomatin0forceRafales', '');
-      $this->checkAndUpdateCmd('Meteomatin0temperatureMin', '');
-      $this->checkAndUpdateCmd('Meteomatin0temperatureMax', '');
-    }
-
-    if ($step == 'après-midi') {
-      $this->checkAndUpdateCmd('Meteomidi0description', $return['properties']['forecast'][$i]['weather_description']);
-      $this->checkAndUpdateCmd('Meteomidi0directionVent', $return['properties']['forecast'][$i]['wind_direction']);
-      $this->checkAndUpdateCmd('Meteomidi0vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
-      $this->checkAndUpdateCmd('Meteomidi0forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
-      $this->checkAndUpdateCmd('Meteomidi0temperatureMin', $return['properties']['forecast'][$i]['T']);
-      $this->checkAndUpdateCmd('Meteomidi0temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
-      $i++;
-    } else {
-      $this->checkAndUpdateCmd('Meteomidi0description', '');
-      $this->checkAndUpdateCmd('Meteomidi0directionVent', '');
-      $this->checkAndUpdateCmd('Meteomidi0vitesseVent', '');
-      $this->checkAndUpdateCmd('Meteomidi0forceRafales', '');
-      $this->checkAndUpdateCmd('Meteomidi0temperatureMin', '');
-      $this->checkAndUpdateCmd('Meteomidi0temperatureMax', '');
-    }
-
-    $this->checkAndUpdateCmd('Meteosoir0description', $return['properties']['forecast'][$i]['weather_description']);
-    $this->checkAndUpdateCmd('Meteosoir0directionVent', $return['properties']['forecast'][$i]['wind_direction']);
-    $this->checkAndUpdateCmd('Meteosoir0vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
-    $this->checkAndUpdateCmd('Meteosoir0forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
-    $this->checkAndUpdateCmd('Meteosoir0temperatureMin', $return['properties']['forecast'][$i]['T']);
-    $this->checkAndUpdateCmd('Meteosoir0temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
-    $i++;
-
-    $this->checkAndUpdateCmd('Meteonuit1description', $return['properties']['forecast'][$i]['weather_description']);
-    $this->checkAndUpdateCmd('Meteonuit1directionVent', $return['properties']['forecast'][$i]['wind_direction']);
-    $this->checkAndUpdateCmd('Meteonuit1vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
-    $this->checkAndUpdateCmd('Meteonuit1forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
-    $this->checkAndUpdateCmd('Meteonuit1temperatureMin', $return['properties']['forecast'][$i]['T']);
-    $this->checkAndUpdateCmd('Meteonuit1temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
-    $i++;
-
-    $this->checkAndUpdateCmd('Meteomatin1description', $return['properties']['forecast'][$i]['weather_description']);
-    $this->checkAndUpdateCmd('Meteomatin1directionVent', $return['properties']['forecast'][$i]['wind_direction']);
-    $this->checkAndUpdateCmd('Meteomatin1vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
-    $this->checkAndUpdateCmd('Meteomatin1forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
-    $this->checkAndUpdateCmd('Meteomatin1temperatureMin', $return['properties']['forecast'][$i]['T']);
-    $this->checkAndUpdateCmd('Meteomatin1temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
-    $i++;
-
-    $this->checkAndUpdateCmd('Meteomidi1description', $return['properties']['forecast'][$i]['weather_description']);
-    $this->checkAndUpdateCmd('Meteomidi1directionVent', $return['properties']['forecast'][$i]['wind_direction']);
-    $this->checkAndUpdateCmd('Meteomidi1vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
-    $this->checkAndUpdateCmd('Meteomidi1forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
-    $this->checkAndUpdateCmd('Meteomidi1temperatureMin', $return['properties']['forecast'][$i]['T']);
-    $this->checkAndUpdateCmd('Meteomidi1temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
-    $i++;
-
-    log::add(__CLASS__, 'debug', '    Meteosoir1description : ' .$return['properties']['forecast'][$i]['weather_description']);
-    $this->checkAndUpdateCmd('Meteosoir1description', $return['properties']['forecast'][$i]['weather_description']);
-    $this->checkAndUpdateCmd('Meteosoir1directionVent', $return['properties']['forecast'][$i]['wind_direction']);
-    $this->checkAndUpdateCmd('Meteosoir1vitesseVent', $return['properties']['forecast'][$i]['wind_speed']);
-    $this->checkAndUpdateCmd('Meteosoir1forceRafales', $return['properties']['forecast'][$i]['wind_speed_gust']);
-    $this->checkAndUpdateCmd('Meteosoir1temperatureMin', $return['properties']['forecast'][$i]['T']);
-    $this->checkAndUpdateCmd('Meteosoir1temperatureMax', $return['properties']['forecast'][$i]['T_windchill']);
 */
+    $step = $return['forecast'][0]['moment_day'];
+    log::add(__CLASS__, 'debug', '    Moment journée : ' . $step);
+    $cmd = $this->getCmd(null, 'Meteonuit0description');
+    if(!is_object($cmd)) { // Si les commandes Meteoxxxx ont été créées
+      if ($step == 'Nuit') {
+        $value = $return['forecast'][$i];
+        $this->checkAndUpdateCmd('Meteonuit0description', $value['weather']['desc']);
+        $this->checkAndUpdateCmd('Meteonuit0directionVent', $value['wind']['direction']);
+        $this->checkAndUpdateCmd('Meteonuit0vitesseVent', $value['wind']['speed']);
+        $this->checkAndUpdateCmd('Meteonuit0forceRafales', $value['wind']['gust']);
+        $this->checkAndUpdateCmd('Meteonuit0temperatureMin', $value['T']['value']);
+        $this->checkAndUpdateCmd('Meteonuit0temperatureMax', $value['T']['windchill']);
+        $i++;
+        $value = $return['forecast'][$i];
+        $this->checkAndUpdateCmd('Meteomatin0description', $value['weather']['desc']);
+        $this->checkAndUpdateCmd('Meteomatin0directionVent', $value['wind']['direction']);
+        $this->checkAndUpdateCmd('Meteomatin0vitesseVent', $value['wind']['speed']);
+        $this->checkAndUpdateCmd('Meteomatin0forceRafales', $value['wind']['gust']);
+        $this->checkAndUpdateCmd('Meteomatin0temperatureMin', $value['T']['value']);
+        $this->checkAndUpdateCmd('Meteomatin0temperatureMax', $value['T']['windchill']);
+        $i++;
+        $value = $return['forecast'][$i];
+        $this->checkAndUpdateCmd('Meteomidi0description', $value['weather']['desc']);
+        $this->checkAndUpdateCmd('Meteomidi0directionVent', $value['wind']['direction']);
+        $this->checkAndUpdateCmd('Meteomidi0vitesseVent', $value['wind']['speed']);
+        $this->checkAndUpdateCmd('Meteomidi0forceRafales', $value['wind']['gust']);
+        $this->checkAndUpdateCmd('Meteomidi0temperatureMin', $value['T']['value']);
+        $this->checkAndUpdateCmd('Meteomidi0temperatureMax', $value['T']['windchill']);
+        $i++;
+      } else {
+        $this->checkAndUpdateCmd('Meteonuit0description', '');
+        $this->checkAndUpdateCmd('Meteonuit0directionVent', '');
+        $this->checkAndUpdateCmd('Meteonuit0vitesseVent', '');
+        $this->checkAndUpdateCmd('Meteonuit0forceRafales', '');
+        $this->checkAndUpdateCmd('Meteonuit0temperatureMin', '');
+        $this->checkAndUpdateCmd('Meteonuit0temperatureMax', '');
+      }
+
+      if ($step == 'Matin') {
+        $value = $return['forecast'][$i];
+        $this->checkAndUpdateCmd('Meteomatin0description', $value['weather']['desc']);
+        $this->checkAndUpdateCmd('Meteomatin0directionVent', $value['wind']['direction']);
+        $this->checkAndUpdateCmd('Meteomatin0vitesseVent', $value['wind']['speed']);
+        $this->checkAndUpdateCmd('Meteomatin0forceRafales', $value['wind']['gust']);
+        $this->checkAndUpdateCmd('Meteomatin0temperatureMin', $value['T']['value']);
+        $this->checkAndUpdateCmd('Meteomatin0temperatureMax', $value['T']['windchill']);
+        $i++;
+        $value = $return['forecast'][$i];
+        $this->checkAndUpdateCmd('Meteomidi0description', $value['weather']['desc']);
+        $this->checkAndUpdateCmd('Meteomidi0directionVent', $value['wind']['direction']);
+        $this->checkAndUpdateCmd('Meteomidi0vitesseVent', $value['wind']['speed']);
+        $this->checkAndUpdateCmd('Meteomidi0forceRafales', $value['wind']['gust']);
+        $this->checkAndUpdateCmd('Meteomidi0temperatureMin', $value['T']['value']);
+        $this->checkAndUpdateCmd('Meteomidi0temperatureMax', $value['T']['windchill']);
+        $i++;
+      } else {
+        $this->checkAndUpdateCmd('Meteomatin0description', '');
+        $this->checkAndUpdateCmd('Meteomatin0directionVent', '');
+        $this->checkAndUpdateCmd('Meteomatin0vitesseVent', '');
+        $this->checkAndUpdateCmd('Meteomatin0forceRafales', '');
+        $this->checkAndUpdateCmd('Meteomatin0temperatureMin', '');
+        $this->checkAndUpdateCmd('Meteomatin0temperatureMax', '');
+      }
+
+      if ($step == 'Après-midi') {
+        $value = $return['forecast'][$i];
+        $this->checkAndUpdateCmd('Meteomidi0description', $value['weather']['desc']);
+        $this->checkAndUpdateCmd('Meteomidi0directionVent', $value['wind']['direction']);
+        $this->checkAndUpdateCmd('Meteomidi0vitesseVent', $value['wind']['speed']);
+        $this->checkAndUpdateCmd('Meteomidi0forceRafales', $value['wind']['gust']);
+        $this->checkAndUpdateCmd('Meteomidi0temperatureMin', $value['T']['value']);
+        $this->checkAndUpdateCmd('Meteomidi0temperatureMax', $value['T']['windchill']);
+        $i++;
+      } else {
+        $this->checkAndUpdateCmd('Meteomidi0description', '');
+        $this->checkAndUpdateCmd('Meteomidi0directionVent', '');
+        $this->checkAndUpdateCmd('Meteomidi0vitesseVent', '');
+        $this->checkAndUpdateCmd('Meteomidi0forceRafales', '');
+        $this->checkAndUpdateCmd('Meteomidi0temperatureMin', '');
+        $this->checkAndUpdateCmd('Meteomidi0temperatureMax', '');
+      }
+
+      $value = $return['forecast'][$i];
+      $this->checkAndUpdateCmd('Meteosoir0description', $value['weather']['desc']);
+      $this->checkAndUpdateCmd('Meteosoir0directionVent', $value['wind']['direction']);
+      $this->checkAndUpdateCmd('Meteosoir0vitesseVent', $value['wind']['speed']);
+      $this->checkAndUpdateCmd('Meteosoir0forceRafales', $value['wind']['gust']);
+      $this->checkAndUpdateCmd('Meteosoir0temperatureMin', $value['T']['value']);
+      $this->checkAndUpdateCmd('Meteosoir0temperatureMax', $value['T']['windchill']);
+      $i++;
+      $value = $return['forecast'][$i];
+
+      $this->checkAndUpdateCmd('Meteonuit1description', $value['weather']['desc']);
+      $this->checkAndUpdateCmd('Meteonuit1directionVent', $value['wind']['direction']);
+      $this->checkAndUpdateCmd('Meteonuit1vitesseVent', $value['wind']['speed']);
+      $this->checkAndUpdateCmd('Meteonuit1forceRafales', $value['wind']['gust']);
+      $this->checkAndUpdateCmd('Meteonuit1temperatureMin', $value['T']['value']);
+      $this->checkAndUpdateCmd('Meteonuit1temperatureMax', $value['T']['windchill']);
+      $i++;
+      $value = $return['forecast'][$i];
+
+      $this->checkAndUpdateCmd('Meteomatin1description', $value['weather']['desc']);
+      $this->checkAndUpdateCmd('Meteomatin1directionVent', $value['wind']['direction']);
+      $this->checkAndUpdateCmd('Meteomatin1vitesseVent', $value['wind']['speed']);
+      $this->checkAndUpdateCmd('Meteomatin1forceRafales', $value['wind']['gust']);
+      $this->checkAndUpdateCmd('Meteomatin1temperatureMin', $value['T']['value']);
+      $this->checkAndUpdateCmd('Meteomatin1temperatureMax', $value['T']['windchill']);
+      $i++;
+      $value = $return['forecast'][$i];
+
+      $this->checkAndUpdateCmd('Meteomidi1description', $value['weather']['desc']);
+      $this->checkAndUpdateCmd('Meteomidi1directionVent', $value['wind']['direction']);
+      $this->checkAndUpdateCmd('Meteomidi1vitesseVent', $value['wind']['speed']);
+      $this->checkAndUpdateCmd('Meteomidi1forceRafales', $value['wind']['gust']);
+      $this->checkAndUpdateCmd('Meteomidi1temperatureMin', $value['T']['value']);
+      $this->checkAndUpdateCmd('Meteomidi1temperatureMax', $value['T']['windchill']);
+      $i++;
+      $value = $return['forecast'][$i];
+
+      log::add(__CLASS__, 'debug', '    Meteosoir1description : ' .$value['weather']['desc']);
+      $this->checkAndUpdateCmd('Meteosoir1description', $value['weather']['desc']);
+      $this->checkAndUpdateCmd('Meteosoir1directionVent', $value['wind']['direction']);
+      $this->checkAndUpdateCmd('Meteosoir1vitesseVent', $value['wind']['speed']);
+      $this->checkAndUpdateCmd('Meteosoir1forceRafales', $value['wind']['gust']);
+      $this->checkAndUpdateCmd('Meteosoir1temperatureMin', $value['T']['value']);
+      $this->checkAndUpdateCmd('Meteosoir1temperatureMax', $value['T']['windchill']);
+    }
   }
 
   public function getRain() {
@@ -675,9 +694,6 @@ class meteofrance extends eqLogic {
   }
 
   public function getMarine() {
-	  if (!$this->getConfiguration('bulletinCote')) {
-		  return;
-	  }
 	  $lat = $this->getConfiguration('lat'); $lon = $this->getConfiguration('lon');
 	  if($lat == '' || $lon == '') {
 		  log::add(__CLASS__, 'debug', __FUNCTION__ ." Invalid latitude/longitude: $lat/$lon");
@@ -686,30 +702,30 @@ class meteofrance extends eqLogic {
     log::add(__CLASS__, 'debug', __FUNCTION__ ." $lat/$lon");
     $url = "https://rpcache-aa.meteofrance.com/internet2018client/2.0/forecast/marine?lat=$lat&lon=$lon";
     $return = self::callMeteoWS($url,false,true,__FUNCTION__ ."-2-${lat}_$lon.json");
+    $t = time();
     foreach ($return['properties']['marine'] as $id => $marine) {
-	    $id = 0; // Pas d'autre commande que 0 TODO
-      if(time() < strtotime($marine['time'])) break;
-	    if(time() >= strtotime($marine['time'])) {
-      $this->checkAndUpdateCmd('Marinewind_speed_kt' . $id, $marine['wind_speed_kt']);
-      $this->checkAndUpdateCmd('Marinewind_direction' . $id, $marine['wind_direction']);
-      $this->checkAndUpdateCmd('Marinebeaufort_scale' . $id, $marine['beaufort_scale']);
-      $this->checkAndUpdateCmd('Marinewave_height' . $id, $marine['wave_height']);
-      $this->checkAndUpdateCmd('Marinemax_wave_height' . $id, $marine['max_wave_height']);
-      $this->checkAndUpdateCmd('Marinewind_waves_height' . $id, $marine['wind_waves_height']);
-      $this->checkAndUpdateCmd('Marineprimary_swell_direction' . $id, $marine['primary_swell_direction']);
-      $this->checkAndUpdateCmd('Marineprimary_swell_height' . $id, $marine['primary_swell_height']);
-      $this->checkAndUpdateCmd('Marineprimary_swell_period' . $id, $marine['primary_swell_period']);
-      $this->checkAndUpdateCmd('MarineT_sea' . $id, $marine['T_sea']);
-      $this->checkAndUpdateCmd('Marinesea_condition' . $id, $marine['sea_condition']);
-      $this->checkAndUpdateCmd('Marinesea_condition_description' . $id, $marine['sea_condition_description']);
-	    }
+	    $id = 0; // Pas d'autre commande que 0 TODO to be checked
+      $marineTS = strtotime($marine['time']);
+      if($t < $marineTS) continue;
+      if($t >= $marineTS) {
+        $this->checkAndUpdateCmd('Marinewind_speed_kt' . $id, $marine['wind_speed_kt']);
+        $this->checkAndUpdateCmd('Marinewind_direction' . $id, $marine['wind_direction']);
+        $this->checkAndUpdateCmd('Marinebeaufort_scale' . $id, $marine['beaufort_scale']);
+        $this->checkAndUpdateCmd('Marinewave_height' . $id, $marine['wave_height']);
+        $this->checkAndUpdateCmd('Marinemax_wave_height' . $id, $marine['max_wave_height']);
+        $this->checkAndUpdateCmd('Marinewind_waves_height' . $id, $marine['wind_waves_height']);
+        $this->checkAndUpdateCmd('Marineprimary_swell_direction' . $id, $marine['primary_swell_direction']);
+        $this->checkAndUpdateCmd('Marineprimary_swell_height' . $id, $marine['primary_swell_height']);
+        $this->checkAndUpdateCmd('Marineprimary_swell_period' . $id, $marine['primary_swell_period']);
+        $this->checkAndUpdateCmd('MarineT_sea' . $id, $marine['T_sea']);
+        $this->checkAndUpdateCmd('Marinesea_condition' . $id, $marine['sea_condition']);
+        $this->checkAndUpdateCmd('Marinesea_condition_description' . $id, $marine['sea_condition_description']);
+        break;
+      }
     }
   }
 
   public function getTide() {
-    if (!$this->getConfiguration('bulletinCote')) {
-      return;
-    }
     $insee = $this->getConfiguration('insee');
     $ville = $this->getConfiguration('ville');
     log::add(__CLASS__, 'debug', __FUNCTION__ ." Insee: $insee Ville $ville");
@@ -964,47 +980,6 @@ class meteofrance extends eqLogic {
       $this->checkAndUpdateCmd("Vigilancephenomenon_max_color_id$i", $phenomColor[$i]);
     }
 
-/* Avant API de vigilance officielle
-    $url = "https://webservice.meteofrance.com/warning/currentphenomenons?domain=$numDept";
-    $return = self::callMeteoWS($url,false,true,__FUNCTION__ .'-' .$numDept .".json");
-    $phases = array(); $phenomColor = array();
-        // init all values
-    foreach(self::$_vigilanceType as $vig) {
-      $i = $vig['idx']; 
-      // message::add(__CLASS__, "init Vigilance $i " .$vig['txt']);
-      $phases[$i] = ''; $phenomColor[$i] = 0;
-    }
-    if(!isset($return['error'])) {
-      $maxColor = 0;
-      $endValidityTime = $return['end_validity_time'];
-      if(time() > $endValidityTime) {
-        log::add(__CLASS__, 'debug', "  Fin validité vigilance $numDept: ".date('d-m-Y H:i:s',$endValidityTime));
-        foreach(self::$_vigilanceType as $vig) {
-          $id = $vig['idx']; 
-          $phases[$id] = 'Données de vigilance invalides';
-        }
-      }
-      else {
-        foreach($return['phenomenons_max_colors'] as $alert) {
-          $id = $alert['phenomenon_id'];
-          $color = $alert['phenomenon_max_color_id'];
-          $phases[$id] = $value[$color]; // self::$_vigilanceType[$id];
-          $phenomColor[$id] = $color;
-          if($color > $maxColor) $maxColor = $color;
-        }
-      }
-      $this->checkAndUpdateCmd('Vigilancecolor_max', $maxColor); // TODO command not created
-    }
-    else {
-      log::add(__CLASS__, 'warning', __FUNCTION__ ." Département: $numDept Erreur: " .$return['error'] ." Message: " .$return['message']);
-    }
-    foreach(self::$_vigilanceType as $vig) {
-      $i = $vig['idx']; 
-      // if($phenomColor[$i] <= 0) message::add(__CLASS__, "Vigilance $i " .$phenomColor[$i]);
-      $this->checkAndUpdateCmd("Vigilancephases$i", $phases[$i]);
-      $this->checkAndUpdateCmd("Vigilancephenomenon_max_color_id$i", $phenomColor[$i]);
-    }
- */
     /*
      *  $listVigilance = array(); TODO command not updated
     foreach ($return['phenomenons_items'] as $id => $vigilance) {
@@ -1333,7 +1308,7 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
           if($dec !== false) {
             $replaceFC = array();
             $replaceFC['#sep#'] = '';
-            $lastTS = $dec['dt']; // ($dec['dt_beg'] +$dec['dt_end'])/2;
+            $lastTS = $dec['dt'];
             $day = date('md',$lastTS);
             if($day != $currentDay) $numDay++;
             if($numDay >= $nbDayInstant) break;
@@ -1345,8 +1320,7 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
             else
               $replaceFC['#day#'] = "<br/>";
             $replaceFC['#moment#'] = $moment;
-            $replaceFC['#time#'] = '';
-            $replaceFC['#time#'] = date('H',$dec['dt_beg']) ."&nbsp;h&nbsp;-&nbsp;" .date('H',$dec['dt_end']) ."&nbsp;h";
+            $replaceFC['#time#'] = date('H',$dec['dt']) ."&nbsp;h";
             $img = self::getMFimg($dec['weather']['icon'] .'.svg');
             $replaceFC['#iconeFC#'] = $img;
             $replaceFC['#condition#'] = $dec['weather']['desc'];
@@ -1371,7 +1345,7 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
             if($dec['dt'] < $lastTS) continue;
             $replaceFC['#day#'] = date_fr(date('D  j', $dec['dt']));
             $replaceFC['#moment#'] = '<br/>';
-            $replaceFC['#time#'] = date('H:i',$dec['dt']);
+            $replaceFC['#time#'] = date('H:i',$dec['dt12H']);
             $img = self::getMFimg($dec['weather12H']['icon'] .'.svg');
             $replaceFC['#iconeFC#'] = $img;
             $replaceFC['#condition#'] = $dec['weather12H']['desc'];
@@ -1430,7 +1404,8 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
 
     $windDirCmd = $this->getCmd(null, 'MeteonowWindDirection');
     if(is_object($windDirCmd)) {
-      $windDirection = $windDirCmd->execCmd(); //TODO valeur non numerique null ?
+      $windDirection = $windDirCmd->execCmd();
+      if(!is_numeric($windDirection)) $windDirection = 0;
       $replace['#wind_direction#'] = $windDirection;
       $replace['#winddir#'] = $this->convertDegrees2Compass($windDirection,0);
       $replace['#wind_direction_vari#'] = $windDirection+180;
@@ -1442,8 +1417,11 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
     }
 
     $windGust = $this->getCmd(null, 'MeteonowWindGust');
-    if(is_object($windGust)) $raf = $windGust->execCmd(); else $raf = 0;
-    // $raf = 150;
+    if(is_object($windGust)) {
+      $raf = $windGust->execCmd();
+      if(!is_numeric($raf)) $raf = 0;
+    }
+    else $raf = 0;
     $replace['#windGust#'] = ($raf) ? ("&nbsp; ${raf}km/h &nbsp;") : '<br/>'; // br pour occuper la place
 
     $refresh = $this->getCmd(null, 'refresh');
@@ -1552,26 +1530,15 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
           }
           $replace['#vig'.$i.'Desc#'] = $vig['txt'] .$desc;
           if($col > 0) {
-            if($i == 1)
-              $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width: 10%;height:20px;text-align: center" title="' .$vig['txt'] .$desc .'"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 512 512"><path fill="' .substr($color[$col],8).'" d="M288 32c0 17.7 14.3 32 32 32h32c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32 14.3-32 32s14.3 32 32 32H352c53 0 96-43 96-96s-43-96-96-96H320c-17.7 0-32 14.3-32 32zm64 352c0 17.7 14.3 32 32 32h32c53 0 96-43 96-96s-43-96-96-96H32c-17.7 0-32 14.3-32 32s14.3 32 32 32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H384c-17.7 0-32 14.3-32 32zM128 512h32c53 0 96-43 96-96s-43-96-96-96H32c-17.7 0-32 14.3-32 32s14.3 32 32 32H160c17.7 0 32 14.3 32 32s-14.3 32-32 32H128c-17.7 0-32 14.3-32 32s14.3 32 32 32z"/></svg></td>';
-            else if($i == 2)
-              $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width: 10%;height:20px;text-align: center" title="' .$vig['txt'] .$desc .'"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 512 512"><path fill="' .substr($color[$col],8).'" d="M96 320c-53 0-96-43-96-96c0-42.5 27.6-78.6 65.9-91.2C64.7 126.1 64 119.1 64 112C64 50.1 114.1 0 176 0c43.1 0 80.5 24.3 99.2 60c14.7-17.1 36.5-28 60.8-28c44.2 0 80 35.8 80 80c0 5.5-.6 10.8-1.6 16c.5 0 1.1 0 1.6 0c53 0 96 43 96 96s-43 96-96 96H96zM81.5 353.9c12.2 5.2 17.8 19.3 12.6 31.5l-48 112c-5.2 12.2-19.3 17.8-31.5 12.6S-3.3 490.7 1.9 478.5l48-112c5.2-12.2 19.3-17.8 31.5-12.6zm120 0c12.2 5.2 17.8 19.3 12.6 31.5l-48 112c-5.2 12.2-19.3 17.8-31.5 12.6s-17.8-19.3-12.6-31.5l48-112c5.2-12.2 19.3-17.8 31.5-12.6zm244.6 31.5l-48 112c-5.2 12.2-19.3 17.8-31.5 12.6s-17.8-19.3-12.6-31.5l48-112c5.2-12.2 19.3-17.8 31.5-12.6s17.8 19.3 12.6 31.5zM313.5 353.9c12.2 5.2 17.8 19.3 12.6 31.5l-48 112c-5.2 12.2-19.3 17.8-31.5 12.6s-17.8-19.3-12.6-31.5l48-112c5.2-12.2 19.3-17.8 31.5-12.6z"/></svg></td>';
-            else if($i == 3)
-              $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width: 10%;height:20px;text-align: center" title="' .$vig['txt'] .$desc .'"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 512 512"><path fill="' .substr($color[$col],8).'" d="M0 224c0 53 43 96 96 96h47.2L290 202.5c17.6-14.1 42.6-14 60.2 .2s22.8 38.6 12.8 58.8L333.7 320H352h64c53 0 96-43 96-96s-43-96-96-96c-.5 0-1.1 0-1.6 0c1.1-5.2 1.6-10.5 1.6-16c0-44.2-35.8-80-80-80c-24.3 0-46.1 10.9-60.8 28C256.5 24.3 219.1 0 176 0C114.1 0 64 50.1 64 112c0 7.1 .7 14.1 1.9 20.8C27.6 145.4 0 181.5 0 224zm330.1 3.6c-5.8-4.7-14.2-4.7-20.1-.1l-160 128c-5.3 4.2-7.4 11.4-5.1 17.8s8.3 10.7 15.1 10.7h70.1L177.7 488.8c-3.4 6.7-1.6 14.9 4.3 19.6s14.2 4.7 20.1 .1l160-128c5.3-4.2 7.4-11.4 5.1-17.8s-8.3-10.7-15.1-10.7H281.9l52.4-104.8c3.4-6.7 1.6-14.9-4.2-19.6z"/></svg></td>';
-            else if($i == 4)
-              $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width: 10%;height:20px;text-align: center" title="' .$vig['txt'] .$desc .'"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 576 512"><path fill="' .substr($color[$col],8).'" d="M306.8 6.1C295.6-2 280.4-2 269.2 6.1l-176 128c-11.2 8.2-15.9 22.6-11.6 35.8S98.1 192 112 192h16v73c1.7 1 3.3 2 4.9 3.1c18 12.4 40.1 20.3 59.2 20.3c21.1 0 42-8.5 59.2-20.3c22.1-15.5 51.6-15.5 73.7 0c18.4 12.7 39.6 20.3 59.2 20.3c19 0 41.2-7.9 59.2-20.3c1.5-1 3-2 4.5-2.9l-.3-73.2H464c13.9 0 26.1-8.9 30.4-22.1s-.4-27.6-11.6-35.8l-176-128zM269.5 309.9C247 325.4 219.5 336 192 336c-26.9 0-55.3-10.8-77.4-26.1l0 0c-11.9-8.5-28.1-7.8-39.2 1.7c-14.4 11.9-32.5 21-50.6 25.2c-17.2 4-27.9 21.2-23.9 38.4s21.2 27.9 38.4 23.9c24.5-5.7 44.9-16.5 58.2-25C126.5 389.7 159 400 192 400c31.9 0 60.6-9.9 80.4-18.9c5.8-2.7 11.1-5.3 15.6-7.7c4.5 2.4 9.7 5.1 15.6 7.7c19.8 9 48.5 18.9 80.4 18.9c33 0 65.5-10.3 94.5-25.8c13.4 8.4 33.7 19.3 58.2 25c17.2 4 34.4-6.7 38.4-23.9s-6.7-34.4-23.9-38.4c-18.1-4.2-36.2-13.3-50.6-25.2c-11.1-9.5-27.3-10.1-39.2-1.7l0 0C439.4 325.2 410.9 336 384 336c-27.5 0-55-10.6-77.5-26.1c-11.1-7.9-25.9-7.9-37 0zM384 448c-27.5 0-55-10.6-77.5-26.1c-11.1-7.9-25.9-7.9-37 0C247 437.4 219.5 448 192 448c-26.9 0-55.3-10.8-77.4-26.1l0 0c-11.9-8.5-28.1-7.8-39.2 1.7c-14.4 11.9-32.5 21-50.6 25.2c-17.2 4-27.9 21.2-23.9 38.4s21.2 27.9 38.4 23.9c24.5-5.7 44.9-16.5 58.2-25C126.5 501.7 159 512 192 512c31.9 0 60.6-9.9 80.4-18.9c5.8-2.7 11.1-5.3 15.6-7.7c4.5 2.4 9.7 5.1 15.6 7.7c19.8 9 48.5 18.9 80.4 18.9c33 0 65.5-10.3 94.5-25.8c13.4 8.4 33.7 19.3 58.2 25c17.2 4 34.4-6.7 38.4-23.9s-6.7-34.4-23.9-38.4c-18.1-4.2-36.2-13.3-50.6-25.2c-11.1-9.4-27.3-10.1-39.2-1.7l0 0C439.4 437.2 410.9 448 384 448z"/></svg></td>';
-            else if($i == 5)
-              $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width: 10%;height:20px;text-align: center" title="' .$vig['txt'] .$desc .'"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 448 512"><path fill="' .substr($color[$col],8).'" d="M224 0c17.7 0 32 14.3 32 32V62.1l15-15c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-49 49v70.3l61.4-35.8 17.7-66.1c3.4-12.8 16.6-20.4 29.4-17s20.4 16.6 17 29.4l-5.2 19.3 23.6-13.8c15.3-8.9 34.9-3.7 43.8 11.5s3.8 34.9-11.5 43.8l-25.3 14.8 21.7 5.8c12.8 3.4 20.4 16.6 17 29.4s-16.6 20.4-29.4 17l-67.7-18.1L287.5 256l60.9 35.5 67.7-18.1c12.8-3.4 26 4.2 29.4 17s-4.2 26-17 29.4l-21.7 5.8 25.3 14.8c15.3 8.9 20.4 28.5 11.5 43.8s-28.5 20.4-43.8 11.5l-23.6-13.8 5.2 19.3c3.4 12.8-4.2 26-17 29.4s-26-4.2-29.4-17l-17.7-66.1L256 311.7v70.3l49 49c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-15-15V480c0 17.7-14.3 32-32 32s-32-14.3-32-32V449.9l-15 15c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l49-49V311.7l-61.4 35.8-17.7 66.1c-3.4 12.8-16.6 20.4-29.4 17s-20.4-16.6-17-29.4l5.2-19.3L48.1 395.6c-15.3 8.9-34.9 3.7-43.8-11.5s-3.7-34.9 11.5-43.8l25.3-14.8-21.7-5.8c-12.8-3.4-20.4-16.6-17-29.4s16.6-20.4 29.4-17l67.7 18.1L160.5 256 99.6 220.5 31.9 238.6c-12.8 3.4-26-4.2-29.4-17s4.2-26 17-29.4l21.7-5.8L15.9 171.6C.6 162.7-4.5 143.1 4.4 127.9s28.5-20.4 43.8-11.5l23.6 13.8-5.2-19.3c-3.4-12.8 4.2-26 17-29.4s26 4.2 29.4 17l17.7 66.1L192 200.3V129.9L143 81c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l15 15V32c0-17.7 14.3-32 32-32z"/></svg></td>';
-            else if($i == 6)
-              $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width: 10%;height:20px;text-align: center" title="' .$vig['txt'] .$desc .'"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 576 512"><path fill="' .substr($color[$col],8).'" d="M128 112c0-26.5 21.5-48 48-48s48 21.5 48 48V276.5c0 17.3 7.1 31.9 15.3 42.5C249.8 332.6 256 349.5 256 368c0 44.2-35.8 80-80 80s-80-35.8-80-80c0-18.5 6.2-35.4 16.7-48.9c8.2-10.6 15.3-25.2 15.3-42.5V112zM176 0C114.1 0 64 50.1 64 112V276.4c0 .1-.1 .3-.2 .6c-.2 .6-.8 1.6-1.7 2.8C43.2 304.2 32 334.8 32 368c0 79.5 64.5 144 144 144s144-64.5 144-144c0-33.2-11.2-63.8-30.1-88.1c-.9-1.2-1.5-2.2-1.7-2.8c-.1-.3-.2-.5-.2-.6V112C288 50.1 237.9 0 176 0zm0 416c26.5 0 48-21.5 48-48c0-20.9-13.4-38.7-32-45.3V112c0-8.8-7.2-16-16-16s-16 7.2-16 16V322.7c-18.6 6.6-32 24.4-32 45.3c0 26.5 21.5 48 48 48zM480 160h32c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-64-64c-12.5-12.5-32.8-12.5-45.3 0l-64 64c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8h32V448c0 17.7 14.3 32 32 32s32-14.3 32-32V160z"/></svg></td>';
-            else if($i == 7)
-              $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width: 10%;height:20px;text-align: center" title="' .$vig['txt'] .$desc .'"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 576 512"><path fill="' .substr($color[$col],8).'" d="M128 112c0-26.5 21.5-48 48-48s48 21.5 48 48V276.5c0 17.3 7.1 31.9 15.3 42.5C249.8 332.6 256 349.5 256 368c0 44.2-35.8 80-80 80s-80-35.8-80-80c0-18.5 6.2-35.4 16.7-48.9c8.2-10.6 15.3-25.2 15.3-42.5V112zM176 0C114.1 0 64 50.1 64 112V276.4c0 .1-.1 .3-.2 .6c-.2 .6-.8 1.6-1.7 2.8C43.2 304.2 32 334.8 32 368c0 79.5 64.5 144 144 144s144-64.5 144-144c0-33.2-11.2-63.8-30.1-88.1c-.9-1.2-1.5-2.2-1.7-2.8c-.1-.3-.2-.5-.2-.6V112C288 50.1 237.9 0 176 0zm0 416c26.5 0 48-21.5 48-48c0-20.9-13.4-38.7-32-45.3V272c0-8.8-7.2-16-16-16s-16 7.2-16 16v50.7c-18.6 6.6-32 24.4-32 45.3c0 26.5 21.5 48 48 48zm336-64H480V64c0-17.7-14.3-32-32-32s-32 14.3-32 32V352H384c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l64 64c6 6 14.1 9.4 22.6 9.4s16.6-3.4 22.6-9.4l64-64c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8z"/></svg></td>';
-            else if($i == 8)
-              $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width: 10%;height:20px;text-align: center" title="' .$vig['txt'] .$desc .'"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 576 512"><path fill="' .substr($color[$col],8).'" d="M439.7 401.9c34.2 23.1 81.1 19.5 111.4-10.8c34.4-34.4 34.4-90.1 0-124.4c-27.8-27.8-69.5-33.1-102.6-16c-11.8 6.1-16.4 20.6-10.3 32.3s20.6 16.4 32.3 10.3c15.1-7.8 34-5.3 46.6 7.3c15.6 15.6 15.6 40.9 0 56.6s-40.9 15.6-56.6 0l-81.7-81.7C401.2 261.3 416 236.4 416 208c0-33.9-21.1-62.9-50.9-74.5c1.9-6.8 2.9-14 2.9-21.5c0-44.2-35.8-80-80-80c-27.3 0-51.5 13.7-65.9 34.6C216.3 46.6 197.9 32 176 32c-26.5 0-48 21.5-48 48c0 4 .5 7.9 1.4 11.6L439.7 401.9zM480 64a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm0 128a32 32 0 1 0 0-64 32 32 0 1 0 0 64zM68.3 87C43.1 61.8 0 79.7 0 115.3V432c0 44.2 35.8 80 80 80H396.7c35.6 0 53.5-43.1 28.3-68.3L68.3 87z"/></svg></td>';
-            else if($i == 9)
-              $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width: 10%;height:20px;text-align: center" title="' .$vig['txt'] .$desc .'"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 576 512"><path fill="' .substr($color[$col],8).'" d="M80.8 136.5C104.9 93.8 152.6 64 209 64c16.9 0 33.1 2.7 48.2 7.7c16.8 5.5 34.9-3.6 40.4-20.4s-3.6-34.9-20.4-40.4C255.8 3.8 232.8 0 209 0C95.2 0 0 88 0 200c0 91.6 53.5 172.1 142.2 194.1c13.4 3.8 27.5 5.9 42.2 5.9c.7 0 1.4 0 2.1-.1c1.8 0 3.7 .1 5.5 .1l0 0c31.9 0 60.6-9.9 80.4-18.9c5.8-2.7 11.1-5.3 15.6-7.7c4.5 2.4 9.7 5.1 15.6 7.7c19.8 9 48.5 18.9 80.4 18.9c33 0 65.5-10.3 94.5-25.8c13.4 8.4 33.7 19.3 58.2 25c17.2 4 34.4-6.7 38.4-23.9s-6.7-34.4-23.9-38.4c-18.1-4.2-36.2-13.3-50.6-25.2c-11.1-9.5-27.3-10.1-39.2-1.7l0 0C439.4 325.2 410.9 336 384 336c-27.5 0-55-10.6-77.5-26.1c-11.1-7.9-25.9-7.9-37 0c-22.4 15.5-49.9 26.1-77.4 26.1c0 0-.1 0-.1 0c-12.4 0-24-1.5-34.9-4.3C121.6 320.2 96 287 96 248c0-48.5 39.5-88 88.4-88c13.5 0 26.1 3 37.5 8.3c16 7.5 35.1 .6 42.5-15.5s.6-35.1-15.5-42.5C229.3 101.1 207.4 96 184.4 96c-40 0-76.4 15.4-103.6 40.5zm252-18.1c-8.1 6-12.8 15.5-12.8 25.6V265c1.6 1 3.3 2 4.8 3.1c18.4 12.7 39.6 20.3 59.2 20.3c19 0 41.2-7.9 59.2-20.3c23.8-16.7 55.8-15.3 78.1 3.4c10.6 8.8 24.2 15.6 37.3 18.6c5.8 1.4 11.2 3.4 16.2 6.2c.7-2.7 1.1-5.5 1.1-8.4l-.4-144c0-10-4.7-19.4-12.7-25.5l-95.5-72c-11.4-8.6-27.1-8.6-38.5 0l-96 72zM384 448c-27.5 0-55-10.6-77.5-26.1c-11.1-7.9-25.9-7.9-37 0C247 437.4 219.5 448 192 448c-26.9 0-55.3-10.8-77.4-26.1l0 0c-11.9-8.5-28.1-7.8-39.2 1.7c-14.4 11.9-32.5 21-50.6 25.2c-17.2 4-27.9 21.2-23.9 38.4s21.2 27.9 38.4 23.9c24.5-5.7 44.9-16.5 58.2-25C126.5 501.7 159 512 192 512c31.9 0 60.6-9.9 80.4-18.9c5.8-2.7 11.1-5.3 15.6-7.7c4.5 2.4 9.7 5.1 15.6 7.7c19.8 9 48.5 18.9 80.4 18.9c33 0 65.5-10.3 94.5-25.8c13.4 8.4 33.7 19.3 58.2 25c17.2 4 34.4-6.7 38.4-23.9s-6.7-34.4-23.9-38.4c-18.1-4.2-36.2-13.3-50.6-25.2c-11.1-9.4-27.3-10.1-39.2-1.7l0 0C439.4 437.2 410.9 448 384 448z"/></svg></td>';
-            else if($i == 10)
-              $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width: 10%;height:20px;text-align: center" title="' .$vig['txt'] .$desc .'"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 448 512"><path fill="' .substr($color[$col],8).'" d="M159.3 5.4c7.8-7.3 19.9-7.2 27.7 .1c27.6 25.9 53.5 53.8 77.7 84c11-14.4 23.5-30.1 37-42.9c7.9-7.4 20.1-7.4 28 .1c34.6 33 63.9 76.6 84.5 118c20.3 40.8 33.8 82.5 33.8 111.9C448 404.2 348.2 512 224 512C98.4 512 0 404.1 0 276.5c0-38.4 17.8-85.3 45.4-131.7C73.3 97.7 112.7 48.6 159.3 5.4zM225.7 416c25.3 0 47.7-7 68.8-21c42.1-29.4 53.4-88.2 28.1-134.4c-4.5-9-16-9.6-22.5-2l-25.2 29.3c-6.6 7.6-18.5 7.4-24.7-.5c-16.5-21-46-58.5-62.8-79.8c-6.3-8-18.3-8.1-24.7-.1c-33.8 42.5-50.8 69.3-50.8 99.4C112 375.4 162.6 416 225.7 416z"/></svg></td>';
+            if($i >= 1 && $i <= 10) {
+              $file = __DIR__ ."/../template/images/Vigilance$i.svg";
+              $svg = @file_get_contents($file);
+              if($svg === false) log::add(__CLASS__, 'debug', "  Unable to read SVG : $file");
+              else {
+                $svg = str_replace('#888888', substr($color[$col],8),$svg);
+                $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width: 10%;height:20px;text-align: center" title="' .$vig['txt'] .$desc .'">' .$svg .'</td>';
+              }
+            }
             else
               $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width: 10%;height:20px;text-align: center" title="' .$vig['txt'] .$desc .'"><i class="wi ' .$vig['icon'] .'" style="font-size: 24px;' .$color[$col] .'"></i></td>';
           }
@@ -1590,8 +1557,8 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
 class meteofranceCmd extends cmd {
   public function execute($_options = null) {
     if ($this->getLogicalId() == 'refresh') {
-/*
       $eqLogic = $this->getEqLogic();
+/*
       foreach ($eqLogic->getCmd('info') as $cmd) {
         $val = $cmd->execCmd(null);
         $cmdLogicalId = $cmd->getLogicalId();
@@ -1601,7 +1568,7 @@ class meteofranceCmd extends cmd {
           $eqLogic->checkAndUpdateCmd($cmdLogicalId,"Obsolete command");
       }
 */
-      $this->getEqLogic()->getInformations();
+      $eqLogic()->getInformations();
     }
   }
 }

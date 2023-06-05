@@ -19,14 +19,19 @@
   </template>
   <script>
     /* JSON structure:
-    { "dt":1685797200,"T":{"value":24,"windchill":25},"humidity":40,"sea_level":1015.5,
-      "wind":{"speed":4,"gust":0,"direction":50,"icon":"NE"},
-      "rain":{"1h":0},"snow":{"1h":0},"iso0":3450,"rain snow limit":"Non pertinent",
-      "clouds":10,
-      "dt_beg":1685235600,"dt_end":1685235600,
-      "moment_day":"Soirée",
-      "weather":{"icon":"p1j","desc":"Ensoleillé"},
-   }
+      { "dt":1685991600,
+        "T":{"value":22.7,"windchill":21.3},
+        "humidity":30,
+        "sea_level":1015.3,
+        "wind":{"speed":4,"gust":0,"direction":55,"icon":"NE"},
+        "rain":{"1h":0},
+        "snow":{"1h":0},
+        "iso0":3350,
+        "rain snow limit":"Non pertinent",
+        "clouds":10,
+        "weather":{"icon":"p1j","desc":"Ensoleillé"},
+        "moment_day":"Soirée"
+      }
    */
     jeedom.cmd.addUpdateFunction('#id#',function(_options) {
       let cmd = $('.cmd[data-cmd_id=#id#]');
@@ -49,11 +54,7 @@
           else weatherIconTitle += '<br/>' +obj.moment_day;
           if('#displayTime#' != '0') {
             if(dateTime.length) dateTime += '<br/>';
-            let cdbeg = new Date(obj.dt_beg * 1000);
-            dateTime += cdbeg.toLocaleTimeString('fr-FR', {hour: '2-digit'});
-            let cdend = new Date(obj.dt_end * 1000);
-            let timeend = cdend.toLocaleTimeString('fr-FR', {hour: '2-digit'});
-            dateTime += ' - ' +timeend;
+            dateTime += cd.toLocaleTimeString('fr-FR', {hour: '2-digit'});
           }
           else weatherIconTitle += '<br/>Heure: ' +cd.toLocaleTimeString('fr-FR', {hour: '2-digit'});
           if('#displayDescription#' != '0') {

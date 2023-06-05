@@ -18,18 +18,18 @@
   </template>
   <script>
     /* JSON structure:
-    { "dt":1685199600,
-      "T":{"value":24.4,"windchill":26.2},
-      "humidity":45,
-      "sea_level":1018.7,
-      "wind":{"speed":6,"gust":0,"direction":35,"icon":"NE"},
-      "rain":{"1h":0},
-      "snow":{"1h":0},
-      "iso0":3600,
-      "rain snow limit":"Non pertinent",
-      "clouds":10,
-      "weather":{"icon":"p1j", "desc":"Ensoleillé"}
-    }
+      { "dt":1685984400,
+        "T":{"value":25.2,"windchill":24.1},
+        "humidity":25,
+        "sea_level":1015,
+        "wind":{"speed":3,"gust":0,"direction":65,"icon":"ENE"},
+        "rain":{"1h":0},
+        "snow":{"1h":0},
+        "iso0":2900,
+        "rain snow limit":"Non pertinent",
+        "clouds":10,
+        "weather":{"icon":"p1j","desc":"Ensoleillé"}
+      }
    */
     jeedom.cmd.addUpdateFunction('#id#',function(_options) {
       let cmd = $('.cmd[data-cmd_id=#id#]');

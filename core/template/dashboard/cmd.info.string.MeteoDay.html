@@ -19,16 +19,17 @@
     <div>displayHumidity : 0/1 ({{Affichage de l'humidité}})</div>
   </template>
   <script>
-    /* JSON structure:
-    { "dt":1685145600,
-      "T":{"min":10.5,"max":24.6,"sea":null},
-      "humidity":{"min":40,"max":75},
-      "precipitation":{"24h":0},
-      "uv":8,
-      "sun":{"rise":1685158861,"set":1685215434}
-      "weather12H":{"icon":"p1j","desc":"Ensoleillé"},
-    }
-   */
+     /* JSON structure
+        { "dt":1686096000,
+          "T":{"min":12.1,"max":26.1,"sea":null},
+          "humidity":{"min":40,"max":75},
+          "precipitation":{"24h":0},
+          "uv":8,
+          "weather12H":{"icon":"p1j","desc":"Ensoleill\u00e9"},
+          "sun":{"rise":1686108819,"set":1686166464},
+          "dt12H":1686132000
+        }
+       */
     jeedom.cmd.addUpdateFunction('#id#',function(_options) {
       let cmd = $('.cmd[data-cmd_id=#id#]');
       try {
@@ -37,7 +38,7 @@
           cmd.find('.weatherIcon').empty().append('<img src="plugins/meteofrance/data/icones/' +obj.weather12H.icon +'.svg">');
           let weatherIconTitle = obj.weather12H.desc;
 
-          let cd = new Date(obj.dt * 1000);
+          let cd = new Date(obj.dt12H * 1000);
           let dateTime = '';
           let dayTxt = cd.toLocaleDateString('fr-FR', {month: 'short', day: 'numeric',weekday: 'short'});
           let day = dayTxt.charAt(0).toUpperCase() + dayTxt.slice(1); // ucfirst

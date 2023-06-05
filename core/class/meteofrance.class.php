@@ -517,7 +517,7 @@ class meteofrance extends eqLogic {
     }
 
  /* // TODO verify usefulness and delete old unused commands
-*/
+  * Fonctionnel mais en commentaire pour ne pas renseigner les commandes obsoletes
     $step = $return['forecast'][0]['moment_day'];
     log::add(__CLASS__, 'debug', '    Moment journée : ' . $step);
     $cmd = $this->getCmd(null, 'Meteonuit0description');
@@ -645,6 +645,7 @@ class meteofrance extends eqLogic {
       $this->checkAndUpdateCmd('Meteosoir1temperatureMin', $value['T']['value']);
       $this->checkAndUpdateCmd('Meteosoir1temperatureMax', $value['T']['windchill']);
     }
+*/
   }
 
   public function getRain() {

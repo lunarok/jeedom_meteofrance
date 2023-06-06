@@ -95,10 +95,11 @@ class meteofrance extends eqLogic {
     }
   }
 
-  public static function pullDataVigilance() {
+  public static function pullDataVigilance($updatePlugin=0) {
     $recup = 1; $ret = 0;
     foreach (eqLogic::byType(__CLASS__, true) as $meteofrance) {
       if($recup) $ret = $meteofrance->getVigilanceDataApiCloudMF();
+      if($updatePlugin == 1) break; // Update data only
       $recup = 0;
       if($ret != -1) $meteofrance->getInformations();
     }
@@ -856,7 +857,10 @@ class meteofrance extends eqLogic {
       }
     }
     if($recupAPI < 3) { // Recover vigilance with MF archives
-      $url = "http://storage.gra.cloud.ovh.net/v1/AUTH_555bdc85997f4552914346d4550c421e/gra-vigi6-archive_public/" .date('Y') ."/" .date('m') ."/" .date('d') ."/";
+      if(date('H') < 6) $timeRecup = strtotime("yesterday");
+      else $timeRecup = time();
+      $dateRecup = gmdate('Y/m/d',$timeRecup);
+      $url = "http://storage.gra.cloud.ovh.net/v1/AUTH_555bdc85997f4552914346d4550c421e/gra-vigi6-archive_public/$dateRecup/";
       log::add(__CLASS__, 'debug', "  Fetching MF archives $url");
       $doc = new DOMDocument();
       libxml_use_internal_errors(true); // disable warning
@@ -873,7 +877,7 @@ class meteofrance extends eqLogic {
           log::add(__CLASS__, 'debug', "  Val: [$val] Latest: $latest");
         }
         $prevRecup = trim(config::byKey('prevVigilanceRecovery', __CLASS__));
-        $latestFull = date('Y').date('m').date('d') .$latest .'Z';
+        $latestFull = gmdate('Ymd',$timeRecup) .$latest .'Z';
         if($prevRecup != $latestFull) {
           log::add(__CLASS__, 'debug', "  Using: $latest data Previous: $prevRecup");
           $contents = @file_get_contents($url.$latest ."/CDP_CARTE_EXTERNE.json");

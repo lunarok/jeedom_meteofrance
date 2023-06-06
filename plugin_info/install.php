@@ -20,7 +20,6 @@ require_once __DIR__ . '/../../../core/php/core.inc.php';
 // Fonction exécutée automatiquement après l'installation du plugin
 function meteofrance_install() {
   meteofrance::setCronDataVigilance(1);
-  meteofrance::pullDataVigilance(1);
 }
 
 // Fonction exécutée automatiquement après la mise à jour du plugin
@@ -29,7 +28,6 @@ function meteofrance_update() {
     $eqLogic->save();
   }
   meteofrance::setCronDataVigilance(1);
-  meteofrance::pullDataVigilance(1);
 }
 
 // Fonction exécutée automatiquement après la suppression du plugin

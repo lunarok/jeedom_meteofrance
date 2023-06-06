@@ -117,6 +117,7 @@ class meteofrance extends eqLogic {
         $cron->setSchedule(rand(5,25) .' 6-20 * * *');
         $cron->save();
       }
+      meteofrance::pullDataVigilance(1); // update data
     }
     else {
       $cron = cron::byClassAndFunction(__CLASS__, 'pullDataVigilance');
@@ -878,7 +879,7 @@ class meteofrance extends eqLogic {
         }
         $prevRecup = trim(config::byKey('prevVigilanceRecovery', __CLASS__));
         $latestFull = gmdate('Ymd',$timeRecup) .$latest .'Z';
-        if($prevRecup != $latestFull) {
+        if($prevRecup != $latestFull || !file_exists($fileAlert) || !file_exists($fileVignetteJ)) {
           log::add(__CLASS__, 'debug', "  Using: $latest data Previous: $prevRecup");
           $contents = @file_get_contents($url.$latest ."/CDP_CARTE_EXTERNE.json");
           if($contents !== false) {

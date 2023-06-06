@@ -1,544 +1,576 @@
 {
   "commands": [
-        {
-            "name": "Météo 3h - Probabilité Pluie",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "MeteoprobaPluie"
-        },
-        {
-            "name": "Météo 3h - Probabilité Neige",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "MeteoprobaNeige"
-        },
-        {
-            "name": "Météo 3h - Probabilité Gel",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "MeteoprobaGel"
-        },
-        {
-            "name": "Météo 3h - Probabilité Orage",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "MeteoprobaStorm"
-        },
-        {
-            "name": "Météo du Jour - Aujourd'hui - Cumul Pluie",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteoday0PluieCumul"
-        },
-        {
-            "name": "Météo du Jour - Aujourd'hui - Description",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteoday0description"
-        },
-        {
-            "name": "Météo du Jour - Aujourd'hui - Direction du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteoday0directionVent"
-        },
-        {
-            "name": "Météo du Jour - Aujourd'hui - Vitesse du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteoday0vitesseVent"
-        },
-        {
-            "name": "Météo du Jour - Aujourd'hui - Force Rafales",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteoday0forceRafales"
-        },
-        {
-            "name": "Météo du Jour - Aujourd'hui - Température Minimum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteoday0temperatureMin"
-        },
-        {
-            "name": "Météo du Jour - Aujourd'hui - Température Maximum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteoday0temperatureMax"
-        },
-        {
-            "name": "Météo du Jour - Aujourd'hui - Indice UV",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteoday0indiceUV"
-        },
-        {
-            "name": "Météo du Jour - Demain - Description",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteoday1description"
-        },
-        {
-            "name": "Météo du Jour - Demain - Direction du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteoday1directionVent"
-        },
-        {
-            "name": "Météo du Jour - Demain - Vitesse du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteoday1vitesseVent"
-        },
-        {
-            "name": "Météo du Jour - Demain - Force Rafales",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteoday1forceRafales"
-        },
-        {
-            "name": "Météo du Jour - Demain - Température Minimum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteoday1temperatureMin"
-        },
-        {
-            "name": "Météo du Jour - Demain - Température Maximum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteoday1temperatureMax"
-        },
-        {
-            "name": "Météo du Jour - Demain - Indice UV",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteoday1indiceUV"
-        },
-        {
-            "name": "Météo du Jour - Surlendemain - Description",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteoday2description"
-        },
-        {
-            "name": "Météo du Jour - Surlendemain - Direction du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteoday2directionVent"
-        },
-        {
-            "name": "Météo du Jour - Surlendemain - Vitesse du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteoday2vitesseVent"
-        },
-        {
-            "name": "Météo du Jour - Surlendemain - Force Rafales",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteoday2forceRafales"
-        },
-        {
-            "name": "Météo du Jour - Surlendemain - Température Minimum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteoday2temperatureMin"
-        },
-        {
-            "name": "Météo du Jour - Surlendemain - Température Maximum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteoday2temperatureMax"
-        },
-        {
-            "name": "Météo du Jour - Surlendemain - Indice UV",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteoday2indiceUV"
-        },
-        {
-            "name": "Météo du Matin - Aujourd'hui - Description",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteomatin0description"
-        },
-        {
-            "name": "Météo du Matin - Aujourd'hui - Direction du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteomatin0directionVent"
-        },
-        {
-            "name": "Météo du Matin - Aujourd'hui - Vitesse du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteomatin0vitesseVent"
-        },
-        {
-            "name": "Météo du Matin - Aujourd'hui - Force Rafales",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteomatin0forceRafales"
-        },
-        {
-            "name": "Météo du Matin - Aujourd'hui - Température Minimum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteomatin0temperatureMin"
-        },
-        {
-            "name": "Météo du Matin - Aujourd'hui - Température Maximum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteomatin0temperatureMax"
-        },
-        {
-            "name": "Météo du Matin - Demain - Description",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteomatin1description"
-        },
-        {
-            "name": "Météo du Matin - Demain - Direction du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteomatin1directionVent"
-        },
-        {
-            "name": "Météo du Matin - Demain - Vitesse du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteomatin1vitesseVent"
-        },
-        {
-            "name": "Météo du Matin - Demain - Force Rafales",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteomatin1forceRafales"
-        },
-        {
-            "name": "Météo du Matin - Demain - Température Minimum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteomatin1temperatureMin"
-        },
-        {
-            "name": "Météo du Matin - Demain - Température Maximum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteomatin1temperatureMax"
-        },
-        {
-            "name": "Météo du Midi - Aujourd'hui - Description",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteomidi0description"
-        },
-        {
-            "name": "Météo du Midi - Aujourd'hui - Direction du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteomidi0directionVent"
-        },
-        {
-            "name": "Météo du Midi - Aujourd'hui - Vitesse du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteomidi0vitesseVent"
-        },
-        {
-            "name": "Météo du Midi - Aujourd'hui - Force Rafales",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteomidi0forceRafales"
-        },
-        {
-            "name": "Météo du Midi - Aujourd'hui - Température Minimum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteomidi0temperatureMin"
-        },
-        {
-            "name": "Météo du Midi - Aujourd'hui - Température Maximum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteomidi0temperatureMax"
-        },
-        {
-            "name": "Météo du Midi - Demain - Description",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteomidi1description"
-        },
-        {
-            "name": "Météo du Midi - Demain - Direction du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteomidi1directionVent"
-        },
-        {
-            "name": "Météo du Midi - Demain - Vitesse du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteomidi1vitesseVent"
-        },
-        {
-            "name": "Météo du Midi - Demain - Force Rafales",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteomidi1forceRafales"
-        },
-        {
-            "name": "Météo du Midi - Demain - Température Minimum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteomidi1temperatureMin"
-        },
-        {
-            "name": "Météo du Midi - Demain - Température Maximum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteomidi1temperatureMax"
-        },
-        {
-            "name": "Météo du Soir - Aujourd'hui - Description",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteosoir0description"
-        },
-        {
-            "name": "Météo du Soir - Aujourd'hui - Direction du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteosoir0directionVent"
-        },
-        {
-            "name": "Météo du Soir - Aujourd'hui - Vitesse du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteosoir0vitesseVent"
-        },
-        {
-            "name": "Météo du Soir - Aujourd'hui - Force Rafales",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteosoir0forceRafales"
-        },
-        {
-            "name": "Météo du Soir - Aujourd'hui - Température Minimum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteosoir0temperatureMin"
-        },
-        {
-            "name": "Météo du Soir - Aujourd'hui - Température Maximum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteosoir0temperatureMax"
-        },
-        {
-            "name": "Météo du Soir - Demain - Description",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteosoir1description"
-        },
-        {
-            "name": "Météo du Soir - Demain - Direction du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteosoir1directionVent"
-        },
-        {
-            "name": "Météo du Soir - Demain - Vitesse du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteosoir1vitesseVent"
-        },
-        {
-            "name": "Météo du Soir - Demain - Force Rafales",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteosoir1forceRafales"
-        },
-        {
-            "name": "Météo du Soir - Demain - Température Minimum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteosoir1temperatureMin"
-        },
-        {
-            "name": "Météo du Soir - Demain - Température Maximum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteosoir1temperatureMax"
-        },
-        {
-            "name": "Météo de la Nuit - Aujourd'hui - Description",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteonuit0description"
-        },
-        {
-            "name": "Météo de la Nuit - Aujourd'hui - Direction du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteonuit0directionVent"
-        },
-        {
-            "name": "Météo de la Nuit - Aujourd'hui - Vitesse du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteonuit0vitesseVent"
-        },
-        {
-            "name": "Météo de la Nuit - Aujourd'hui - Force Rafales",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteonuit0forceRafales"
-        },
-        {
-            "name": "Météo de la Nuit - Aujourd'hui - Température Minimum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteonuit0temperatureMin"
-        },
-        {
-            "name": "Météo de la Nuit - Aujourd'hui - Température Maximum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteonuit0temperatureMax"
-        },
-        {
-            "name": "Météo de la Nuit - Demain - Description",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteonuit1description"
-        },
-        {
-            "name": "Météo de la Nuit - Demain - Direction du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteonuit1directionVent"
-        },
-        {
-            "name": "Météo de la Nuit - Demain - Vitesse du Vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteonuit1vitesseVent"
-        },
-        {
-            "name": "Météo de la Nuit - Demain - Force Rafales",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteonuit1forceRafales"
-        },
-        {
-            "name": "Météo de la Nuit - Demain - Température Minimum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteonuit1temperatureMin"
-        },
-        {
-            "name": "Météo de la Nuit - Demain - Température Maximum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteonuit1temperatureMax"
-        },
-        {
-            "name": "Météo Actuellement - Couverture Nuageuse",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "MeteonowCloud"
-        },
-        {
-            "name": "Météo Actuellement - Pression",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "MeteonowPression"
-        },
-        {
-            "name": "Météo Actuellement - Température",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "MeteonowTemperature"
-        },
-        {
-            "name": "Météo Actuellement - Humidité",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "MeteonowHumidity"
-        },
-        {
-            "name": "Météo du Jour - J+3 - Température Minimum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteoday3temperatureMin"
-        },
-        {
-            "name": "Météo du Jour - J+3 - Température Maximum",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteoday3temperatureMax"
-        },
-        {
-            "name": "Météo du Jour - H+1 - Température",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteodayh1temperature"
-        },
-        {
-            "name": "Météo du Jour - H+1 - Température Ressentie",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Meteodayh1temperatureRes"
-        },
-        {
-            "name": "Météo Actuellement - Température Ressentie",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "MeteonowTemperatureRes"
-        },
-        {
-            "name": "Météo Actuellement - Icone",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteoday0icon"
-        },
-        {
-            "name": "Météo du Jour - H+1 - Icone",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "hourly1icon"
-        },
-        {
-            "name": "Météo du Jour - J+1 - Icone",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteoday1icon"
-        },
-        {
-            "name": "Météo du Jour - J+2 - Icone",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteoday2icon"
-        },
-        {
-            "name": "Météo du Jour - J+3 - Icone",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteoday3icon"
-        },
-        {
-            "name": "Météo du Jour - J+3 - Description",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteoday3description"
-        },
-        {
-            "name": "Météo du Jour - H+1 - Description",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Meteodayh1description"
-        }
-    ]
+    {
+        "name": "Météo 3h - Probabilité Pluie",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "MeteoprobaPluie"
+    },
+    {
+        "name": "Météo 3h - Probabilité Neige",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "MeteoprobaNeige"
+    },
+    {
+        "name": "Météo 3h - Probabilité Gel",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "MeteoprobaGel"
+    },
+    {
+        "name": "Météo 3h - Probabilité Orage",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "MeteoprobaStorm"
+    },
+    { "name": "Météo du Jour - Aujourd'hui - Cumul Pluie",
+      "type": "info",
+      "subtype": "string",
+      "isVisible": 0,
+      "logicalId": "Meteoday0PluieCumul"
+    },
+    {
+        "name": "Météo du Jour - Aujourd'hui - Description",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Meteoday0description"
+    },
+    {
+        "name": "Météo du Jour - Aujourd'hui - Direction du Vent",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Meteoday0directionVent"
+    },
+    {
+        "name": "Météo du Jour - Aujourd'hui - Vitesse du Vent",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Meteoday0vitesseVent"
+    },
+    {
+        "name": "Météo du Jour - Aujourd'hui - Force Rafales",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Meteoday0forceRafales"
+    },
+    {
+        "name": "Météo du Jour - Aujourd'hui - Température Minimum",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Meteoday0temperatureMin"
+    },
+    {
+        "name": "Météo du Jour - Aujourd'hui - Température Maximum",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Meteoday0temperatureMax"
+    },
+    { "name": "Météo du Jour - Aujourd'hui - Indice UV",
+      "type": "info",
+      "subtype": "numeric",
+      "isVisible": 0,
+      "logicalId": "Meteoday0indiceUV"
+    },
+    { "name": "Météo du Jour - Demain - Cumul Pluie",
+      "type": "info",
+      "subtype": "string",
+      "isVisible": 0,
+      "logicalId": "Meteoday1PluieCumul"
+    },
+    { "name": "Météo du Jour - Demain - Description",
+      "type": "info",
+      "subtype": "string",
+      "isVisible": 0,
+      "logicalId": "Meteoday1description"
+    },
+    {
+        "name": "Météo du Jour - Demain - Direction du Vent",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Meteoday1directionVent"
+    },
+    {
+        "name": "Météo du Jour - Demain - Vitesse du Vent",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Meteoday1vitesseVent"
+    },
+    {
+        "name": "Météo du Jour - Demain - Force Rafales",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Meteoday1forceRafales"
+    },
+    {
+        "name": "Météo du Jour - Demain - Température Minimum",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Meteoday1temperatureMin"
+    },
+    {
+        "name": "Météo du Jour - Demain - Température Maximum",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Meteoday1temperatureMax"
+    },
+    { "name": "Météo du Jour - Demain - Indice UV",
+      "type": "info",
+      "subtype": "numeric",
+      "isVisible": 0,
+      "logicalId": "Meteoday1indiceUV"
+    },
+    { "name": "Météo du Jour - Surlendemain - Cumul Pluie",
+      "type": "info",
+      "subtype": "string",
+      "isVisible": 0,
+      "logicalId": "Meteoday2PluieCumul"
+    },
+    { "name": "Météo du Jour - Surlendemain - Description",
+      "type": "info",
+      "subtype": "string",
+      "isVisible": 0,
+      "logicalId": "Meteoday2description"
+    },
+    {
+        "name": "Météo du Jour - Surlendemain - Direction du Vent",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Meteoday2directionVent"
+    },
+    {
+        "name": "Météo du Jour - Surlendemain - Vitesse du Vent",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Meteoday2vitesseVent"
+    },
+    {
+        "name": "Météo du Jour - Surlendemain - Force Rafales",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Meteoday2forceRafales"
+    },
+    {
+        "name": "Météo du Jour - Surlendemain - Température Minimum",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Meteoday2temperatureMin"
+    },
+    {
+        "name": "Météo du Jour - Surlendemain - Température Maximum",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Meteoday2temperatureMax"
+    },
+    {
+        "name": "Météo du Jour - Surlendemain - Indice UV",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Meteoday2indiceUV"
+    },
+    { "name": "Météo Actuellement - Description",
+      "type": "info",
+      "subtype": "string",
+      "isVisible": 0,
+      "logicalId": "MeteonowDescription"
+    },
+    { "name": "Météo Actuellement - Vitesse du vent",
+      "type": "info",
+      "subtype": "numeric",
+      "isVisible": 0,
+      "logicalId": "MeteonowWindSpeed"
+    },
+    { "name": "Météo Actuellement - Rafales de vent",
+      "type": "info",
+      "subtype": "numeric",
+      "isVisible": 0,
+      "logicalId": "MeteonowWindGust"
+    },
+    { "name": "Météo Actuellement - Direction du vent",
+      "type": "info",
+      "subtype": "numeric",
+      "isVisible": 0,
+      "logicalId": "MeteonowWindDirection"
+    },
+    { "name": "Météo Actuellement - Neige dans l'heure",
+      "type": "info",
+      "subtype": "numeric",
+      "isVisible": 0,
+      "logicalId": "MeteonowSnow1h"
+    },
+    { "name": "Météo Actuellement - Pluie dans l'heure",
+      "type": "info",
+      "subtype": "numeric",
+      "isVisible": 0,
+      "logicalId": "MeteonowRain1h"
+    },
+    {
+        "name": "Météo Actuellement - Couverture Nuageuse",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "MeteonowCloud"
+    },
+    {
+        "name": "Météo Actuellement - Pression",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "MeteonowPression"
+    },
+    {
+        "name": "Météo Actuellement - Température",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "MeteonowTemperature"
+    },
+    {
+        "name": "Météo Actuellement - Humidité",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "MeteonowHumidity"
+    },
+    {
+        "name": "Météo Actuellement - Icone old",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "MeteonowIcon"
+    },
+    {
+        "name": "Météo du Jour - J+3 - Température Minimum",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Meteoday3temperatureMin"
+    },
+    {
+        "name": "Météo du Jour - J+3 - Température Maximum",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Meteoday3temperatureMax"
+    },
+    {
+        "name": "Météo du Jour - H+1 - Température",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Meteodayh1temperature"
+    },
+    {
+        "name": "Météo du Jour - H+1 - Température Ressentie",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Meteodayh1temperatureRes"
+    },
+    {
+        "name": "Météo Actuellement - Température Ressentie",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "MeteonowTemperatureRes"
+    },
+    {
+        "name": "Météo Actuellement - Icone New",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Meteoday0icon"
+    },
+    {
+        "name": "Météo du Jour - H+1 - Icone",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "hourly1icon"
+    },
+    {
+        "name": "Météo du Jour - J+1 - Icone",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Meteoday1icon"
+    },
+    {
+        "name": "Météo du Jour - J+2 - Icone",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Meteoday2icon"
+    },
+    {
+        "name": "Météo du Jour - J+3 - Icone",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Meteoday3icon"
+    },
+    { "name": "Météo du Jour - J+3 - Cumul Pluie",
+      "type": "info",
+      "subtype": "string",
+      "isVisible": 0,
+      "logicalId": "Meteoday3PluieCumul"
+    },
+    { "name": "Météo du Jour - J+3 - Indice UV",
+      "type": "info",
+      "subtype": "numeric",
+      "isVisible": 0,
+      "logicalId": "Meteoday3indiceUV"
+    },
+    {
+        "name": "Météo du Jour - J+3 - Description",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Meteoday3description"
+    },
+    {
+        "name": "Météo du Jour - H+1 - Description",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Meteodayh1description"
+    },
+    {   "name": "Météo jour 0 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoDay0Json",
+        "isHistorized": 0,
+        "order": "300",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"0","parameters":{"displayDate":"1","displayTime":"0","displayHumidity":"1","displayUV":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoDay","mobile":"meteofrance::MeteoDay" }
+    },
+    {   "name": "Météo jour +1 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoDay1Json",
+        "isHistorized": 0,
+        "order": "301",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"0","parameters":{"displayDate":"1","displayTime":"0","displayHumidity":"1","displayUV":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoDay","mobile":"meteofrance::MeteoDay" }
+    },
+    {   "name": "Météo jour +2 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoDay2Json",
+        "isHistorized": 0,
+        "order": "302",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"0","parameters":{"displayDate":"1","displayTime":"0","displayHumidity":"1","displayUV":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoDay","mobile":"meteofrance::MeteoDay" }
+    },
+    {   "name": "Météo jour +3 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoDay3Json",
+        "isHistorized": 0,
+        "order": "303",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"0","parameters":{"displayDate":"1","displayTime":"0","displayHumidity":"1","displayUV":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoDay","mobile":"meteofrance::MeteoDay" }
+    },
+    {   "name": "Météo jour +4 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoDay4Json",
+        "isHistorized": 0,
+        "order": "304",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"0","parameters":{"displayDate":"1","displayTime":"0","displayHumidity":"1","displayUV":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoDay","mobile":"meteofrance::MeteoDay" }
+    },
+    {   "name": "Météo jour +5 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoDay5Json",
+        "isHistorized": 0,
+        "order": "305",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"1","parameters":{"displayDate":"1","displayTime":"0","displayHumidity":"1","displayUV":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoDay","mobile":"meteofrance::MeteoDay" }
+    },
+    {   "name": "Moment de la journée 0 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoInstant0Json",
+        "isHistorized": 0,
+        "order": "320",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"0","parameters":{"displayDate":"1","displayTime":"1","displayMoment":"0","displayWind":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoMoment","mobile":"meteofrance::MeteoMoment" }
+    },
+    {   "name": "Moment de la journée +1 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoInstant1Json",
+        "isHistorized": 0,
+        "order": "321",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"0","parameters":{"displayDate":"1","displayTime":"1","displayMoment":"0","displayWind":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoMoment","mobile":"meteofrance::MeteoMoment" }
+    },
+    {   "name": "Moment de la journée +2 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoInstant2Json",
+        "isHistorized": 0,
+        "order": "322",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"0","parameters":{"displayDate":"1","displayTime":"1","displayMoment":"0","displayWind":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoMoment","mobile":"meteofrance::MeteoMoment" }
+    },
+    {   "name": "Moment de la journée +3 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoInstant3Json",
+        "isHistorized": 0,
+        "order": "323",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"0","parameters":{"displayDate":"1","displayTime":"1","displayMoment":"0","displayWind":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoMoment","mobile":"meteofrance::MeteoMoment" }
+    },
+    {   "name": "Moment de la journée +4 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoInstant4Json",
+        "isHistoriz6d": 0,
+        "order": "324",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"0","parameters":{"displayDate":"1","displayTime":"1","displayMoment":"0","displayWind":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoMoment","mobile":"meteofrance::MeteoMoment" }
+    },
+    {   "name": "Moment de la journée +5 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoInstant5Json",
+        "isHistorized": 0,
+        "order": "325",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"0","parameters":{"displayDate":"1","displayTime":"1","displayMoment":"0","displayWind":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoMoment","mobile":"meteofrance::MeteoMoment" }
+    },
+    {   "name": "Moment de la journée +6 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoInstant6Json",
+        "isHistorized": 0,
+        "order": "326",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"0","parameters":{"displayDate":"0","displayTime":"1","displayMoment":"0","displayWind":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoMoment","mobile":"meteofrance::MeteoMoment" }
+    },
+    {   "name": "Moment de la journée +7 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoInstant7Json",
+        "isHistorized": 0,
+        "order": "327",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"1","parameters":{"displayDate":"1","displayTime":"1","displayMoment":"0","displayWind":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoMoment","mobile":"meteofrance::MeteoMoment" }
+    },
+    {   "name": "Météo heure 0 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoHour0Json",
+        "isHistorized": 0,
+        "order": "340",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"0","parameters":{"displayDate":"0","displayTime":"1","displayWind":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoHour","mobile":"meteofrance::MeteoHour" }
+    },
+    {   "name": "Météo heure +1 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoHour1Json",
+        "isHistorized": 0,
+        "order": "341",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"0","parameters":{"displayDate":"0","displayTime":"1","displayWind":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoHour","mobile":"meteofrance::MeteoHour" }
+    },
+    {   "name": "Météo heure +2 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoHour2Json",
+        "isHistorized": 0,
+        "order": "342",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"0","parameters":{"displayDate":"0","displayTime":"1","displayWind":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoHour","mobile":"meteofrance::MeteoHour" }
+    },
+    {   "name": "Météo heure +3 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoHour3Json",
+        "isHistorized": 0,
+        "order": "343",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"0","parameters":{"displayDate":"0","displayTime":"1","displayWind":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoHour","mobile":"meteofrance::MeteoHour" }
+    },
+    {   "name": "Météo heure +4 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoHour4Json",
+        "isHistorized": 0,
+        "order": "344",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"0","parameters":{"displayDate":"0","displayTime":"1","displayWind":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoHour","mobile":"meteofrance::MeteoHour" }
+    },
+    {   "name": "Météo heure +5 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoHour5Json",
+        "isHistorized": 0,
+        "order": "345",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"0","parameters":{"displayDate":"0","displayTime":"1","displayWind":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoHour","mobile":"meteofrance::MeteoHour" }
+    },
+    {   "name": "Météo heure +6 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoHour6Json",
+        "isHistorized": 0,
+        "order": "346",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"0","parameters":{"displayDate":"0","displayTime":"1","displayWind":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoHour","mobile":"meteofrance::MeteoHour" }
+    },
+    {   "name": "Météo heure +7 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoHour7Json",
+        "isHistorized": 0,
+        "order": "347",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"0","parameters":{"displayDate":"0","displayTime":"1","displayWind":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoHour","mobile":"meteofrance::MeteoHour" }
+    },
+    {   "name": "Météo heure +8 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoHour8Json",
+        "isHistorized": 0,
+        "order": "348",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"0","parameters":{"displayDate":"0","displayTime":"1","displayWind":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoHour","mobile":"meteofrance::MeteoHour" }
+    },
+    {   "name": "Météo heure +9 - Json",
+        "type": "info",
+        "subtype": "string",
+        "logicalId": "MeteoHour9Json",
+        "isHistorized": 0,
+        "order": "349",
+        "display": {"showNameOndashboard":"0","showNameOnmobile":"0","forceReturnLineAfter":"1","parameters":{"displayDate":"0","displayTime":"1","displayWind":"1","displayDescription":"0"}},
+        "template": {"dashboard":"meteofrance::MeteoHour","mobile":"meteofrance::MeteoHour" }
+    }
+  ]
 }

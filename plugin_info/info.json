@@ -3,13 +3,13 @@
 	"name" : "Météo France",
 	"description" : "Ce plugin permet de récupérer différents types d'informations/alertes météo depuis le site de Météo France : vigilance, pluie, alertes, météo marine, marée ...",
 	"licence" : "AGPL",
-	"author" : "lunarok",
+	"author" : "lunarok / jpty",
 	"require" : "3.3.24",
 	"category" : "weather",
 	"language" : ["fr_FR","en_US"],
 	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile","v4"],
-    "changelog" : "https://lunarok.github.io/jeedom_docs/plugins/meteofrance/changelog.html",
-    "documentation" : "https://lunarok.github.io/jeedom_docs/plugins/meteofrance/",
-	"changelog_beta" : "https://lunarok.github.io/jeedom_docs/plugins/meteofrance/changelog.html",
-    "documentation_beta" : "https://lunarok.github.io/jeedom_docs/plugins/meteofrance/"
+  "changelog" : "https://lunarok.github.io/jeedom_docs/plugins/meteofrance/changelog.html",
+  "changelog_beta" : "https://lunarok.github.io/jeedom_docs/plugins/meteofrance/changelog.html",
+  "documentation" : "https://lunarok.github.io/jeedom_docs/plugins/meteofrance/",
+  "documentation_beta" : "https://lunarok.github.io/jeedom_docs/plugins/meteofrance/"
 }

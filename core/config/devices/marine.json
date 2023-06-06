@@ -1,148 +1,172 @@
 {
   "commands": [
-        {
-            "name": "Marine - Vitesse du vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Marinewind_speed_kt0"
-        },
-        {
-            "name": "Marine - Direction du vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Marinewind_direction0"
-        },
-        {
-            "name": "Marine - Echelle Beaufort",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Marinebeaufort_scale0"
-        },
-        {
-            "name": "Marine - Vagues hauteur",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Marinewave_height0"
-        },
-        {
-            "name": "Marine - Vagues hauteur max",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Marinemax_wave_height0"
-        },
-        {
-            "name": "Marine - Vagues hauteur vent",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Marinewind_waves_height0"
-        },
-        {
-            "name": "Marine - Houle direction",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Marineprimary_swell_direction0"
-        },
-        {
-            "name": "Marine - Houle hauteur",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Marineprimary_swell_height0"
-        },
-        {
-            "name": "Marine - Houteur fréquence",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Marineprimary_swell_period0"
-        },
-        {
-            "name": "Marine - Température eau",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "MarineT_sea0"
-        },
-        {
-            "name": "Marine - Mer condition",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Marinesea_condition0"
-        },
-        {
-            "name": "Marine - Mer condition texte",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Marinesea_condition_description0"
-        },
-        {
-            "name": "Marée Haute 1 - Heure",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Tidehigh_tide0time"
-        },
-        {
-            "name": "Marée Haute 1 - Coefficient",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Tidehigh_tide0tidal_coefficient"
-        },
-        {
-            "name": "Marée Haute 1 - Hauteur",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Tidehigh_tide0tidal_height"
-        },
-        {
-            "name": "Marée Haute 2 - Heure",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Tidehigh_tide1time"
-        },
-        {
-            "name": "Marée Haute 2 - Coefficient",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Tidehigh_tide1tidal_coefficient"
-        },
-        {
-            "name": "Marée Haute 2 - Hauteur",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Tidehigh_tide1tidal_height"
-        },
-        {
-            "name": "Marée Basse 1 - Heure",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Tidelow_tide0time"
-        },
-        {
-            "name": "Marée Basse 1 - Coefficient",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Tidelow_tide0tidal_coefficient"
-        },
-        {
-            "name": "Marée Basse 1 - Hauteur",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Tidelow_tide0tidal_height"
-        },
-        {
-            "name": "Marée Basse 2 - Heure",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Tidelow_tide1time"
-        },
-        {
-            "name": "Marée Basse 2 - Coefficient",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Tidelow_tide1tidal_coefficient"
-        },
-        {
-            "name": "Marée Basse 2 - Hauteur",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Tidelow_tide1tidal_height"
-        }
-    ]
+    {
+        "name": "Marine - Vitesse du vent",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Marinewind_speed_kt0"
+    },
+    {
+        "name": "Marine - Direction du vent",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Marinewind_direction0"
+    },
+    {
+        "name": "Marine - Echelle Beaufort",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Marinebeaufort_scale0"
+    },
+    {
+        "name": "Marine - Vagues hauteur",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Marinewave_height0"
+    },
+    {
+        "name": "Marine - Vagues hauteur max",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Marinemax_wave_height0"
+    },
+    {
+        "name": "Marine - Vagues hauteur vent",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Marinewind_waves_height0"
+    },
+    {
+        "name": "Marine - Houle direction",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Marineprimary_swell_direction0"
+    },
+    {
+        "name": "Marine - Houle hauteur",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Marineprimary_swell_height0"
+    },
+    {
+        "name": "Marine - Houteur fréquence",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Marineprimary_swell_period0"
+    },
+    {
+        "name": "Marine - Température eau",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "MarineT_sea0"
+    },
+    {
+        "name": "Marine - Mer condition",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Marinesea_condition0"
+    },
+    {
+        "name": "Marine - Mer condition texte",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Marinesea_condition_description0"
+    },
+    {
+        "name": "Marée Haute 1 - Heure",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Tidehigh_tide0time"
+    },
+    {
+        "name": "Marée Haute 1 - Coefficient",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Tidehigh_tide0tidal_coefficient"
+    },
+    {
+        "name": "Marée Haute 1 - Hauteur",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Tidehigh_tide0tidal_height"
+    },
+    {
+        "name": "Marée Haute 2 - Heure",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Tidehigh_tide1time"
+    },
+    {
+        "name": "Marée Haute 2 - Coefficient",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Tidehigh_tide1tidal_coefficient"
+    },
+    {
+        "name": "Marée Haute 2 - Hauteur",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Tidehigh_tide1tidal_height"
+    },
+    {
+        "name": "Marée Basse 1 - Heure",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Tidelow_tide0time"
+    },
+    {
+        "name": "Marée Basse 1 - Coefficient",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Tidelow_tide0tidal_coefficient"
+    },
+    {
+        "name": "Marée Basse 1 - Hauteur",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Tidelow_tide0tidal_height"
+    },
+    {
+        "name": "Marée Basse 2 - Heure",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Tidelow_tide1time"
+    },
+    {
+        "name": "Marée Basse 2 - Coefficient",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Tidelow_tide1tidal_coefficient"
+    },
+    {
+        "name": "Marée Basse 2 - Hauteur",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Tidelow_tide1tidal_height"
+    }
+  ]
 }

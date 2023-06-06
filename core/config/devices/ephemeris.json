@@ -1,46 +1,53 @@
 {
   "commands": [
-        {
-            "name": "Ephéméride - Lune phase description",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Ephemerismoon_phase_description"
-        },
-        {
-            "name": "Ephéméride - Lune phase",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Ephemerismoon_phase"
-        },
-        {
-            "name": "Ephéméride - Saint du jour",
-            "type": "info",
-            "subtype": "string",
-            "logicalId": "Ephemerissaint"
-        },
-        {
-            "name": "Ephéméride - Soleil lever",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Ephemerissunrise_time"
-        },
-        {
-            "name": "Ephéméride - Soleil coucher",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Ephemerissunset_time"
-        },
-        {
-            "name": "Ephéméride - Lune lever",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Ephemerismoonrise_time"
-        },
-        {
-            "name": "Ephéméride - Lune coucher",
-            "type": "info",
-            "subtype": "numeric",
-            "logicalId": "Ephemerismoonset_time"
-        }
-    ]
+    {
+        "name": "Ephéméride - Lune phase description",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Ephemerismoon_phase_description"
+    },
+    {
+        "name": "Ephéméride - Lune phase",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Ephemerismoon_phase"
+    },
+    {
+        "name": "Ephéméride - Saint du jour",
+        "type": "info",
+        "subtype": "string",
+        "isVisible": 0,
+        "logicalId": "Ephemerissaint"
+    },
+    {
+        "name": "Ephéméride - Soleil lever",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Ephemerissunrise_time"
+    },
+    {
+        "name": "Ephéméride - Soleil coucher",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Ephemerissunset_time"
+    },
+    {
+        "name": "Ephéméride - Lune lever",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Ephemerismoonrise_time"
+    },
+    {
+        "name": "Ephéméride - Lune coucher",
+        "type": "info",
+        "subtype": "numeric",
+        "isVisible": 0,
+        "logicalId": "Ephemerismoonset_time"
+    }
+  ]
 }

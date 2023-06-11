@@ -53,7 +53,7 @@ class meteofrance extends eqLogic {
     $id = cmd::humanReadableToCmd('#' .$cmd_id .'#');
     $cmd = cmd::byId(trim(str_replace('#', '', $id)));
     if(is_object($cmd)) {
-      $cmdjson = str_replace('&quot;','"',$cmd->execCmd());
+      $cmdJson = str_replace('&quot;','"',$cmd->execCmd());
       $json =json_decode($cmdJson,true);
       if($json === null)
         log::add(__CLASS__, 'debug', "Unable to decode JSON: " .substr($cmdJson,0,50));

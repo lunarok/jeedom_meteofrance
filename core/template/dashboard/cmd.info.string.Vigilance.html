@@ -1,0 +1,133 @@
+<div class="cmd cmd-widget #history#" data-type="info" data-subtype="string" data-template="custom" data-cmd_id="#id#" data-cmd_uid="#uid#" data-version="#version#" data-eqLogic_id="#eqLogic_id#">
+  <div class="title #hide_name#">
+    <div  class="cmdName">#name_display#</div>
+  </div>
+  <div class="dateText"></div>
+  <div class="vigilanceMap" style="margin-top: -5px;margin-bottom: -5px"></div>
+  <div title="Niveau de vigilance du département" class="maxDeptColor"></div>
+  <div class="wind" style="margin-top: 4px"></div>
+  <div title="Message" class="errorMessage"></div>
+  <template>
+    <div>color : rgb(20,20,20) ({{Couleur de fond}})</div>
+    <div>fontColor : rgb(20,20,20) ({{Couleur du texte}})</div>
+    <div>displayDate : 0/1 ({{Affichage du jour}})</div>
+    <div>displayTime : 0/1 ({{Affichage de l'heure}})</div>
+    <div>displayMap : 0/1 ({{Affichage de la carte des vigilances du jour}})</div>
+    <div>displayDeptLevel : 0/1 ({{Affichage du niveau de vigilance du département}})</div>
+    <!--
+    <div>displayDescription : 0/1 ({{Affichage de la description}})</div>
+    <div>displayTemperature : 0/1 ({{Affichage de la température}})</div>
+    <div>displayWind : 0/1 ({{Affichage du vent}})</div>
+    -->
+  </template>
+  <script>
+    /* JSON structure:
+      { "begin_validity_time":"2023-06-11T22:00:00Z","end_validity_time":"2023-06-12T22:00:00Z",
+        "image":"VIGNETTE_NATIONAL_J_500X500.png",
+        "0": {
+          "domain_id":"76","max_color_id":2,
+          "phenomenon_items":[
+            { "phenomenon_id":"1","phenomenon_max_color_id":1,
+              "timelaps_items":[
+                { "begin_time":"2023-06-11T08:00:00Z","end_time":"2023-06-11T22:00:00Z","color_id":1}
+              ]
+            },
+            { "phenomenon_id":"4","phenomenon_max_color_id":1,
+              "timelaps_items":[
+                { "begin_time":"2023-06-11T08:00:00Z","end_time":"2023-06-11T22:00:00Z","color_id":1}
+              ]
+            },
+            { "phenomenon_id":"3","phenomenon_max_color_id":2,
+              "timelaps_items":[
+                { "begin_time":"2023-06-11T08:00:00Z","end_time":"2023-06-11T14:00:00Z","color_id":1},
+                { "begin_time":"2023-06-11T14:00:00Z","end_time":"2023-06-11T20:00:00Z","color_id":2},
+                { "begin_time":"2023-06-11T20:00:00Z","end_time":"2023-06-11T22:00:00Z","color_id":1}
+              ]
+            },
+            { "phenomenon_id":"2","phenomenon_max_color_id":1,
+              "timelaps_items":[
+                { "begin_time":"2023-06-11T08:00:00Z","end_time":"2023-06-11T22:00:00Z","color_id":1}
+              ]
+            },
+            { "phenomenon_id":"5","phenomenon_max_color_id":1,
+              "timelaps_items":[
+                { "begin_time":"2023-06-11T08:00:00Z","end_time":"2023-06-11T22:00:00Z","color_id":1}
+              ]
+            },
+            { "phenomenon_id":"6","phenomenon_max_color_id":1,
+              "timelaps_items":[
+                { "begin_time":"2023-06-11T08:00:00Z","end_time":"2023-06-11T22:00:00Z","color_id":1}
+              ]
+            }
+           ]
+        },
+        "1": {
+          "domain_id":"7610","max_color_id":1,
+          "phenomenon_items": [
+            { "phenomenon_id":"9","phenomenon_max_color_id":1,
+              "timelaps_items": [
+                { "begin_time":"2023-06-11T08:00:00Z","end_time":"2023-06-11T22:00:00Z","color_id":1}
+              ]
+            }
+          ]
+        }
+      }
+   */
+    jeedom.cmd.addUpdateFunction('#id#',function(_options) {
+      let cmd = $('.cmd[data-cmd_id=#id#]');
+      cmd.find('.errorMessage').empty(); // clean previous error
+      let json = _options.display_value.replaceAll('&quot;','"');
+      try {
+        let jsonData = JSON.parse(json);
+        if(jsonData != null) {
+          if('#displayMap#' != '0') {
+            cmd.find('.vigilanceMap').empty().append('<img style="width:70px" src="plugins/meteofrance/data/' +jsonData.image +'">');
+          }
+
+          let cd = new Date(jsonData.begin_validity_time);
+          let dateTime = '';
+          let dayTxt = cd.toLocaleDateString('fr-FR', {month: 'short', day: 'numeric',weekday: 'short'});
+          let day = dayTxt.charAt(0).toUpperCase() + dayTxt.slice(1); // ucfirst
+          if('#displayDate#' != '0') dateTime += day;
+          let vigilanceIconTitle = day;
+          let cdEnd = new Date(jsonData.end_validity_time);
+          if('#displayTime#' != '0') {
+            if(dateTime.length) dateTime += ' ';
+            dateTime += cd.toLocaleTimeString('fr-FR', {hour: '2-digit'});
+            dateTime += ' - ' +cdEnd.toLocaleTimeString('fr-FR', {hour: '2-digit'});
+          }
+          else {
+            vigilanceIconTitle += ' ' +cd.toLocaleTimeString('fr-FR', {hour: '2-digit'});
+            vigilanceIconTitle += ' - ' +cdEnd.toLocaleTimeString('fr-FR', {hour: '2-digit'});
+          }
+              
+          cmd.find('.dateText').empty().append(dateTime);
+          cmd.find('.vigilanceMap').attr('title', vigilanceIconTitle);
+          cmd.find('.dateText').attr('title', '{{Date de valeur}} : '+_options.valueDate+'<br/>{{Date de collecte}} : '+_options.collectDate);
+
+          if('#displayDeptLevel#' != '0') {
+            let maxColorTxt = '';
+            switch(jsonData.dept.max_color_id) {
+              case 1: maxColorTxt = '<i class="fa fa-circle" style="color: #31AA35"></i>'; break;
+              case 2: maxColorTxt = '<i class="fa fa-circle" style="color: #FFF600"></i>'; break;
+              case 3: maxColorTxt = '<i class="fa fa-circle" style="color: #FFB82B"></i>'; break;
+              case 4: maxColorTxt = '<i class="fa fa-circle" style="color: #CC0000"></i>'; break;
+              default: maxColorTxt = '<i class="fa fa-circle" style="color: #888888"></i>'; break;
+            }
+            cmd.find('.maxDeptColor').empty().append("Département " +jsonData.dept.domain_id +" : " +maxColorTxt);
+          }
+        }
+        if ($.issetWidgetOptParam('#color#', 'color')) {
+          cmd.style('background-color', '#color#', 'important')
+        }
+        if ($.issetWidgetOptParam('#fontColor#', 'fontColor')) {
+          cmd.style('color', '#fontColor#', 'important')
+        }
+      }
+      catch(err) {
+        cmd.find('.errorMessage').empty().append('<strong>JSON data:' +json.substr(0,30) +'...</strong><br>' +err.message);
+      }
+    });
+    jeedom.cmd.refreshValue([{cmd_id :'#id#',display_value: '#state#', valueDate: '#valueDate#', collectDate: '#collectDate#', alertLevel: '#alertLevel#', unit: '#unite#'}])
+  </script>
+</div>

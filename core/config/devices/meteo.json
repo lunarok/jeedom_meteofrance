@@ -21,13 +21,6 @@
         "isVisible": 0,
         "logicalId": "MeteoprobaGel"
     },
-    {
-        "name": "Météo 3h - Probabilité Orage",
-        "type": "info",
-        "subtype": "numeric",
-        "isVisible": 0,
-        "logicalId": "MeteoprobaStorm"
-    },
     { "name": "Météo du Jour - Aujourd'hui - Cumul Pluie",
       "type": "info",
       "subtype": "string",

@@ -165,6 +165,14 @@
         "subtype": "string",
       "isVisible": 0,
         "logicalId": "AlertdateProduction"
+    },
+    {
+        "name": "Vigilance - Json",
+        "type": "info",
+        "subtype": "string",
+      "isVisible": 0,
+      "isHistorized": 0,
+        "logicalId": "VigilanceJson"
     }
   ]
 }

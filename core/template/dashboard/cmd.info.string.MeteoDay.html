@@ -32,8 +32,10 @@
        */
     jeedom.cmd.addUpdateFunction('#id#',function(_options) {
       let cmd = $('.cmd[data-cmd_id=#id#]');
+      cmd.find('.errorMessage').empty(); // clean previous error
       try {
-        let obj = JSON.parse(_options.display_value);
+        let json = _options.display_value.replaceAll('&quot;','"');
+        let obj = JSON.parse(json);
         if(obj != null) {
           cmd.find('.weatherIcon').empty().append('<img src="plugins/meteofrance/data/icones/' +obj.weather12H.icon +'.svg">');
           let weatherIconTitle = obj.weather12H.desc;

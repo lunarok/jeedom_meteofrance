@@ -3,8 +3,16 @@
     <div  class="cmdName">#name_display#</div>
   </div>
   <div class="dateText"></div>
-  <div class="vigilanceMap" style="margin-top: -5px;margin-bottom: -5px"></div>
-  <div title="Niveau de vigilance du département" class="maxDeptColor"></div>
+  <table>
+    <tr style="background-color:transparent !important;">
+      <td>
+        <div class="vigilanceMap" style="margin-top: -5px;margin-bottom: -5px"></div>
+      </td>
+      <td>
+        <div class="maxDeptColor"></div>
+      </td>
+    </tr>
+  </table>
   <div class="wind" style="margin-top: 4px"></div>
   <div title="Message" class="errorMessage"></div>
   <template>
@@ -12,7 +20,7 @@
     <div>fontColor : rgb(20,20,20) ({{Couleur du texte}})</div>
     <div>displayDate : 0/1 ({{Affichage du jour}})</div>
     <div>displayTime : 0/1 ({{Affichage de l'heure}})</div>
-    <div>displayMap : 0/1 ({{Affichage de la carte des vigilances du jour}})</div>
+    <div>displayMapFr : 0/1 ({{Affichage de la carte de France des vigilances du jour}})</div>
     <div>displayDeptLevel : 0/1 ({{Affichage du niveau de vigilance du département}})</div>
     <!--
     <div>displayDescription : 0/1 ({{Affichage de la description}})</div>
@@ -23,8 +31,9 @@
   <script>
     /* JSON structure:
       { "begin_validity_time":"2023-06-11T22:00:00Z","end_validity_time":"2023-06-12T22:00:00Z",
-        "image":"VIGNETTE_NATIONAL_J_500X500.png",
-        "0": {
+        "image":"VIGNETTE_NATIONAL_J_500X500.png?ts=1687357984",
+        "domain_id_picture":"dept_fr_76.svg?ts=1687368217",
+        "dept": {
           "domain_id":"76","max_color_id":2,
           "phenomenon_items":[
             { "phenomenon_id":"1","phenomenon_max_color_id":1,
@@ -61,7 +70,7 @@
             }
            ]
         },
-        "1": {
+        "littoral": {
           "domain_id":"7610","max_color_id":1,
           "phenomenon_items": [
             { "phenomenon_id":"9","phenomenon_max_color_id":1,
@@ -80,7 +89,7 @@
       try {
         let jsonData = JSON.parse(json);
         if(jsonData != null) {
-          if('#displayMap#' != '0') {
+          if('#displayMapFr#' != '0') {
             cmd.find('.vigilanceMap').empty().append('<img style="width:70px" src="plugins/meteofrance/data/' +jsonData.image +'">');
           }
 
@@ -114,7 +123,11 @@
               case 4: maxColorTxt = '<i class="fa fa-circle" style="color: #CC0000"></i>'; break;
               default: maxColorTxt = '<i class="fa fa-circle" style="color: #888888"></i>'; break;
             }
-            cmd.find('.maxDeptColor').empty().append("Département " +jsonData.dept.domain_id +" : " +maxColorTxt);
+            if(jsonData.domain_id_picture == 'none')
+              cmd.find('.maxDeptColor').empty().append(jsonData.dept.domain_id +" " +maxColorTxt);
+            else
+              cmd.find('.maxDeptColor').empty().append('<img style="margin-top:4px;width:50px; height:50px" src="plugins/meteofrance/data/' +jsonData.domain_id_picture +'">');
+            cmd.find('.maxDeptColor').attr('title', "Vigilance du département: " +jsonData.dept.domain_id);
           }
         }
         if ($.issetWidgetOptParam('#color#', 'color')) {

@@ -16,6 +16,7 @@
     <div>displayTemperature : 0/1 ({{Affichage de la température}})</div>
     <div>displayMoment : 0/1 ({{Affichage moment de la journée}})</div>
     <div>displayWind : 0/1 ({{Affichage du vent}})</div>
+    <div>displayError : 0/1 ({{Affichage des erreurs JS}})</div>
   </template>
   <script>
     /* JSON structure:
@@ -93,7 +94,8 @@
       }
     }
     catch(err) {
-      cmd.find('.errorMessage').empty().append('<strong>JSON data:' +_options.display_value.substr(0,30) +'...</strong><br>' +err.message);
+      if('#displayError#' != '0')
+        cmd.find('.errorMessage').empty().append('<strong>JSON data:' +_options.display_value.substr(0,30) +'...</strong><br>' +err.message);
     }
   });
   jeedom.cmd.refreshValue([{cmd_id :'#id#',display_value: '#state#', valueDate: '#valueDate#', collectDate: '#collectDate#', alertLevel: '#alertLevel#', unit: '#unite#'}])

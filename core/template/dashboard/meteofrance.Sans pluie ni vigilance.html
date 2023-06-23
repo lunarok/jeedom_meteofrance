@@ -4,7 +4,7 @@
   </center>
   <link rel="stylesheet" type="text/css" href="plugins/meteofrance/desktop/weather-icons/css/weather-icons.min.css" />
   <table border=0 style="border-spacing: 2px; width: 100%;">
-    <tr>
+    <tr style="background-color:transparent !important;">
       <td style="text-align: center">
         <img src="#icone#" data-src="#icone#" alt="#condition#" title="#condition#" class="icon shape-weather ls-is-cached lazyloaded">
       </td>
@@ -97,9 +97,9 @@
 </script>
   <!-- Pluie dans l'heure -->
   <!--
-  <div style="margin-top: 8px;">
+  <div style="margin-top: 4px;">
     <table border=0 style="border-spacing: 2px; width: 100%;">
-      <tr>
+      <tr title="Prévisions pluie" style="background-color:transparent !important;">
         <td class="tableCmdcss" style="width: 10%;height:20px;text-align: left">&nbsp;#heure#</td>
         <td class="tableCmdcss" style="width: 8%;font-size: .8em;height:20px;text-align: right">#h10m#</td>
         <td class="tableCmdcss" style="width: 8%;height:20px;text-align: right">&nbsp;</td>
@@ -108,10 +108,10 @@
         <td class="tableCmdcss" style="width: 8%;font-size: .8em;height:20px;text-align: right">#h30m#</td>
         <td class="tableCmdcss" style="width: 16%;font-size: .8em;height:20px;text-align: right">#h40m#</td>
         <td class="tableCmdcss" style="width: 16%;font-size: .8em;height:20px;text-align: right">#h50m#</td>
-        <td class="tableCmdcss" style="width: 18%;height:20px;text-align: right">#h1h# <i class="wi wi-raindrops" title="Prévisions pluie"style="font-size: 24px;color: #3C73A5"></i>&nbsp;</td>
+        <td class="tableCmdcss" style="width: 18%;height:20px;text-align: right">#h1h#</td>
       </tr>
-      <tr>
-        <td style="height:20px;#prev1Color#" title="#prev1Text#" class="tooltips"></td>
+      <tr style="background-color:transparent !important;">
+        <td style="height:20px;#prev1Color#" title="#prev1Text#" class="tooltips">&nbsp; <i class="wi wi-raindrops" style="font-size: 24px;color: #3C73A5"></i></td>
         <td style="height:20px;#prev2Color#" title="#prev2Text#" class="tooltips"></td>
         <td style="height:20px;#prev3Color#" title="#prev3Text#" class="tooltips"></td>
         <td style="height:20px;#prev4Color#" title="#prev4Text#" class="tooltips"></td>
@@ -119,16 +119,16 @@
         <td style="height:20px;#prev6Color#" title="#prev6Text#" class="tooltips"></td>
         <td style="height:20px;#prev7Color#" title="#prev7Text#" class="tooltips"></td>
         <td style="height:20px;#prev8Color#" title="#prev8Text#" class="tooltips"></td>
-        <td style="height:20px;#prev9Color#" title="#prev9Text#" class="tooltips"></td>
+        <td style="height:20px;#prev9Color#;text-align: right" title="#prev9Text#" class="tooltips"> <i class="wi wi-raindrops" style="font-size: 24px;color: #3C73A5"></i>&nbsp;</td>
       </tr>
     </table>
   </div>
   -->
   <!-- Vigilances -->
   <!--
-  <div style="margin-top: 8px;">
+  <div style="margin-top: 4px;">
     <table border=0 style="border-spacing: 0px; width: 100%;">
-      <tr>
+      <tr style="background-color:transparent !important;">
         #vigilance#
       </tr>
     </table>

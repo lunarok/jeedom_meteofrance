@@ -24,24 +24,34 @@ if (!isConnect()) {
 ?>
 <form class="form-horizontal">
   <fieldset>
+    <div class="form-group">
+      <label class="col-md-10 control-label" style="text-align: center">{{La récupération des données de vigilances ne nécessite pas encore l'utilisation de l'API <a href="https://portail-api.meteofrance.fr/devportal/apis">DonneesPubliquesVigilance</a> de Météo France. Le plugin récupère les données sur le <a href="http://storage.gra.cloud.ovh.net/v1/AUTH_555bdc85997f4552914346d4550c421e/gra-vigi6-archive_public/">site d'archives de Météo France</a>. En cas de problème avec le site d'archives MF, il faudra utiliser l'API en renseignant les clés publique et privée ci-dessous.}}
+    </div>
+    <div class="form-group">
+			<label class="col-md-4 control-label">{{Utilisation de l'API vigilance Météo France}}</label>
+			<div class="col-sm-2">
+				<input id="input_demo_mode" type="checkbox" class="configKey tooltips" data-l1key="useVigilanceAPI">
+			</div>
+		</div>
+    <div class="form-group">
+      <label class="col-md-4 control-label">{{Clé publique de l'API vigilance Meteo France à générer }}
+        <a target="blank" href="https://portail-api.meteofrance.fr/devportal/apis">ICI</a>
 <!--
-    <div class="form-group">
-      <label class="col-md-4 control-label">{{Clé publique de l'application vigilance Meteo France}}
-        <sup><i class="fas fa-question-circle tooltips" title="{{Renseignez la clé publique}}"></i></sup>
-      </label>
-      <div class="col-md-6">
-        <input class="configKey form-control" data-l1key="alertPublicKey"/>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-md-4 control-label">{{Clé privée de l'application vigilance Meteo France}}
-        <sup><i class="fas fa-question-circle tooltips" title="{{Renseignez la clé privée}}"></i></sup>
-      </label>
-      <div class="col-md-6">
-        <input type="password" class="configKey form-control" data-l1key="alertPrivateKey"/>
-      </div>
-    </div>
 -->
+        <sup><i class="fas fa-question-circle tooltips" title="{{Clé publique à copier sur le site MF et à coller ici}}"></i></sup>
+      </label>
+      <div class="col-md-6">
+        <input class="configKey form-control" data-l1key="alertPublicKey" placeholder="Saisissez la clé publique"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-md-4 control-label">{{Clé privée de l'API vigilance Meteo France}}
+        <sup><i class="fas fa-question-circle tooltips" title="{{Clé privée à copier sur le site MF et à coller ici}}"></i></sup>
+      </label>
+      <div class="col-md-6">
+        <input type="password" class="configKey form-control" data-l1key="alertPrivateKey" placeholder="Saisissez la clé privée"/>
+      </div>
+    </div>
     <div class="form-group">
       <label class="col-md-4 control-label">{{Commentaires}}
       </label>

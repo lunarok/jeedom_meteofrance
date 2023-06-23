@@ -6,6 +6,7 @@
   <div class="weatherIcon" style="margin-top: -5px;margin-bottom: -5px"></div>
   <div title="Température" class="Tvalue"></div>
   <div class="wind" style="margin-top: 4px"></div>
+  <div title="Nuages" class="clouds" style="margin-top: 4px"></div>
   <div title="Message" class="errorMessage"></div>
   <template>
     <div>color : rgb(20,20,20) ({{Couleur de fond}})</div>
@@ -15,6 +16,8 @@
     <div>displayDescription : 0/1 ({{Affichage de la description}})</div>
     <div>displayTemperature : 0/1 ({{Affichage de la température}})</div>
     <div>displayWind : 0/1 ({{Affichage du vent}})</div>
+    <div>displayClouds : 0/1 ({{Affichage du pourcentage de nuages}})</div>
+    <div>displayError : 0/1 ({{Affichage des erreurs JS}})</div>
   </template>
   <script>
     /* JSON structure:
@@ -70,6 +73,10 @@
             cmd.find('.wind').attr('title', obj.wind.icon);
           }
           else weatherIconTitle += '<br/>Vent: ' +obj.wind.icon +' '+vent;
+          if('#displayClouds#' != '0') {
+            let clouds = obj.clouds +'%';
+            cmd.find('.clouds').empty().append(clouds);
+          }
               
           cmd.find('.weatherIcon').attr('title', weatherIconTitle);
           cmd.find('.dateText').attr('title', '{{Date de valeur}} : '+_options.valueDate+'<br/>{{Date de collecte}} : '+_options.collectDate);
@@ -82,7 +89,8 @@
         }
       }
       catch(err) {
-        cmd.find('.errorMessage').empty().append('<strong>JSON data:' +_options.display_value.substr(0,30) +'...</strong><br>' +err.message);
+        if('#displayError#' != '0')
+          cmd.find('.errorMessage').empty().append('<strong>JSON data:' +_options.display_value.substr(0,30) +'...</strong><br>' +err.message);
       }
     });
     jeedom.cmd.refreshValue([{cmd_id :'#id#',display_value: '#state#', valueDate: '#valueDate#', collectDate: '#collectDate#', alertLevel: '#alertLevel#', unit: '#unite#'}])

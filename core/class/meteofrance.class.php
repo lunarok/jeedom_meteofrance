@@ -15,7 +15,7 @@
 * You should have received a copy of the GNU General Public License
 * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
 */
-require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
+require_once __DIR__ .'/../../../../core/php/core.inc.php';
 
 class meteofrance extends eqLogic {
   public static $_widgetPossibility = array('custom' => true);
@@ -1058,6 +1058,7 @@ class meteofrance extends eqLogic {
   }
 
   public function getBulletinFrance() {
+    log::add(__CLASS__, 'debug', __FUNCTION__);
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/report?domain=france&report_type=forecast&report_subtype=BGP';
     // $return = self::callMeteoWS($url, true);
     $return = self::callMeteoWS($url,true,true,__FUNCTION__ .".json");
@@ -1297,8 +1298,8 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
     else $templateFile = substr($templateF,0,-5);
     // log::add(__CLASS__, 'debug', __FUNCTION__ ." \"" .$this->getName() ."\" Template: $templateFile");
 
-    $html_forecast = '<table "width=100%"><tr style="background-color:transparent !important;">';
-    if ($_version != 'mobile' || $this->getConfiguration('fullMobileDisplay', 0) == 1) {
+    if($_version != 'mobile' || $this->getConfiguration('fullMobileDisplay', 0) == 1) {
+      $html_forecast = '<table "width=100%"><tr style="background-color:transparent !important;">';
       $forecast_template = getTemplate('core', $version, 'forecast', 'meteofrance');
       $lastTS = 0;
       $nbH = $this->getConfiguration('forecast1h',0);
@@ -1392,7 +1393,7 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
       $nbDays = $this->getConfiguration('dailyForecastNumber',12);
       for($i=0;$i<$nbDays;$i++) {
         $replaceFC =array();
-        $replaceFC['#sep#'] = '|';
+        $replaceFC['#sep#'] = '&nbsp;|&nbsp;';
         $jsonCmd = $this->getCmd(null, "MeteoDay${i}Json");
         if(is_object($jsonCmd)) {
           $val = str_replace('&quot;','"',$jsonCmd->execCmd());
@@ -1424,9 +1425,10 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
         $html_forecast .= template_replace($replaceFC, $forecast_template);
         unset($replaceFC);
       }
+      $html_forecast .= '</tr></table>';
+      $replace["#forecast#"] = "<div style=\"overflow-x: scroll; width: 100%; min-height: 15px; max-height: 200px; margin-top: 1px; font-size: 14px; text-align: left; scrollbar-width: thin;\">$html_forecast</div>\n";
     }
-    $html_forecast .= '</tr></table>';
-    $replace["#forecast#"] = "<div style=\"overflow-x: scroll; width: 100%; min-height: 15px; max-height: 200px; margin-top: 1px; font-size: 14px; text-align: left; scrollbar-width: thin;\">$html_forecast</div>\n";
+    else $replace["#forecast#"] = '';
 
     $replace['#city#'] = $this->getName();
     $replace['#cityName#'] = $ville;
@@ -1530,7 +1532,7 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
       $replace['#h50m#'] = date('H:i', $t + 3000);
     }
 
-    $color = Array();
+    $color = array();
     $color[0] = '';
     $color[1] = '';
     $color[2] = ' background: #AAE8FF';
@@ -1568,8 +1570,9 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
           $localFile = __DIR__ ."/../../data/$img2";
           $img2 .= "?ts=" .@filemtime($localFile);
         }
-        $replace['#vigilance#'] = '<td class="tableCmdcss" style="width: 10%;text-align: center" title="Vigilance aujourd\'hui: ' .date_fr(date('d  F')) .'"><a href="https://vigilance.meteofrance.fr/fr" target="_blank"><img style="width:70px" src="plugins/meteofrance/data/' .$img .'"/></a></td>';
-        // <td class="tableCmdcss" style="width: 10%;height:20px;text-align: center" title="#vigDesc#"><i class="wi #vigIcon#" style="font-size: 24px;#vigColors#"></i></td>
+        if($_version != 'mobile')
+          $replace['#vigilance#'] = '<td class="tableCmdcss" style="width: 10%;text-align: center" title="Vigilance aujourd\'hui: ' .date_fr(date('d  F')) .'"><a href="https://vigilance.meteofrance.fr/fr" target="_blank"><img style="width:70px" src="plugins/meteofrance/data/' .$img .'"/></a></td>';
+        else $replace['#vigilance#'] = '';
         foreach(self::$_vigilanceType as $i => $vig) {
           $vigilance = $this->getCmd(null, "Vigilancephenomenon_max_color_id$i");
           if(is_object($vigilance))  {
@@ -1602,7 +1605,7 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
               $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width: 10%;height:20px;text-align: center" title="' .$vig['txt'] .$desc .'"><i class="wi ' .$vig['icon'] .'" style="font-size: 24px;color: '.self::$_vigilanceColors[$col]['color'] .'"></i></td>';
           }
         }
-        if($img2 != '')
+        if($img2 != '' && $_version != 'mobile')
           $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width: 10%;text-align: center" title="Vigilance demain: ' .date_fr(date('d  F',time()+86400)) .'"><a href="https://vigilance.meteofrance.fr/fr/demain" target="_blank"><img style="width:70px" src="plugins/meteofrance/data/' .$img2 .'"/></a></td>';
       }
     }

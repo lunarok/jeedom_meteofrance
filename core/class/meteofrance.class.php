@@ -42,44 +42,52 @@ class meteofrance extends eqLogic {
   public static function backupExclude() { return(array('data/*.json')); }
 
   public function checkAndUpdateCmd($_logicalId, $_value, $_updateTime = null) {
-		$cmd = $this->getCmd('info', $_logicalId);
-		if (!is_object($cmd)) {
-      log::add(__CLASS__, 'debug', "Equipment: " .$this->getName() ." Unexistant command $_logicalId");
+    $loglevel = log::convertLogLevel(log::getLogLevel(__CLASS__));
+    if($loglevel == 'debug') {
+      $cmd = $this->getCmd('info', $_logicalId);
+      if (!is_object($cmd)) {
+        log::add(__CLASS__, 'debug', "Equipment: " .$this->getName() ." Unexistant command $_logicalId");
+      }
     }
     parent::checkAndUpdateCmd($_logicalId, $_value, $_updateTime);
   }
+
+  
+  public static function extractValueFromJsonTxt($cmdValue, $request) {
+    $txtJson = str_replace('&quot;','"',$cmdValue);
+    $json =json_decode($txtJson,true);
+    if($json !== null) {
+      $tags = explode('>', $request);
+      foreach ($tags as $tag) {
+        $tag = trim($tag);
+        if (isset($json[$tag])) {
+          $json = $json[$tag];
+        } elseif (is_numeric(intval($tag)) && isset($json[intval($tag)])) {
+          $json = $json[intval($tag)];
+        } elseif (is_numeric(intval($tag)) && intval($tag) < 0 && isset($json[count($json) + intval($tag)])) {
+          $json = $json[count($json) + intval($tag)];
+        } else {
+          $json = "Request error: tag[$tag] not found in " .json_encode($json);
+          break;
+        }
+      }
+      return (is_array($json)) ? json_encode($json) : $json;
+    }
+    return ("*** Unable to decode JSON: " .substr($txtJson,0,20));
+}
 
   public static function getJsonInfo($cmd_id, $request) {
     $id = cmd::humanReadableToCmd('#' .$cmd_id .'#');
     $cmd = cmd::byId(trim(str_replace('#', '', $id)));
     if(is_object($cmd)) {
-      $cmdJson = str_replace('&quot;','"',$cmd->execCmd());
-      $json =json_decode($cmdJson,true);
-      if($json === null)
-        log::add(__CLASS__, 'debug', "Unable to decode JSON: " .substr($cmdJson,0,50));
-      else {
-        $tags = explode('>', $request);
-        foreach ($tags as $tag) {
-          $tag = trim($tag);
-          if (isset($json[$tag])) {
-            $json = $json[$tag];
-          } elseif (is_numeric(intval($tag)) && isset($json[intval($tag)])) {
-            $json = $json[intval($tag)];
-          } elseif (is_numeric(intval($tag)) && intval($tag) < 0 && isset($json[count($json) + intval($tag)])) {
-            $json = $json[count($json) + intval($tag)];
-          } else {
-            $json = "Request error: tag[$tag] not found in " .json_encode($json);
-            break;
-          }
-        }
-        return (is_array($json)) ? json_encode($json) : $json;
-      }
+      return self::extractValueFromJsonTxt($cmd->execCmd(), $request);
     }
     else log::add(__CLASS__, 'debug', "Command not found: $cmd");
     return(null);
   }
 
   public static function cron5() {
+    log::add(__CLASS__, 'debug', __FUNCTION__);
     if(date('i') == 0) return; // will be executed by cronHourly
     foreach (eqLogic::byType(__CLASS__, true) as $meteofrance) {
       $meteofrance->getRain();
@@ -90,6 +98,7 @@ class meteofrance extends eqLogic {
   }
 
   public static function cronHourly() {
+    log::add(__CLASS__, 'debug', __FUNCTION__);
     foreach (eqLogic::byType(__CLASS__, true) as $meteofrance) {
       $meteofrance->getInformations();
     }
@@ -148,33 +157,44 @@ class meteofrance extends eqLogic {
   }
 
   public static function cronTrigger($_options) {
-    $meteofrance = meteofrance::byId($_options['meteofrance_id']);
-    log::add(__CLASS__, 'debug', "Starting cronTrigger for " .$meteofrance->getName());
-    $meteofrance->loadCmdFromConf('bulletin');
-    $meteofrance->loadCmdFromConf('bulletinville');
-    $meteofrance->loadCmdFromConf('ephemeris');
-	  if ($meteofrance->getConfiguration('bulletinCote')) {
-      $meteofrance->loadCmdFromConf('marine');
+    $meteofrance = eqLogic::byId($_options['meteofrance_id']);
+    if(is_object($meteofrance)) { // The equipment has not been deleted since cronTrigger creation
+      log::add(__CLASS__, 'debug', "Starting cronTrigger for " .$meteofrance->getName());
+      $meteofrance->loadCmdFromConf('bulletin');
+      $bulletinVille = $meteofrance->getConfiguration('bulletinVille','');
+      if ($bulletinVille != '') {
+        $meteofrance->loadCmdFromConf('bulletinville');
+      }
+      $meteofrance->loadCmdFromConf('ephemeris');
+      if ($meteofrance->getConfiguration('bulletinCote')) {
+        $meteofrance->loadCmdFromConf('marine');
+      }
+      $meteofrance->loadCmdFromConf('meteo');
+      $meteofrance->loadCmdFromConf('rain');
+      $meteofrance->loadCmdFromConf('vigilance');
+      $eqLogicId = $meteofrance->getId();
+      $mfCmd = meteofranceCmd::byEqLogicIdAndLogicalId($eqLogicId, 'refresh'); // L'existance de cette commande est testée dans toHtml
+      if (!is_object($mfCmd)) {
+        $mfCmd = new meteofranceCmd();
+        $mfCmd->setName(__('Rafraichir', __FILE__));
+        $mfCmd->setEqLogic_id($eqLogicId);
+        $mfCmd->setLogicalId('refresh');
+        $mfCmd->setType('action');
+        $mfCmd->setSubType('other');
+        $mfCmd->save();
+      }
+      log::add(__CLASS__, 'debug', "End of commands creation. Memory_usage: ".memory_get_usage());
+        // reset des dates de derniere interrogation pour synchro plus rapide
+      $meteofrance->setConfiguration('lastHourlyCall', 0);
+      $meteofrance->setConfiguration('lastInstantCall', 0);
+      $meteofrance->setConfiguration('lastTideCall', 0);
+      $meteofrance->save(true);
+      $meteofrance->getInformations();
     }
-    $meteofrance->loadCmdFromConf('meteo');
-    $meteofrance->loadCmdFromConf('rain');
-    $meteofrance->loadCmdFromConf('vigilance');
-    $eqLogicId = $meteofrance->getId();
-    $mfCmd = meteofranceCmd::byEqLogicIdAndLogicalId($eqLogicId, 'refresh'); // L'existance de cette commande est testée dans toHtml
-    if (!is_object($mfCmd)) {
-      $mfCmd = new meteofranceCmd();
-      $mfCmd->setName(__('Rafraichir', __FILE__));
-      $mfCmd->setEqLogic_id($eqLogicId);
-      $mfCmd->setLogicalId('refresh');
-      $mfCmd->setType('action');
-      $mfCmd->setSubType('other');
-      $mfCmd->save();
-    }
-    log::add(__CLASS__, 'debug', "End of commands creation. Memory_usage: ".memory_get_usage());
-    $meteofrance->getInformations();
   }
 
   public function getInformations() {
+    log::add(__CLASS__, 'debug', __FUNCTION__);
     $this->getVigilance();
     $this->getRain(); 
 	  if($this->getConfiguration('bulletinCote')) {
@@ -255,8 +275,6 @@ class meteofrance extends eqLogic {
       if(isset($return['properties']['bulletin_cote'])) $bulletin_cote = $return['properties']['bulletin_cote'];
       else $bulletin_cote = 0;
       $this->setConfiguration('bulletinCote', $bulletin_cote);
-      if(isset($return['properties']['timezone'])) $timezone = $return['properties']['timezone'];
-      else $timezone = 'Europe/Paris';
       $this->setConfiguration('numDept', $return['properties']['french_department']);
     }
     else {
@@ -269,6 +287,9 @@ class meteofrance extends eqLogic {
     $this->setConfiguration('lon', $_array['lon']);
     $this->setConfiguration('zip', $_array['zip']);
     $this->setConfiguration('ville', $_array['ville']);
+    $this->setConfiguration('lastHourlyCall', 0);
+    $this->setConfiguration('lastInstantCall', 0);
+    $this->setConfiguration('lastTideCall', 0);
   }
 
   public function getBulletinDetails($_array = array()) {
@@ -389,13 +410,13 @@ class meteofrance extends eqLogic {
             $this->checkAndUpdateCmd('Meteodayh1description', $value['weather']['desc'].' '.date('d-m H:i', $forecastTS));
             $this->checkAndUpdateCmd('Meteodayh1temperature', $value['T']['value']);
             $this->checkAndUpdateCmd('Meteodayh1temperatureRes', $value['T']['windchill']);
-            $this->checkAndUpdateCmd('hourly1icon', $value['weather']['icon']);
           }
           // message::add(__FUNCTION__, "I=$i J=$j DT: " .$value['dt'] ." ==> $forecastTS");
           // $value['dt'] = $forecastTS;
+          $cmd = $this->getCmd(null, "MeteoHour${j}Json");
+          if(!is_object($cmd)) break;
           $this->checkAndUpdateCmd("MeteoHour${j}Json", str_replace('"','&quot;',json_encode($value,JSON_UNESCAPED_UNICODE)));
           $j++;
-          if($j >= 10) break;
         }
       }
       if($found == 0) {
@@ -414,7 +435,6 @@ class meteofrance extends eqLogic {
         $this->checkAndUpdateCmd('Meteodayh1description', "Hour not found");
         $this->checkAndUpdateCmd('Meteodayh1temperature', -1);
         $this->checkAndUpdateCmd('Meteodayh1temperatureRes', -1);
-        $this->checkAndUpdateCmd('hourly1icon', "0");
       }
       else {
         $this->setConfiguration('lastHourlyCall', time());
@@ -430,11 +450,6 @@ class meteofrance extends eqLogic {
         log::add(__CLASS__, 'debug', "    $i daily_forecast:" .date('d-m-Y H:i:s', $forecastTS));
         if($i < 4) {
           $this->checkAndUpdateCmd('Meteoday' .$i .'PluieCumul', $value['precipitation']['24h']);
-        /* n'existe pas dans les daily_forecast
-        $this->checkAndUpdateCmd('Meteoday' .$i .'directionVent', $value['wind_direction']);
-        $this->checkAndUpdateCmd('Meteoday' .$i .'vitesseVent', $value['wind_speed']);
-        $this->checkAndUpdateCmd('Meteoday' .$i .'forceRafales', $value['wind_speed_gust']);
-         */
           $this->checkAndUpdateCmd("Meteoday${i}indiceUV", $value['uv']);
           $this->checkAndUpdateCmd("Meteoday${i}description", $value['weather12H']['desc']);
           $this->checkAndUpdateCmd("Meteoday${i}icon", $value['weather12H']['icon']);
@@ -512,10 +527,11 @@ class meteofrance extends eqLogic {
         log::add(__CLASS__, 'debug', "    $i forecast:" .date('d-m-Y H:i:s', $forecastTS) ." Desc: " .$value['weather']['desc']);
         if(($now >= $forecastTS && $now < $forecastNextTS) || ($i==0 && $now < $forecastTS)) {
           $found = 1;
-          for($j=0;$j<8;$j++) {
+          for($j=0;($i+$j)<$nb;$j++) {
+            $cmd = $this->getCmd(null, "MeteoInstant${j}Json");
+            if(!is_object($cmd)) break;
             $value = $return['forecast'][$i+$j];
             log::add(__CLASS__, 'debug', "    Filling: $j forecast:" .date('d-m-Y H:i:s', $value['dt']) ." Moment: " .$value['moment_day']);
-            // $this->checkAndUpdateCmd("MeteoInstant${j}Json", json_encode($value));
             $this->checkAndUpdateCmd("MeteoInstant${j}Json", str_replace('"','&quot;',json_encode($value,JSON_UNESCAPED_UNICODE)));
           }
           break;
@@ -654,36 +670,47 @@ class meteofrance extends eqLogic {
   }
 
   public function getTide() {
+      // only one successfull request per day
+    $lastCall = $this->getConfiguration('lastTideCall', -1);
+    if(date('md') == date('md',$lastCall)) {
+      log::add(__CLASS__, 'debug', __FUNCTION__ ." [" .$this->getName() ."] LastEphemerisCall " .date('md',$lastCall) ." already successfully processed");
+      return;
+    }
     $insee = $this->getConfiguration('insee');
     $ville = $this->getConfiguration('ville');
     log::add(__CLASS__, 'debug', __FUNCTION__ ." Insee: $insee Ville $ville");
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/tide?id=' .$insee .'52';
     $return = self::callMeteoWS($url,false,true,__FUNCTION__ ."-${insee}-$ville.json");
     if(is_array($return) && isset($return['properties']['tide'])) {
-      $this->checkAndUpdateCmd('Tidehigh_tide0time', date('Hi',strtotime($return['properties']['tide']['high_tide'][0]['time'])));
-      $this->checkAndUpdateCmd('Tidehigh_tide0tidal_coefficient', $return['properties']['tide']['high_tide'][0]['tidal_coefficient']);
-      $this->checkAndUpdateCmd('Tidehigh_tide0tidal_height', $return['properties']['tide']['high_tide'][0]['tidal_height']);
-      if(isset($return['properties']['tide']['high_tide'][1]['time'])) 
-        $this->checkAndUpdateCmd('Tidehigh_tide1time', date('Hi',strtotime($return['properties']['tide']['high_tide'][1]['time'])));
-      else $this->checkAndUpdateCmd('Tidehigh_tide1time', -1);
-      if(isset($return['properties']['tide']['high_tide'][1]['tidal_coefficient'])) 
-        $this->checkAndUpdateCmd('Tidehigh_tide1tidal_coefficient', $return['properties']['tide']['high_tide'][1]['tidal_coefficient']);
-      else $this->checkAndUpdateCmd('Tidehigh_tide1tidal_coefficient', -1);
-      if(isset($return['properties']['tide']['high_tide'][1]['tidal_height'])) 
-        $this->checkAndUpdateCmd('Tidehigh_tide1tidal_height', $return['properties']['tide']['high_tide'][1]['tidal_height']);
-      else $this->checkAndUpdateCmd('Tidehigh_tide1tidal_height', -1);
-      $this->checkAndUpdateCmd('Tidelow_tide0time', date('Hi',strtotime($return['properties']['tide']['low_tide'][0]['time'])));
-      if(isset($return['properties']['tide']['low_tide'][0]['tidal_coefficient']))
-        $coef = $return['properties']['tide']['low_tide'][0]['tidal_coefficient'];
-      else $coef = 0;
-      $this->checkAndUpdateCmd('Tidelow_tide0tidal_coefficient', $coef);
-      $this->checkAndUpdateCmd('Tidelow_tide0tidal_height', $return['properties']['tide']['low_tide'][0]['tidal_height']);
-      $this->checkAndUpdateCmd('Tidelow_tide1time', date('Hi',strtotime($return['properties']['tide']['low_tide'][1]['time'])));
-      if(isset($return['properties']['tide']['low_tide'][1]['tidal_coefficient']))
-        $coef = $return['properties']['tide']['low_tide'][1]['tidal_coefficient'];
-      else $coef = 0;
-      $this->checkAndUpdateCmd('Tidelow_tide1tidal_coefficient', $coef);
-      $this->checkAndUpdateCmd('Tidelow_tide1tidal_height', $return['properties']['tide']['low_tide'][1]['tidal_height']);
+      if(date('Ymd') == date('Ymd',strtotime($return['properties']['tide'][0]['high_tide']['time']))) {
+        $this->checkAndUpdateCmd('Tidehigh_tide0time', date('Hi',strtotime($return['properties']['tide']['high_tide'][0]['time'])));
+        $this->checkAndUpdateCmd('Tidehigh_tide0tidal_coefficient', $return['properties']['tide']['high_tide'][0]['tidal_coefficient']);
+        $this->checkAndUpdateCmd('Tidehigh_tide0tidal_height', $return['properties']['tide']['high_tide'][0]['tidal_height']);
+        if(isset($return['properties']['tide']['high_tide'][1]['time'])) 
+          $this->checkAndUpdateCmd('Tidehigh_tide1time', date('Hi',strtotime($return['properties']['tide']['high_tide'][1]['time'])));
+        else $this->checkAndUpdateCmd('Tidehigh_tide1time', -1);
+        if(isset($return['properties']['tide']['high_tide'][1]['tidal_coefficient'])) 
+          $this->checkAndUpdateCmd('Tidehigh_tide1tidal_coefficient', $return['properties']['tide']['high_tide'][1]['tidal_coefficient']);
+        else $this->checkAndUpdateCmd('Tidehigh_tide1tidal_coefficient', -1);
+        if(isset($return['properties']['tide']['high_tide'][1]['tidal_height'])) 
+          $this->checkAndUpdateCmd('Tidehigh_tide1tidal_height', $return['properties']['tide']['high_tide'][1]['tidal_height']);
+        else $this->checkAndUpdateCmd('Tidehigh_tide1tidal_height', -1);
+        $this->checkAndUpdateCmd('Tidelow_tide0time', date('Hi',strtotime($return['properties']['tide']['low_tide'][0]['time'])));
+        if(isset($return['properties']['tide']['low_tide'][0]['tidal_coefficient']))
+          $coef = $return['properties']['tide']['low_tide'][0]['tidal_coefficient'];
+        else $coef = 0;
+        $this->checkAndUpdateCmd('Tidelow_tide0tidal_coefficient', $coef);
+        $this->checkAndUpdateCmd('Tidelow_tide0tidal_height', $return['properties']['tide']['low_tide'][0]['tidal_height']);
+        $this->checkAndUpdateCmd('Tidelow_tide1time', date('Hi',strtotime($return['properties']['tide']['low_tide'][1]['time'])));
+        if(isset($return['properties']['tide']['low_tide'][1]['tidal_coefficient']))
+          $coef = $return['properties']['tide']['low_tide'][1]['tidal_coefficient'];
+        else $coef = 0;
+        $this->checkAndUpdateCmd('Tidelow_tide1tidal_coefficient', $coef);
+        $this->checkAndUpdateCmd('Tidelow_tide1tidal_height', $return['properties']['tide']['low_tide'][1]['tidal_height']);
+        $this->setConfiguration('lastTideCall', time());
+        $this->save(true);
+      }
+      else log::add(__CLASS__, 'debug', "  Data not up to date.");
     }
     else log::add(__CLASS__, 'warning', __FUNCTION__ ." Unable to get data.");
   }
@@ -793,6 +820,7 @@ class meteofrance extends eqLogic {
     $alertPublicKey = trim(config::byKey('alertPublicKey', __CLASS__));
     $alertPrivateKey = trim(config::byKey('alertPrivateKey', __CLASS__));
     $fileAlert = __DIR__ ."/../../data/CDP_CARTE_EXTERNE.json";
+    $fileAlertTxt = __DIR__ ."/../../data/CDP_TEXTES_VIGILANCE.json";
     $fileVignetteJ = __DIR__ ."/../../data/VIGNETTE_NATIONAL_J_500X500.png";
     $fileVignetteJ1 = __DIR__ ."/../../data/VIGNETTE_NATIONAL_J1_500X500.png";
     $recupAPI = 0;
@@ -810,11 +838,17 @@ class meteofrance extends eqLogic {
           // Vignette de demain
         $file = "vignettenationale-J1/encours";
         $recupAPI += $this->downloadVigDataApi($file,$token,0,$fileVignetteJ1);
-        if($recupAPI == 3) // Recover vigilance with MF archives
+          // Json des vigilances
+        $file = "textesvigilance/encours";
+        $recupAPI += $this->downloadVigDataApi($file,$token,1,$fileAlertTxt);
+        if($recupAPI == 4) { // Recover vigilance with MF archives
           log::add(__CLASS__, 'debug', "  Data successfully downloaded using MF API");
+          $latestFull = date('YmdHis') .$latest .'Z';
+          config::save('prevVigilanceRecovery', $latestFull, __CLASS__);
+        }
       }
     }
-    if($recupAPI < 3) { // Recover vigilance with MF archives
+    if($recupAPI < 4) { // Recover vigilance with MF archives
       if(date('H') < 6) $timeRecup = strtotime("yesterday");
       else $timeRecup = time();
       $dateRecup = date('Y/m/d',$timeRecup);
@@ -832,7 +866,9 @@ class meteofrance extends eqLogic {
 // echo "Found: $nb PrevRecup: $prevRecup Daterecup: $dateRecup<br>";
         $latest = '0';
         $latestFileAlert = ''; $latestFileVignetteJ = ''; $latestFileVignetteJ1 = '';
-        $filesOK = file_exists($fileAlert) && file_exists($fileVignetteJ) && file_exists($fileVignetteJ1);
+        $filesOK = file_exists($fileAlert) && file_exists($fileVignetteJ) && file_exists($fileVignetteJ1) && file_exists($fileAlertTxt);
+        log::add(__CLASS__, 'debug', "  Files present: " .($filesOK?"OK":"NOK"));
+        log::add(__CLASS__, 'debug', "  Nb : $nb");
         for($i=0;$i<$nb;$i++) {
           $val = $subdir[$i]->getAttribute('href');
           $val2 = substr($val,0,-1);
@@ -846,7 +882,7 @@ class meteofrance extends eqLogic {
           $latest = $val2;
           
 // echo "New Data Recup: $dateRecup/$val2<br>";
-          // log::add(__CLASS__, 'debug', "  Fetching MF archives $url2");
+          log::add(__CLASS__, 'debug', "  Fetching MF archives $url2");
           $doc2 = new DOMDocument();
           libxml_use_internal_errors(true); // disable warning
           $doc2->preserveWhiteSpace = false;
@@ -854,8 +890,10 @@ class meteofrance extends eqLogic {
             $xpath2 = new DOMXpath($doc2);
             $subdir2 = $xpath2->query('//html/body/table/tr/td[@class="colname"]/a');
             $nb2 = count($subdir2);
+            log::add(__CLASS__, 'debug', "  Nb2 : $nb2");
             for($i2=0;$i2<$nb2;$i2++) {
               $val3 = $subdir2[$i2]->getAttribute('href');
+              log::add(__CLASS__, 'debug', "  Val3 : $val3");
               if($val3 == "CDP_CARTE_EXTERNE.json") {
                 $latestFileAlert = "$url2/$val3";
               }
@@ -865,13 +903,16 @@ class meteofrance extends eqLogic {
               else if($val3 == "VIGNETTE_NATIONAL_J1_500X500.png") {
                 $latestFileVignetteJ1 = "$url2/$val3";
               }
+              else if($val3 == "CDP_TEXTES_VIGILANCE.json") {
+                $latestFileAlertTxt = "$url2/$val3";
+              }
             }
           }
           else {
             log::add(__CLASS__, 'warning', "  Unable to fetch $url2");
             return 1; // erreur
           }
-          // log::add(__CLASS__, 'debug', "  Val: [$val] Latest: $latest");
+          log::add(__CLASS__, 'debug', "  Val: [$val] Latest: $latest");
         }
         $err = 0;
         if($latestFileAlert != '') {
@@ -882,6 +923,9 @@ class meteofrance extends eqLogic {
         }
         if($latestFileVignetteJ1 != '') {
           $err += $this->downloadVigDataArchive($latestFileVignetteJ1,0,$fileVignetteJ1);
+        }
+        if($latestFileAlertTxt != '') {
+          $err += $this->downloadVigDataArchive($latestFileAlertTxt,0,$fileAlertTxt);
         }
         if($err == 0 && $latest != 0) {
           $latestFull = date('Ymd',$timeRecup) .$latest .'Z';
@@ -1060,7 +1104,6 @@ class meteofrance extends eqLogic {
   public function getBulletinFrance() {
     log::add(__CLASS__, 'debug', __FUNCTION__);
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/report?domain=france&report_type=forecast&report_subtype=BGP';
-    // $return = self::callMeteoWS($url, true);
     $return = self::callMeteoWS($url,true,true,__FUNCTION__ .".json");
     if(is_array($return) && isset($return['groupe'])) {
       if(isset($return['groupe'][0])) {
@@ -1281,14 +1324,15 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
     }
     $lat = $this->getConfiguration('lat'); $lon = $this->getConfiguration('lon');
     $ville = $this->getConfiguration('ville'); $zip = $this->getConfiguration('zip');
-    $insee = $this->getConfiguration('insee'); $timezone = $this->getConfiguration('timezone');
-    if($ville == '' || $lon == '' || $lat == '' || $zip == '')  {
-      $replace['#cmd#'] = '<div style="background-color: red;color:white;margin:5px">Erreur de configuration de l\'équipement Météo France.<br/>Vérifiez la localisation utilisée, puis sauvegardez cet équipement.</div>'."Ville: $ville<br/>Zip: $zip<br/>Insee: $insee<br/>Lat: $lat<br/>Long: $lon<br/>Timezone: $timezone";
+    $insee = $this->getConfiguration('insee');
+    // if($ville === '' || $lon === '' || $lat === '' || $zip === '')  {
+    if($lon === '' || $lat === '')  {
+      $replace['#cmd#'] = '<div style="background-color: red;color:white;margin:5px">Erreur de configuration de l\'équipement Météo France.<br/>Vérifiez la localisation utilisée, puis sauvegardez cet équipement.</div>'."Ville: $ville<br/>Zip: $zip<br/>Insee: $insee<br/>Lat: $lat<br/>Long: $lon";
       return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $version, 'eqLogic')));
     }
     $lastCmd = $this->getCmd(null, 'refresh'); // Pour test si la dernière commande créée par cronTrigger existe
     if(!is_object($lastCmd)) {
-      $replace['#cmd#'] = '<div style="background-color: red;color:white;margin:5px">Création des commandes pour l\'équipement Météo France en cours. Veuillez patienter.</div>'."Ville: $ville<br/>Zip: $zip<br/>Insee: $insee<br/>Lat: $lat<br/>Long: $lon<br/>Timezone: $timezone";
+      $replace['#cmd#'] = '<div style="background-color: red;color:white;margin:5px">Création des commandes pour l\'équipement Météo France en cours. Veuillez patienter.</div>'."Ville: $ville<br/>Zip: $zip<br/>Insee: $insee<br/>Lat: $lat<br/>Long: $lon";
       return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $version, 'eqLogic')));
     }
     $templateF = $this->getConfiguration('templateMeteofrance','plugin');
@@ -1299,7 +1343,7 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
     // log::add(__CLASS__, 'debug', __FUNCTION__ ." \"" .$this->getName() ."\" Template: $templateFile");
 
     if($_version != 'mobile' || $this->getConfiguration('fullMobileDisplay', 0) == 1) {
-      $html_forecast = '<table "width=100%"><tr style="background-color:transparent !important;">';
+      $html_forecast = '<table style="width:100%"><tr style="background-color:transparent !important;">';
       $forecast_template = getTemplate('core', $version, 'forecast', 'meteofrance');
       $lastTS = 0;
       $nbH = $this->getConfiguration('forecast1h',0);
@@ -1337,7 +1381,7 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
             $replaceFC['#time#'] = date('H:i',$lastTS);
           }
         }
-        $html_forecast .= template_replace($replaceFC, $forecast_template);
+        $html_forecast .= "<td style=\"width:8%\">" .template_replace($replaceFC, $forecast_template) ."</td>";
         unset($replaceFC);
       }
           // Meteo par instant matin, aprés midi, soir, nuit
@@ -1384,7 +1428,12 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
             $replaceFC['#conditionid#'] = $jsonCmd->getId();
             $replaceFC['#low_temperature#'] = $dec['T']['value']."°C";
             $replaceFC['#high_temperature#'] = ''; // "(" .$dec['T']['windchill']."°C)";
+            if($i== 0 || ($moment == "Nuit") || ($moment == "Matin" && $displayNight == 0))
+              $html_forecast .= "<td style=\"width:8%;border-left: 1px solid #3C73A5;\">";
+            else
+              $html_forecast .= "<td style=\"width:8%\">";
             $html_forecast .= template_replace($replaceFC, $forecast_template);
+            $html_forecast .= "</td>";
             unset($replaceFC);
           }
         }
@@ -1393,7 +1442,7 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
       $nbDays = $this->getConfiguration('dailyForecastNumber',12);
       for($i=0;$i<$nbDays;$i++) {
         $replaceFC =array();
-        $replaceFC['#sep#'] = '&nbsp;|&nbsp;';
+        $replaceFC['#sep#'] = ' &nbsp;-&nbsp; ';
         $jsonCmd = $this->getCmd(null, "MeteoDay${i}Json");
         if(is_object($jsonCmd)) {
           $val = str_replace('&quot;','"',$jsonCmd->execCmd());
@@ -1418,15 +1467,15 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
 // message::add(__CLASS__, __FUNCTION__ .' ' .$dec['weather12H']['icon'] .' ' .$dec['weather12H']['desc']);
             $replaceFC['#conditionid#'] = $jsonCmd->getId();
             $replaceFC['#low_temperature#'] = $dec['T']['min'];
-            $replaceFC['#high_temperature#'] = $dec['T']['max'];
+            $replaceFC['#high_temperature#'] = $dec['T']['max'] .'°C';
           }
         }
         else break;
-        $html_forecast .= template_replace($replaceFC, $forecast_template);
+        $html_forecast .= "<td style=\"width:8%;border-left: 1px solid #3C73A5;\">" .template_replace($replaceFC, $forecast_template) ."</td>";
         unset($replaceFC);
       }
       $html_forecast .= '</tr></table>';
-      $replace["#forecast#"] = "<div style=\"overflow-x: scroll; width: 100%; min-height: 15px; max-height: 200px; margin-top: 1px; font-size: 14px; text-align: left; scrollbar-width: thin;\">$html_forecast</div>\n";
+      $replace["#forecast#"] = "<div style=\"overflow-x:scroll; width:100%; min-height:15px; max-height:200px; margin-top:1px; font-size:14px; text-align:left; scrollbar-width:thin;\">$html_forecast</div>\n";
     }
     else $replace["#forecast#"] = '';
 
@@ -1504,6 +1553,11 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
       $replace['#collectDate#'] = '';
     }
 
+    $clouds = $this->getCmd(null, 'MeteonowCloud');
+    if(is_object($clouds)) {
+      $replace['#clouds#'] = $clouds->execCmd();
+    }
+
     $icone = $this->getCmd(null, 'MeteonowIcon');
     if(is_object($icone)) {
       $img = self::getMFimg($icone->execCmd() .'.svg');
@@ -1535,23 +1589,54 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
     $color = array();
     $color[0] = '';
     $color[1] = '';
-    $color[2] = ' background: #AAE8FF';
-    $color[3] = ' background: #48BFEA';
-    $color[4] = ' background: #0094CE';
+    $color[2] = ' background: #AAE8FF'; // Faible
+    $color[3] = ' background: #48BFEA'; // Modérée
+    $color[4] = ' background: #0094CE'; // Forte
 
+    $maxRain = 0;
+    for($i=1; $i <= 9; $i++){
+      $prev = $this->getCmd(null,'Rainrain' . $i);
+      if(is_object($prev)){
+        $val = $prev->execCmd();
+        if($val> $maxRain) $maxRain =$val;
+      }
+    }
+    $request = $this->getConfiguration('requestForRainForecast','0');
+    if($request == 0) $colorIconPluie = '#CC0000'; // rouge si désactivé
+    else $colorIconPluie = '#3C73A5';
     for($i=1; $i <= 9; $i++){
       $prev = $this->getCmd(null,'Rainrain' . $i);
       $text = $this->getCmd(null,'Raindesc' . $i);
       if(is_object($prev)){
         $val = $prev->execCmd();
+        $imgDef = '<img style="width:30px;height:30px" src="/plugins/meteofrance/data/icones/Rain'.$val.'.svg"></img>';
         $replace['#prev' . $i . '#'] = $val;
         $replace['#prev' . $i . 'Color#'] = $color[(is_numeric($val)?$val:0)];
         $replace['#prev' . $i . 'Text#'] = $text->execCmd();
+        if($i==1) {
+          if($val < 2) {
+           if($maxRain <= 1) $replace['#prev' .$i .'Icon#'] = '&nbsp; <i class="wi wi-raindrops" style="font-size: 20px;color: ' .$colorIconPluie .'"></i>';
+           else $replace['#prev' .$i .'Icon#'] = '';
+          }
+          else $replace['#prev' .$i .'Icon#'] = $imgDef;
+        }
+        else if($i==9) {
+          if($val < 2) {
+            if($maxRain <= 1) $replace['#prev' .$i .'Icon#'] = '<i class="wi wi-raindrops" style="font-size: 20px;color: ' .$colorIconPluie .'"></i>&nbsp;';
+            else $replace['#prev' .$i .'Icon#'] = '';
+          }
+          else $replace['#prev' .$i .'Icon#'] = $imgDef;
+        }
+        else {
+          if($val > 1) $replace['#prev' .$i .'Icon#'] = $imgDef;
+          else $replace['#prev' .$i .'Icon#'] = '';
+        }
+
       }
     }
 
     $maxColorCmd = $this->getCmd(null,'Vigilancecolor_max');
-    $replace['#vigilance#'] = '<td class="tableCmdcss" style="width=10%;text-align: center" title="Vigilances">Pas de données de vigilance</td>';
+    $replace['#vigilance#'] = '<td class="tableCmdcss" style="width:10%;text-align: center" title="Vigilances">Pas de données de vigilance</td>';
     if(is_object($maxColorCmd)){
       $maxColor = $maxColorCmd->execCmd();
       if($maxColor > 0) {
@@ -1571,7 +1656,7 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
           $img2 .= "?ts=" .@filemtime($localFile);
         }
         if($_version != 'mobile')
-          $replace['#vigilance#'] = '<td class="tableCmdcss" style="width: 10%;text-align: center" title="Vigilance aujourd\'hui: ' .date_fr(date('d  F')) .'"><a href="https://vigilance.meteofrance.fr/fr" target="_blank"><img style="width:70px" src="plugins/meteofrance/data/' .$img .'"/></a></td>';
+          $replace['#vigilance#'] = '<td class="tableCmdcss" style="width:10%;text-align: center" title="Vigilance aujourd\'hui: ' .date_fr(date('d  F')) .'"><a href="https://vigilance.meteofrance.fr/fr" target="_blank"><img style="width:70px" src="plugins/meteofrance/data/' .$img .'"/></a></td>';
         else $replace['#vigilance#'] = '';
         foreach(self::$_vigilanceType as $i => $vig) {
           $vigilance = $this->getCmd(null, "Vigilancephenomenon_max_color_id$i");
@@ -1598,15 +1683,15 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
               if($svg === false) log::add(__CLASS__, 'debug', "  Unable to read SVG : $file");
               else {
                 $svg = str_replace('#888888', self::$_vigilanceColors[$col]['color'], $svg);
-                $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width: 10%;height:20px;text-align: center" title="' .$vig['txt'] .$desc .'">' .$svg .'</td>';
+                $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width:10%;height:20px;text-align: center" title="' .$vig['txt'] .$desc .'">' .$svg .'</td>';
               }
             }
             else
-              $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width: 10%;height:20px;text-align: center" title="' .$vig['txt'] .$desc .'"><i class="wi ' .$vig['icon'] .'" style="font-size: 24px;color: '.self::$_vigilanceColors[$col]['color'] .'"></i></td>';
+              $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width:10%;height:20px;text-align: center" title="' .$vig['txt'] .$desc .'"><i class="wi ' .$vig['icon'] .'" style="font-size: 24px;color: '.self::$_vigilanceColors[$col]['color'] .'"></i></td>';
           }
         }
         if($img2 != '' && $_version != 'mobile')
-          $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width: 10%;text-align: center" title="Vigilance demain: ' .date_fr(date('d  F',time()+86400)) .'"><a href="https://vigilance.meteofrance.fr/fr/demain" target="_blank"><img style="width:70px" src="plugins/meteofrance/data/' .$img2 .'"/></a></td>';
+          $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width:10%;text-align: center" title="Vigilance demain: ' .date_fr(date('d  F',time()+86400)) .'"><a href="https://vigilance.meteofrance.fr/fr/demain" target="_blank"><img style="width:70px" src="plugins/meteofrance/data/' .$img2 .'"/></a></td>';
       }
     }
     if (file_exists( __DIR__ ."/../template/$_version/$templateFile.html"))
@@ -1630,6 +1715,11 @@ class meteofranceCmd extends cmd {
           $eqLogic->checkAndUpdateCmd($cmdLogicalId,"Obsolete command");
       }
 */
+        // reset last...Call to force refresh
+      $eqLogic->setConfiguration('lastHourlyCall', 0);
+      $eqLogic->setConfiguration('lastInstantCall', 0);
+      $eqLogic->setConfiguration('lastTideCall', 0);
+      $eqLogic->save(true);
       $eqLogic->getInformations();
     }
   }

@@ -25,7 +25,7 @@ if (!isConnect()) {
 <form class="form-horizontal">
   <fieldset>
     <div class="form-group">
-      <label class="col-md-10 control-label" style="text-align: center">{{La récupération des données de vigilances ne nécessite pas encore l'utilisation de l'API <a href="https://portail-api.meteofrance.fr/devportal/apis">DonneesPubliquesVigilance</a> de Météo France. Le plugin récupère les données sur le <a href="http://storage.gra.cloud.ovh.net/v1/AUTH_555bdc85997f4552914346d4550c421e/gra-vigi6-archive_public/">site d'archives de Météo France</a>. En cas de problème avec le site d'archives MF, il faudra utiliser l'API en renseignant les clés publique et privée ci-dessous.}}
+      <label class="col-md-10 control-label" style="text-align: center">{{La récupération des données de vigilances ne nécessite pas encore l'utilisation de l'API <a href="https://portail-api.meteofrance.fr/devportal">DonneesPubliquesVigilance</a> de Météo France. Le plugin récupère les données sur le <a href="http://storage.gra.cloud.ovh.net/v1/AUTH_555bdc85997f4552914346d4550c421e/gra-vigi6-archive_public/">site d'archives de Météo France</a>. En cas de problème avec le site d'archives MF, il faudra utiliser l'API en renseignant les clés publique et privée ci-dessous.}}
     </div>
     <div class="form-group">
 			<label class="col-md-4 control-label">{{Utilisation de l'API vigilance Météo France}}</label>
@@ -52,6 +52,20 @@ if (!isConnect()) {
         <input type="password" class="configKey form-control" data-l1key="alertPrivateKey" placeholder="Saisissez la clé privée"/>
       </div>
     </div>
+<!--
+    <div class="form-group">
+      <label class="col-md-4 control-label">{{Clé privée de l'API vigilance Meteo France}}
+        <sup><i class="fas fa-question-circle tooltips" title="{{Clé privée à copier sur le site MF et à coller ici}}"></i></sup>
+      </label>
+<div class="input-group col-md-6">
+    <input type="text" class="inputPassword configKey form-control" data-l1key="pass" placeholder="Saisissez la clé privée" />
+    <span class="input-group-btn">
+        <a class="btn btn-default form-control bt_showPass roundedRight"><i class="fas fa-eye"></i></a>
+    </span>
+</div>
+    </div>
+-->
+
     <div class="form-group">
       <label class="col-md-4 control-label">{{Commentaires}}
       </label>

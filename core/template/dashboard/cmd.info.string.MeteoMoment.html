@@ -6,6 +6,7 @@
   <div class="weatherIcon" style="margin-top: -5px;margin-bottom: -5px"></div>
   <div title="Température" class="Tvalue"></div>
   <div class="wind" style="margin-top: 4px"></div>
+  <div title="Nuages" class="clouds" style="margin-top: 4px"></div>
   <div title="Message" class="errorMessage"></div>
   <template>
     <div>color : rgb(20,20,20) ({{Couleur de fond}})</div>
@@ -14,9 +15,10 @@
     <div>displayTime : 0/1 ({{Affichage de l'heure}})</div>
     <div>displayDescription : 0/1 ({{Affichage de la description}})</div>
     <div>displayTemperature : 0/1 ({{Affichage de la température}})</div>
-    <div>displayMoment : 0/1 ({{Affichage moment de la journée}})</div>
     <div>displayWind : 0/1 ({{Affichage du vent}})</div>
+    <div>displayClouds : 0/1 ({{Affichage du pourcentage de nuages}})</div>
     <div>displayError : 0/1 ({{Affichage des erreurs JS}})</div>
+    <div>displayMoment : 0/1 ({{Affichage moment de la journée}})</div>
   </template>
   <script>
     /* JSON structure:
@@ -33,6 +35,7 @@
         "moment_day":"Soirée",
         "weather":{"icon":"p1j","desc":"Ensoleillé"}
       }
+   {"dt":1687957200,"T":{"value":25.5,"windchill":26.6},"humidity":35,"sea_level":1018.1,"wind":{"speed":1,"gust":0,"direction":-1,"icon":"Variable"},"rain":{"1h":0},"snow":{"1h":0},"iso0":4200,"rain snow limit":"Non pertinent","clouds":40,"weather":{"icon":"p2j","desc":"Eclaircies"},"moment_day":"Après-midi"}
    */
     jeedom.cmd.addUpdateFunction('#id#',function(_options) {
       let cmd = $('.cmd[data-cmd_id=#id#]');
@@ -66,22 +69,31 @@
           }
           cmd.find('.dateText').empty().append(dateTime);
               
-          let temp = Math.round(obj.T.value) + '°C';
+          let temp = Math.round(obj.T.value*10) / 10 + '°C';
           if('#displayTemperature#' != '0') {
             cmd.find('.Tvalue').empty().append(temp);
-            cmd.find('.Tvalue').attr('title',' Temp. ressentie: '+obj.T.windchill +'°C');
+            cmd.find('.Tvalue').attr('title', ' Temp. ressentie: '+obj.T.windchill +'°C');
           }
           else weatherIconTitle += '<br/>Température: ' +temp +' Ressentie: '+obj.T.windchill +'°C';
 
           let vent = Math.round(obj.wind.speed*3.6) +'km/h';
           let raf = obj.wind.gust;
-          if(raf>0) vent += ' <span style="background: #ed1c24;color: #ffffff!important" title="Rafales">&nbsp;' +Math.round(raf*3.6) +'&nbsp;</span>'; 
+          let gust = '';
+          if(raf>0) gust += ' <span style="background: #ed1c24;color: #ffffff!important" title="Rafales">&nbsp;' +Math.round(raf*3.6) +'&nbsp;</span>'; 
           if('#displayWind#' != '0') {
-            let wind = '<svg data-v-47880d39="" width="15" height="15" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve" class="icon-wind-direction" style="transform: rotate(' +(obj.wind.direction+180) +'deg);"><g data-v-47880d39="" fill="#3C73A5"><path data-v-47880d39="" d="M510.5,749.6c-14.9-9.9-38.1-9.9-53.1,1.7l-262,207.3c-14.9,11.6-21.6,6.6-14.9-11.6L474,48.1c5-16.6,14.9-18.2,21.6,0l325,898.7c6.6,16.6-1.7,23.2-14.9,11.6L510.5,749.6z"></path><path data-v-47880d39="" d="M817.2,990c-8.3,0-16.6-3.3-26.5-9.9L497.2,769.5c-5-3.3-18.2-3.3-23.2,0L210.3,976.7c-19.9,16.6-41.5,14.9-51.4,0c-6.6-9.9-8.3-21.6-3.3-38.1L449.1,39.8C459,13.3,477.3,10,483.9,10c6.6,0,24.9,3.3,34.8,29.8l325,898.7c5,14.9,5,28.2-1.7,38.1C837.1,985,827.2,990,817.2,990z M485.6,716.4c14.9,0,28.2,5,39.8,11.6l255.4,182.4L485.6,92.9l-267,814.2l223.9-177.4C454.1,721.4,469,716.4,485.6,716.4z"></path></g></svg>';
-                cmd.find('.wind').empty().append(wind +'<br/>' +vent);
+            let wind = '';
+            if (obj.wind.icon == 'Variable')
+              wind = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve" width="15px" height="15px"><g><path fill="#3C73A5" d="M32.3,13.1c1.1,0.7,2.1,1.5,2.9,2.4c5.6,5.6,5.6,14.7,0,20.4c-5.5,5.6-14.5,5.6-20,0.1l-0.1-0.1 c-5.5-5.7-5.5-14.8,0.1-20.4l3.7,6.9l2.1-15.2L4.1,10.8l8,2c-7.2,7.2-7.2,18.8,0,26.1c7.1,7.2,18.5,7.3,25.7,0.3 c0.1-0.1,0.3-0.3,0.3-0.3c7.2-7.3,7.2-18.9,0-26.3c-1.5-1.3-3.1-2.5-4.8-3.3L32.3,13.1z"/></g></svg>';
+            else
+              wind = '<svg data-v-47880d39="" width="15px" height="15px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve" class="icon-wind-direction" style="transform: rotate(' +(obj.wind.direction+180) +'deg);"><g data-v-47880d39="" fill="#3C73A5"><path data-v-47880d39="" d="M510.5,749.6c-14.9-9.9-38.1-9.9-53.1,1.7l-262,207.3c-14.9,11.6-21.6,6.6-14.9-11.6L474,48.1c5-16.6,14.9-18.2,21.6,0l325,898.7c6.6,16.6-1.7,23.2-14.9,11.6L510.5,749.6z"></path><path data-v-47880d39="" d="M817.2,990c-8.3,0-16.6-3.3-26.5-9.9L497.2,769.5c-5-3.3-18.2-3.3-23.2,0L210.3,976.7c-19.9,16.6-41.5,14.9-51.4,0c-6.6-9.9-8.3-21.6-3.3-38.1L449.1,39.8C459,13.3,477.3,10,483.9,10c6.6,0,24.9,3.3,34.8,29.8l325,898.7c5,14.9,5,28.2-1.7,38.1C837.1,985,827.2,990,817.2,990z M485.6,716.4c14.9,0,28.2,5,39.8,11.6l255.4,182.4L485.6,92.9l-267,814.2l223.9-177.4C454.1,721.4,469,716.4,485.6,716.4z"></path></g></svg>';
+                cmd.find('.wind').empty().append(wind +' ' +gust +'<br/>' +vent);
             cmd.find('.wind').attr('title', obj.wind.icon);
           }
           else weatherIconTitle += '<br/>Vent: ' +obj.wind.icon +' '+vent;
+          if('#displayClouds#' != '0') {
+            let clouds = obj.clouds +'%';
+                cmd.find('.clouds').empty().append('<i class="wi wi-cloud"></i> ' +clouds);
+          }
               
           cmd.find('.weatherIcon').attr('title', weatherIconTitle);
         cmd.find('.dateText').attr('title', '{{Date de valeur}} : '+_options.valueDate+'<br/>{{Date de collecte}} : '+_options.collectDate);

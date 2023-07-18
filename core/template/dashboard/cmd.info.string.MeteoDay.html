@@ -6,7 +6,7 @@
   <div class="weatherIcon" style="margin-top: -5px;margin-bottom: -5px"></div>
   <div title="Température Min - Max" class="Tvalue"></div>
   <div title="Indice UV" class="UVindex"></div>
-  <div title="Humidité" class="humidity"></div>
+  <div title="% Humidité" class="humidity"></div>
   <div title="Message" class="errorMessage"></div>
   <template>
     <div>color : rgb(20,20,20) ({{Couleur de fond}})</div>
@@ -15,9 +15,9 @@
     <div>displayTime : 0/1 ({{Affichage de l'heure}})</div>
     <div>displayDescription : 0/1 ({{Affichage de la description}})</div>
     <div>displayTemperature : 0/1 ({{Affichage de la température}})</div>
+    <div>displayError : 0/1 ({{Affichage des erreurs JS}})</div>
     <div>displayUV : 0/1 ({{Affichage de l'indice UV}})</div>
     <div>displayHumidity : 0/1 ({{Affichage de l'humidité}})</div>
-    <div>displayError : 0/1 ({{Affichage des erreurs JS}})</div>
   </template>
   <script>
      /* JSON structure
@@ -67,10 +67,10 @@
             cmd.find('.UVindex').empty().append('UV: ' + uv);
           }
           else weatherIconTitle += '<br/>UV: ' +uv;
-          let humidityTxt = obj.humidity.min +'% - ' + obj.humidity.max +'%';
+          let humidityTxt = obj.humidity.min +' - ' + obj.humidity.max;
           if('#displayHumidity#' != '0')
-            cmd.find('.humidity').empty().append(humidityTxt);
-          else weatherIconTitle += '<br/>Humidité: ' + humidityTxt;
+            cmd.find('.humidity').empty().append('<i class="wi wi-humidity"></i> ' +humidityTxt);
+          else weatherIconTitle += '<br/>% Humidité: ' + humidityTxt;
 
           cmd.find('.weatherIcon').attr('title', weatherIconTitle);
           cmd.find('.dateText').attr('title', '{{Date de valeur}} : '+_options.valueDate+'<br/>{{Date de collecte}} : '+_options.collectDate);

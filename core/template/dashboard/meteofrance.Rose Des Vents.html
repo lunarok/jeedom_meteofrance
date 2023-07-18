@@ -14,15 +14,16 @@
           <br/>
           <i class="wi wi-thermometer"></i> #temperature# °C (Ressentie #ressentie# °C) &nbsp; <i title="Humidité" class="wi wi-humidity"></i> #humidity# % &nbsp; <i class="wi wi-hot"></i> UV: #uvi#
           <br/>
-          <i class="wi wi-barometer"></i> #pressure# hPa
+          <i title="Pression atmosphérique" class="wi wi-barometer"></i> #pressure# hPa &nbsp; <i title="Nuages" class="wi wi-cloud"></i> #clouds# %
           <br/>
-          <i class="wi wi-sunrise"></i> #sunrise# &nbsp; <i class="wi wi-sunset"></i> #sunset#
+          <i title="Lever du soleil" class="wi wi-sunrise"></i>&nbsp;#sunrise# &nbsp; <i title="Coucher du soleil" class="wi wi-sunset"></i>&nbsp;#sunset#
     </span>
       </td>
       <td style="text-align: center" title="Vent #winddir# #wind_direction#° #windspeed#km/h">
-        <!-- Fleche direction du vent idem MF avec vitesse et rafales -->
-          <!--
-          <svg data-v-47880d39="" width="30" height="30" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve" class="icon-wind-direction" style="transform: rotate(#wind_direction_vari#deg);"><g data-v-47880d39="" fill="#3C73A5"><path data-v-47880d39="" d="M510.5,749.6c-14.9-9.9-38.1-9.9-53.1,1.7l-262,207.3c-14.9,11.6-21.6,6.6-14.9-11.6L474,48.1c5-16.6,14.9-18.2,21.6,0l325,898.7c6.6,16.6-1.7,23.2-14.9,11.6L510.5,749.6z"></path><path data-v-47880d39="" d="M817.2,990c-8.3,0-16.6-3.3-26.5-9.9L497.2,769.5c-5-3.3-18.2-3.3-23.2,0L210.3,976.7c-19.9,16.6-41.5,14.9-51.4,0c-6.6-9.9-8.3-21.6-3.3-38.1L449.1,39.8C459,13.3,477.3,10,483.9,10c6.6,0,24.9,3.3,34.8,29.8l325,898.7c5,14.9,5,28.2-1.7,38.1C837.1,985,827.2,990,817.2,990z M485.6,716.4c14.9,0,28.2,5,39.8,11.6l255.4,182.4L485.6,92.9l-267,814.2l223.9-177.4C454.1,721.4,469,716.4,485.6,716.4z"></path></g></svg><br>
+        <!-- Fleche direction du vent idem MF ou icone variable -->
+        <!--
+        #windIcon#
+        <br>
           -->
         <!-- Fin Fleche direction du vent idem MF -->
         <!-- Rose des vents Highcharts -->
@@ -110,20 +111,20 @@
         <td class="tableCmdcss" style="width: 18%;height:20px;text-align: right">#h1h#</td>
       </tr>
       <tr style="background-color:transparent !important;">
-        <td style="height:20px;#prev1Color#" title="#prev1Text#" class="tooltips">&nbsp; <i class="wi wi-raindrops" style="font-size: 24px;color: #3C73A5"></i></td>
-        <td style="height:20px;#prev2Color#" title="#prev2Text#" class="tooltips"></td>
-        <td style="height:20px;#prev3Color#" title="#prev3Text#" class="tooltips"></td>
-        <td style="height:20px;#prev4Color#" title="#prev4Text#" class="tooltips"></td>
-        <td style="height:20px;#prev5Color#" title="#prev5Text#" class="tooltips"></td>
-        <td style="height:20px;#prev6Color#" title="#prev6Text#" class="tooltips"></td>
-        <td style="height:20px;#prev7Color#" title="#prev7Text#" class="tooltips"></td>
-        <td style="height:20px;#prev8Color#" title="#prev8Text#" class="tooltips"></td>
-        <td style="height:20px;#prev9Color#;text-align: right" title="#prev9Text#" class="tooltips"> <i class="wi wi-raindrops" style="font-size: 24px;color: #3C73A5"></i>&nbsp;</td>
+        <td style="text-align:center;#prev1Color#" title="#prev1Text#" class="tooltips">#prev1Icon#</td>
+        <td style="text-align:center;#prev2Color#" title="#prev2Text#" class="tooltips">#prev2Icon#</td>
+        <td style="text-align:center;#prev3Color#" title="#prev3Text#" class="tooltips">#prev3Icon#</td>
+        <td style="text-align:center;#prev4Color#" title="#prev4Text#" class="tooltips">#prev4Icon#</td>
+        <td style="text-align:center;#prev5Color#" title="#prev5Text#" class="tooltips">#prev5Icon#</td>
+        <td style="text-align:center;#prev6Color#" title="#prev6Text#" class="tooltips">#prev6Icon#</td>
+        <td style="text-align:center;#prev7Color#" title="#prev7Text#" class="tooltips">#prev7Icon#</td>
+        <td style="text-align:center;#prev8Color#" title="#prev8Text#" class="tooltips">#prev8Icon#</td>
+        <td style="text-align:center;#prev9Color#" title="#prev9Text#" class="tooltips">#prev9Icon#</td>
       </tr>
     </table>
   </div>
   <!-- Vigilances -->
-  <div style="margin-top: 4px;">
+  <div style="margin-top: 0px;">
     <table border=0 style="border-spacing: 0px; width: 100%;">
       <tr style="background-color:transparent !important;">
         #vigilance#

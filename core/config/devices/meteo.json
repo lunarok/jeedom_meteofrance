@@ -35,27 +35,6 @@
         "logicalId": "Meteoday0description"
     },
     {
-        "name": "Météo du Jour - Aujourd'hui - Direction du Vent",
-        "type": "info",
-        "subtype": "numeric",
-        "isVisible": 0,
-        "logicalId": "Meteoday0directionVent"
-    },
-    {
-        "name": "Météo du Jour - Aujourd'hui - Vitesse du Vent",
-        "type": "info",
-        "subtype": "numeric",
-        "isVisible": 0,
-        "logicalId": "Meteoday0vitesseVent"
-    },
-    {
-        "name": "Météo du Jour - Aujourd'hui - Force Rafales",
-        "type": "info",
-        "subtype": "numeric",
-        "isVisible": 0,
-        "logicalId": "Meteoday0forceRafales"
-    },
-    {
         "name": "Météo du Jour - Aujourd'hui - Température Minimum",
         "type": "info",
         "subtype": "numeric",
@@ -88,27 +67,6 @@
       "logicalId": "Meteoday1description"
     },
     {
-        "name": "Météo du Jour - Demain - Direction du Vent",
-        "type": "info",
-        "subtype": "numeric",
-        "isVisible": 0,
-        "logicalId": "Meteoday1directionVent"
-    },
-    {
-        "name": "Météo du Jour - Demain - Vitesse du Vent",
-        "type": "info",
-        "subtype": "numeric",
-        "isVisible": 0,
-        "logicalId": "Meteoday1vitesseVent"
-    },
-    {
-        "name": "Météo du Jour - Demain - Force Rafales",
-        "type": "info",
-        "subtype": "numeric",
-        "isVisible": 0,
-        "logicalId": "Meteoday1forceRafales"
-    },
-    {
         "name": "Météo du Jour - Demain - Température Minimum",
         "type": "info",
         "subtype": "numeric",
@@ -139,27 +97,6 @@
       "subtype": "string",
       "isVisible": 0,
       "logicalId": "Meteoday2description"
-    },
-    {
-        "name": "Météo du Jour - Surlendemain - Direction du Vent",
-        "type": "info",
-        "subtype": "numeric",
-        "isVisible": 0,
-        "logicalId": "Meteoday2directionVent"
-    },
-    {
-        "name": "Météo du Jour - Surlendemain - Vitesse du Vent",
-        "type": "info",
-        "subtype": "numeric",
-        "isVisible": 0,
-        "logicalId": "Meteoday2vitesseVent"
-    },
-    {
-        "name": "Météo du Jour - Surlendemain - Force Rafales",
-        "type": "info",
-        "subtype": "numeric",
-        "isVisible": 0,
-        "logicalId": "Meteoday2forceRafales"
     },
     {
         "name": "Météo du Jour - Surlendemain - Température Minimum",
@@ -294,13 +231,6 @@
         "subtype": "string",
         "isVisible": 0,
         "logicalId": "Meteoday0icon"
-    },
-    {
-        "name": "Météo du Jour - H+1 - Icone",
-        "type": "info",
-        "subtype": "string",
-        "isVisible": 0,
-        "logicalId": "hourly1icon"
     },
     {
         "name": "Météo du Jour - J+1 - Icone",

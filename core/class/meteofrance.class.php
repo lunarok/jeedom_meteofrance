@@ -271,7 +271,7 @@ class meteofrance extends eqLogic {
     if($lat != '' && $lon != '') {
       $url = "https://rpcache-aa.meteofrance.com/internet2018client/2.0/forecast?lat=$lat&lon=$lon&id=&instants=morning,afternoon,evening,night";
       $ville = $_array['ville'];
-      $return = self::callMeteoWS($url,false,true,__FUNCTION__ ."-$ville.json");
+      $return = self::callMeteoWS($url,false,true,__FUNCTION__ ."-".$this->getId() ."-$ville.json");
       if(isset($return['properties']['bulletin_cote'])) $bulletin_cote = $return['properties']['bulletin_cote'];
       else $bulletin_cote = 0;
       $this->setConfiguration('bulletinCote', $bulletin_cote);
@@ -333,7 +333,7 @@ class meteofrance extends eqLogic {
     }
     $url = "https://rpcache-aa.meteofrance.com/wsft/files/agat/ville/bulvillefr_$bulletinVille.xml";
     log::add(__CLASS__, 'debug', __FUNCTION__ ." BulletinVille: $bulletinVille URL: $url");
-    $return = self::callMeteoWS($url,true,false,__FUNCTION__ ."-$bulletinVille.json");
+    $return = self::callMeteoWS($url,true,false,__FUNCTION__ ."-".$this->getId() ."-$bulletinVille.json");
     if(is_array($return) && isset($return['echeance'])) {
       $this->checkAndUpdateCmd('BulletinvilletitreEcheance1', $return['echeance'][0]['titreEcheance']);
       $this->checkAndUpdateCmd('Bulletinvillepression1', $return['echeance'][0]['pression']);
@@ -373,7 +373,7 @@ class meteofrance extends eqLogic {
     $ville = $this->getConfiguration('ville');
     log::add(__CLASS__, 'debug', __FUNCTION__ ." $ville $lat/$lon");
     $url = "https://webservice.meteofrance.com/forecast?lat=$lat&lon=$lon&id=&instants=&day=5";
-    $return = self::callMeteoWS($url,false,true,__FUNCTION__ ."-$ville.json");
+    $return = self::callMeteoWS($url,false,true,__FUNCTION__ ."-".$this->getId() ."-$ville.json");
     if(is_array($return) && isset($return['forecast'])) {
       $timezone = $return['position']['timezone'];
       $nb = count($return['forecast']);
@@ -496,7 +496,7 @@ class meteofrance extends eqLogic {
       return;
     }
     $url = "https://webservice.meteofrance.com/forecast?lat=$lat&lon=$lon&id=&instants=morning,afternoon,evening,night";
-    $return = self::callMeteoWS($url,false,true,__FUNCTION__ ."-$ville.json");
+    $return = self::callMeteoWS($url,false,true,__FUNCTION__ ."-".$this->getId() ."-$ville.json");
     if(is_array($return) && isset($return['forecast'])) {
       $nb = count($return['forecast']);
       $updated_on = $return['updated_on'];
@@ -606,7 +606,7 @@ class meteofrance extends eqLogic {
       return;
     }
     $url = "https://webservice.meteofrance.com/rain?lat=$lat&lon=$lon";
-    $return = self::callMeteoWS($url,false,true,__FUNCTION__ ."-$ville.json");
+    $return = self::callMeteoWS($url,false,true,__FUNCTION__ ."-".$this->getId() ."-$ville.json");
     $i = 0; $cumul = 0; $next = 0; $type = '';
     if(is_array($return) && isset($return['forecast'])) {
       $updated_on = $return['updated_on'];
@@ -642,7 +642,7 @@ class meteofrance extends eqLogic {
     }
     log::add(__CLASS__, 'debug', __FUNCTION__ ." $lat/$lon");
     $url = "https://rpcache-aa.meteofrance.com/internet2018client/2.0/forecast/marine?lat=$lat&lon=$lon";
-    $return = self::callMeteoWS($url,false,true,__FUNCTION__ ."-2-${lat}_$lon.json");
+    $return = self::callMeteoWS($url,false,true,__FUNCTION__ ."-".$this->getId() ."-2-${lat}_$lon.json");
     if(is_array($return) && isset($return['properties']['marine'])) {
       $t = time();
       foreach ($return['properties']['marine'] as $id => $marine) {
@@ -680,7 +680,7 @@ class meteofrance extends eqLogic {
     $ville = $this->getConfiguration('ville');
     log::add(__CLASS__, 'debug', __FUNCTION__ ." Insee: $insee Ville $ville");
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/tide?id=' .$insee .'52';
-    $return = self::callMeteoWS($url,false,true,__FUNCTION__ ."-${insee}-$ville.json");
+    $return = self::callMeteoWS($url,false,true,__FUNCTION__ ."-".$this->getId() ."-${insee}-$ville.json");
     if(is_array($return) && isset($return['properties']['tide'])) {
       if(date('Ymd') == date('Ymd',strtotime($return['properties']['tide'][0]['high_tide']['time']))) {
         $this->checkAndUpdateCmd('Tidehigh_tide0time', date('Hi',strtotime($return['properties']['tide']['high_tide'][0]['time'])));
@@ -843,7 +843,7 @@ class meteofrance extends eqLogic {
         $recupAPI += $this->downloadVigDataApi($file,$token,1,$fileAlertTxt);
         if($recupAPI == 4) { // Recover vigilance with MF archives
           log::add(__CLASS__, 'debug', "  Data successfully downloaded using MF API");
-          $latestFull = date('YmdHis') .$latest .'Z';
+          $latestFull = gmdate('YmdHis') .'Z';
           config::save('prevVigilanceRecovery', $latestFull, __CLASS__);
         }
       }
@@ -960,10 +960,10 @@ class meteofrance extends eqLogic {
       // TODO clean des cmds ou pas ?
       return;
     }
-    $txtTsAlerts = array(); $phenomColor = array();
+    $txtTsAlerts = array(); $phenomColor = array(); $txtPhases = array();
         // init all values
     foreach(self::$_vigilanceType as $i => $vig) {
-      $txtTsAlerts[$i] = ''; $phenomColor[$i] = 0;
+      $txtTsAlerts[$i] = ''; $phenomColor[$i] = 0; $txtPhases[$i] = '';
     }
     $maxColor = 0; $now = time();
     // $numDept = '74';
@@ -994,13 +994,14 @@ class meteofrance extends eqLogic {
             if($color > $maxColor) $maxColor = $color;
             $phenomColor[$phenId] = $color;
             if($color > 1) {
-              $listVigilance[] = self::$_vigilanceType[$phenId]['txt'] .' : ' .self::$_vigilanceColors[$color]['desc'];
+              $listVigilance[] = self::$_vigilanceType[$phenId]['txt'] .' : ' .self::$_vigilanceColors[$color]['desc']; // TODO Ajout couleur entre les horaires
               foreach($phenomenonItem['timelaps_items'] as $timelapsItem) {
                 $colorTs = $timelapsItem['color_id'];
                 if($colorTs != 0) {
                   $begin = strtotime($timelapsItem['begin_time']);
                   $end = strtotime($timelapsItem['end_time']);
                   if($now < $end) {
+                    $txtPhases[$phenId] .= '. ' .self::$_vigilanceColors[$colorTs]['desc'] .":  " .date('H:i',$begin) ." - " .date('H:i',$end);
                     $txtTsAlerts[$phenId] .= "<br><i class='fa fa-circle' style='color:" .self::$_vigilanceColors[$colorTs]['color'] ."'></i> " .date('H:i',$begin) ." - " .date('H:i',$end);
                     log::add(__CLASS__, 'debug', "  PhenomId: $phenId Color: $color start:" .date("d-m-Y H:i:s",$begin)." End:" .date("d-m-Y H:i:s",$end) ." MaxColor: $maxColor"); 
                   }
@@ -1038,7 +1039,7 @@ class meteofrance extends eqLogic {
     foreach(self::$_vigilanceType as $i => $vig) {
       // if($phenomColor[$i] > 1) message::add(__CLASS__, "Vigilance $i " .$phenomColor[$i] .$txtTsAlerts[$i]);
       $this->checkAndUpdateCmd("Vigilancephases$i",
-        self::$_vigilanceColors[$phenomColor[$i]]['desc'] .$txtTsAlerts[$i]);
+        self::$_vigilanceColors[$phenomColor[$i]]['desc'] .$txtPhases[$i]);
       $this->checkAndUpdateCmd("Vigilancephenomenon_max_color_id$i", $phenomColor[$i]);
     }
   }
@@ -1046,7 +1047,7 @@ class meteofrance extends eqLogic {
   public function getAlerts() {
     log::add(__CLASS__, 'debug', __FUNCTION__);
     $url = 'https://webservice.meteofrance.com//report?domain=france&report_type=message&report_subtype=infospe&format=';
-    $return = self::callMeteoWS($url,false,true,__FUNCTION__ .".json");
+    $return = self::callMeteoWS($url,false,true,__FUNCTION__ ."-".$this->getId() .".json");
     if(is_array($return) && isset($return['Com'])) {
       if(isset($return['Com'][0])) {
         $this->checkAndUpdateCmd('Alerttitre', $return['Com'][0]['titre']);
@@ -1074,7 +1075,7 @@ class meteofrance extends eqLogic {
     log::add(__CLASS__, 'debug', __FUNCTION__ ." $lat/$lon");
     $url = "https://webservice.meteofrance.com/ephemeris?lat=$lat&lon=$lon";
     $ville = $this->getConfiguration('ville');
-    $return = self::callMeteoWS($url,false,true,__FUNCTION__ ."-$ville.json");
+    $return = self::callMeteoWS($url,false,true,__FUNCTION__ ."-".$this->getId() ."-$ville.json");
     if(is_array($return) && isset($return['properties'])) {
       if(date('Ymd') == date('Ymd',strtotime($return['properties']['ephemeris']['sunset_time']))) {
         $this->checkAndUpdateCmd('Ephemerismoon_phase', $return['properties']['ephemeris']['moon_phase']);
@@ -1104,7 +1105,7 @@ class meteofrance extends eqLogic {
   public function getBulletinFrance() {
     log::add(__CLASS__, 'debug', __FUNCTION__);
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/report?domain=france&report_type=forecast&report_subtype=BGP';
-    $return = self::callMeteoWS($url,true,true,__FUNCTION__ .".json");
+    $return = self::callMeteoWS($url,true,true,__FUNCTION__ ."-".$this->getId() .".json");
     if(is_array($return) && isset($return['groupe'])) {
       if(isset($return['groupe'][0])) {
         $this->checkAndUpdateCmd('Bulletinfrdate0', $return['groupe'][0]['date']);
@@ -1129,7 +1130,7 @@ class meteofrance extends eqLogic {
   public function getBulletinSemaine() {
     log::add(__CLASS__, 'debug', __FUNCTION__);
     $url = 'https://rpcache-aa.meteofrance.com/internet2018client/2.0/report?domain=france&report_type=forecast&report_subtype=BGP_mensuel';
-    $return = self::callMeteoWS($url,true,true,__FUNCTION__ .".json");
+    $return = self::callMeteoWS($url,true,true,__FUNCTION__ ."-".$this->getId() .".json");
     if(is_array($return) && isset($return['groupe'])) {
       $this->checkAndUpdateCmd('Bulletindatesem', $return['groupe'][0]['date']);
       if(isset($return['groupe'][0]['temps'])) {
@@ -1523,13 +1524,20 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
       $windDirection = $windDirCmd->execCmd();
       if(!is_numeric($windDirection)) $windDirection = 0;
       $replace['#wind_direction#'] = $windDirection;
-      $replace['#winddir#'] = $this->convertDegrees2Compass($windDirection,0);
       $replace['#wind_direction_vari#'] = $windDirection+180;
+      if($windDirection == -1) {
+        $replace['#winddir#'] = "Variable";
+        $replace['#windIcon#'] = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve" width="30px" height="30px"><g><path fill="#3C73A5" d="M32.3,13.1c1.1,0.7,2.1,1.5,2.9,2.4c5.6,5.6,5.6,14.7,0,20.4c-5.5,5.6-14.5,5.6-20,0.1l-0.1-0.1 c-5.5-5.7-5.5-14.8,0.1-20.4l3.7,6.9l2.1-15.2L4.1,10.8l8,2c-7.2,7.2-7.2,18.8,0,26.1c7.1,7.2,18.5,7.3,25.7,0.3 c0.1-0.1,0.3-0.3,0.3-0.3c7.2-7.3,7.2-18.9,0-26.3c-1.5-1.3-3.1-2.5-4.8-3.3L32.3,13.1z"/></g></svg>';
+      }else {
+        $replace['#winddir#'] = $this->convertDegrees2Compass($windDirection,0);
+        $replace['#windIcon#'] = '<svg data-v-47880d39="" width="30px" height="30px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve" class="icon-wind-direction" style="transform: rotate(' .($windDirection+180) .'deg);"><g data-v-47880d39="" fill="#3C73A5"><path data-v-47880d39="" d="M510.5,749.6c-14.9-9.9-38.1-9.9-53.1,1.7l-262,207.3c-14.9,11.6-21.6,6.6-14.9-11.6L474,48.1c5-16.6,14.9-18.2,21.6,0l325,898.7c6.6,16.6-1.7,23.2-14.9,11.6L510.5,749.6z"></path><path data-v-47880d39="" d="M817.2,990c-8.3,0-16.6-3.3-26.5-9.9L497.2,769.5c-5-3.3-18.2-3.3-23.2,0L210.3,976.7c-19.9,16.6-41.5,14.9-51.4,0c-6.6-9.9-8.3-21.6-3.3-38.1L449.1,39.8C459,13.3,477.3,10,483.9,10c6.6,0,24.9,3.3,34.8,29.8l325,898.7c5,14.9,5,28.2-1.7,38.1C837.1,985,827.2,990,817.2,990z M485.6,716.4c14.9,0,28.2,5,39.8,11.6l255.4,182.4L485.6,92.9l-267,814.2l223.9-177.4C454.1,721.4,469,716.4,485.6,716.4z"></path></g></svg>';
+      }
     }
     else {
       $replace['#wind_direction#'] = 0;
       $replace['#winddir#'] = '';
       $replace['#wind_direction_vari#'] = 180;
+      $replace['#windIcon#'] = '';
     }
 
     $windGust = $this->getCmd(null, 'MeteonowWindGust');
@@ -1644,19 +1652,24 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
         if(date('Ymd') != substr($prevVigRecup,0,8)) {
           $img = 'VIGNETTE_NATIONAL_J1_500X500.png';
           $localFile = __DIR__ ."/../../data/$img";
+          $ts1 = @filemtime($localFile);
           $img .= "?ts=" .@filemtime($localFile);
+          $ts1 += 86400;
           $img2 = '';
         }
         else  {
           $img = 'VIGNETTE_NATIONAL_J_500X500.png';
           $localFile = __DIR__ ."/../../data/$img";
-          $img .= "?ts=" .@filemtime($localFile);
+          $ts1 = @filemtime($localFile);
+          $img .= "?ts=" .$ts1;
           $img2 = 'VIGNETTE_NATIONAL_J1_500X500.png';
           $localFile = __DIR__ ."/../../data/$img2";
-          $img2 .= "?ts=" .@filemtime($localFile);
+          $ts2 = @filemtime($localFile);
+          $img2 .= "?ts=" .$ts2;
+          $ts2 += 86400;
         }
         if($_version != 'mobile')
-          $replace['#vigilance#'] = '<td class="tableCmdcss" style="width:10%;text-align: center" title="Vigilance aujourd\'hui: ' .date_fr(date('d  F')) .'"><a href="https://vigilance.meteofrance.fr/fr" target="_blank"><img style="width:70px" src="plugins/meteofrance/data/' .$img .'"/></a></td>';
+          $replace['#vigilance#'] = '<td class="tableCmdcss" style="width:10%;text-align: center" title="Vigilance: ' .date_fr(date('l  d  F',$ts1)) .'"><a href="https://vigilance.meteofrance.fr/fr" target="_blank"><img style="width:70px" src="plugins/meteofrance/data/' .$img .'"/></a></td>';
         else $replace['#vigilance#'] = '';
         foreach(self::$_vigilanceType as $i => $vig) {
           $vigilance = $this->getCmd(null, "Vigilancephenomenon_max_color_id$i");
@@ -1671,8 +1684,12 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
           $desc = '';
           if(is_object($phase))  {
             $txt = $phase->execCmd();
+            foreach(self::$_vigilanceColors as $color) {
+              $txt = str_replace($color['desc'] .":", "<i class='fa fa-circle' style='color:" .$color['color'] ."'></i>", $txt);
+            }
+            $txt = str_replace('.', "<br>", $txt);
             if($txt != '') {
-              $desc = " &nbsp; $txt";
+              $desc = ": &nbsp;$txt";
             }
           }
           $replace['#vig'.$i.'Desc#'] = $vig['txt'] .$desc;
@@ -1691,7 +1708,7 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
           }
         }
         if($img2 != '' && $_version != 'mobile')
-          $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width:10%;text-align: center" title="Vigilance demain: ' .date_fr(date('d  F',time()+86400)) .'"><a href="https://vigilance.meteofrance.fr/fr/demain" target="_blank"><img style="width:70px" src="plugins/meteofrance/data/' .$img2 .'"/></a></td>';
+          $replace['#vigilance#'] .= '<td class="tableCmdcss" style="width:10%;text-align: center" title="Vigilance: ' .date_fr(date('l  d  F',$ts2)) .'"><a href="https://vigilance.meteofrance.fr/fr/demain" target="_blank"><img style="width:70px" src="plugins/meteofrance/data/' .$img2 .'"/></a></td>';
       }
     }
     if (file_exists( __DIR__ ."/../template/$_version/$templateFile.html"))

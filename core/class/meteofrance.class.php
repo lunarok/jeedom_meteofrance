@@ -1617,7 +1617,7 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
       $text = $this->getCmd(null,'Raindesc' . $i);
       if(is_object($prev)){
         $val = $prev->execCmd();
-        $imgDef = '<img style="width:30px;height:30px" src="/plugins/meteofrance/data/icones/Rain'.$val.'.svg"></img>';
+        $imgDef = '<img style="width:30px;height:30px" src="plugins/meteofrance/data/icones/Rain'.$val.'.svg"></img>';
         $replace['#prev' . $i . '#'] = $val;
         $replace['#prev' . $i . 'Color#'] = $color[(is_numeric($val)?$val:0)];
         $replace['#prev' . $i . 'Text#'] = $text->execCmd();

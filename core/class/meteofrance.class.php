@@ -588,7 +588,7 @@ class meteofrance extends eqLogic {
     }
   }
 
-  public function getRain() {
+  public function getRain() {  // cron5 called
     $request = $this->getConfiguration('requestForRainForecast','0');
     if($request == 0) {
       for($i=1;$i<10;$i++) {
@@ -605,33 +605,34 @@ class meteofrance extends eqLogic {
       log::add(__CLASS__, 'debug', "  Invalid latitude/longitude: $lat/$lon");
       return;
     }
-    $url = "https://webservice.meteofrance.com/rain?lat=$lat&lon=$lon";
+    $i = 0; $cumul = 0; $next = 0; $type = ''; $dt = time();
+    $url = "https://rpcache-aa.meteofrance.com/internet2018client/2.0/nowcast/rain?lat=$lat&lon=$lon";
+    // similar to $url = "https://webservice.meteofrance.com/v3/rain?lat=$lat&lon=$lon";
     $return = self::callMeteoWS($url,false,true,__FUNCTION__ ."-".$this->getId() ."-$ville.json");
-    $i = 0; $cumul = 0; $next = 0; $type = '';
-    if(is_array($return) && isset($return['forecast'])) {
-      $updated_on = $return['updated_on'];
-      log::add(__CLASS__, 'debug', "  Updated_on: " .date('d-m-Y H:i:s', $updated_on));
-      foreach ($return['forecast'] as $id => $rain) {
+    if(is_array($return) && isset($return['properties']['forecast'])) {
+      $updated_on = strtotime($return['update_time']);
+      log::add(__CLASS__, 'debug', "  ".__FUNCTION__ ." Updated_on: " .date('d-m-Y H:i:s', $updated_on));
+      foreach ($return['properties']['forecast'] as $id => $rain) {
         $i++;
-        $this->checkAndUpdateCmd('Rainrain' . $i, $rain['rain']);
-        $this->checkAndUpdateCmd('Raindesc' . $i, $rain['desc']);
-        if (($rain['rain'] > 1) && ($next == 0)) {
+        $this->checkAndUpdateCmd('Rainrain' . $i, $rain['rain_intensity']);
+        $this->checkAndUpdateCmd('Raindesc' . $i, $rain['rain_intensity_description']);
+        if (($rain['rain_intensity'] > 1) && ($next == 0)) {
           $next = $i * 5;
           if ($i > 6) {
             $next += ($i - 6) * 5;
             //after 30 mn, steps are for 10mn
           }
-          $type = $rain['desc'];
+          $type = $rain['rain_intensity_description'];
         }
-        $cumul += $rain['rain'];
+        $cumul += $rain['rain_intensity'];
       }
-      $dt = $return['forecast'][0]['dt'];
-      $this->checkAndUpdateCmd('Rainheure',  date('Hi',$dt));
-      $this->checkAndUpdateCmd('Raincumul', $cumul);
-      $this->checkAndUpdateCmd('Rainnext', $next);
-      $this->checkAndUpdateCmd('Raintype', $type);
+      $dt = strtotime($return['properties']['forecast'][0]['time']);
     }
     else log::add(__CLASS__, 'warning', __FUNCTION__ ." Unable to get data.");
+    $this->checkAndUpdateCmd('Rainheure',  date('Hi',$dt));
+    $this->checkAndUpdateCmd('Raincumul', $cumul);
+    $this->checkAndUpdateCmd('Rainnext', $next);
+    $this->checkAndUpdateCmd('Raintype', $type);
   }
 
   public function getMarine() {

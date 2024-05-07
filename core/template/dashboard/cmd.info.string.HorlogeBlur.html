@@ -1,0 +1,372 @@
+<div class="cmd cmd-widget widget-MFweather #history#" data-type="info" data-subtype="string" data-template="MFweather" data-cmd_id="#id#" data-cmd_uid="#uid#" data-version="#version#" data-eqLogic_id="#eqLogic_id#">
+  <div class="content">
+    <div id="digital_container#id#">
+      <div class="clock#id#" style="background:transparent;text-align:center">
+        <div class="hours#id#" style="margin-left:20px">
+          <div class="first">
+            <div class="number">0</div>
+          </div>
+          <div class="second">
+            <div class="number">0</div>
+          </div>
+        </div>
+          <div class="tick#id#">:</div>
+        <div class="minutes#id#">
+          <div class="first">
+            <div class="number">0</div>
+          </div>
+          <div class="second">
+            <div class="number">0</div>
+          </div>
+        </div>
+          <div class="seconds#id#">00</div>
+      </div>
+      <div id="weather#id#" class="wIcon">
+        <div id="meteofranceTopLeft">
+            <div class="widgetName#id#">#name#</div>
+            <div style="font-size:14px;margin:0;padding:0" class="condition"></div>
+          <div id="meteofranceLeft">
+            <div class="wind"></div>
+            <div>
+              <span class="humidity"></span>
+              <span class="clouds"></span>
+            </div>
+            <div>
+              <span class="pressure"></span>
+              <span class="rain"></span>
+            </div>
+          </div>
+        </div>
+        <div id="meteofranceRight">
+          <div id="date" class="dateText" style="font-size: 16px;line-height:16px;padding:0"></div>
+          <div class="sunRiseSet" style="font-size:11px;line-height:12px;margin:0;padding:0"></div>
+          <div class="Tvalue" style="margin-top:10px;font-size:40px;line-height:50px;padding:0;text-shadow: 3px 3px 2px rgba(0, 0, 0, 1);"></div>
+        </div>
+      </div>
+      <div id="collect#id#">
+        <span title="Date de collecte" class="collectDate"></span>
+        <span title="Message" class="errorMessage"></span>
+      </div>
+    </div>
+  </div>
+  <style>
+    .wIcon {
+      background-position: center -30px;
+      background-size: 180px 180px;
+      background-repeat: no-repeat;
+      background-origin: border-box;
+      overflow: visible!important;
+    }
+    #digital_container#id# {
+      width: 440px;
+      height: 280px;
+      background: url(plugins/meteofrance/core/template/images/clockBackground.png) no-repeat;
+      z-index: 98;
+      overflow: hidden;
+    }
+    .clock#id# {
+      text-align: center;
+      margin-top: -20px;
+      height: 170px;
+      font-size: 150px;
+      font-weight: 400;
+      font-family: sans-serif;
+      line-height: normal;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+    }
+    .clock#id# > div {
+      display: flex;
+    }
+    .number {
+      margin-top: -20px;
+    }
+
+    .hours#id#,
+    .minutes#id# {
+      background: transparent;
+      color: white;
+      border: 8px ridge transparent;
+      border-radius:18px;
+      margin-top: 20px;
+    }
+
+    .seconds#id# {
+      background:transparent;
+      color: #E6E6E6;
+      margin-top: 105px;
+      margin-left: 1px;
+      height: 150px;
+      max-width:10px;
+      text-align: center;
+      font-size: 18px;
+      text-shadow: 2px 2px 1px rgba(0, 0, 0, 1);
+    }
+    .tick#id# {
+      margin-top: 45px;
+      font-size: 80px;
+    }
+
+    .anim#id# {
+      animation: anim#id# linear 1s infinite;
+      /* 
+         animation-timing-function: linear;
+         animation-timing-function: cubic-bezier(0.2, -2, 0.8, 2);
+      */
+    }
+
+    @keyframes anim#id# {
+      /* from { transform: translateY(0vh); } to { transform: translateY(-140px); } */
+      0% { filter: blur( 0.0vmin) }
+      100% { filter: blur( 2.5vmin) }
+    }
+
+    #weather#id# {
+      width: 100%;
+      height: 130px;
+      color: #fff;
+    }
+
+    #weather#id# #meteofranceTopLeft {
+      float: left;
+      margin: 0px 0 0 10px;
+      text-align:left;
+      min-width:100px;
+      line-height:16px
+    }
+    #weather#id# #meteofranceLeft {
+      margin: 8px 0 0 4px;
+      width: 200px;
+      font-size: 7pt;
+      line-height: 12px;
+    }
+
+    .widgetName#id# {
+      font-size: 16px;
+      margin:0;
+      padding:0;
+      font-weight: bold;
+      text-shadow: 2px 2px 1px rgba(0, 0, 0, 1);
+    }
+
+    #weather#id# #meteofranceRight {
+      text-align:right;
+      float: right;
+      clear: none;
+      margin-right:10px;
+      margin-top: 0px;
+    }
+
+    #weather#id# #date {
+      font-size: 14px;
+      padding-right: 2px;
+      font-weight: bold;
+      text-shadow: 2px 2px 1px rgba(0, 0, 0, 1);
+    }
+    #collect#id# {
+      font-size: 8px;
+      margin: -38px 0 0 10px;
+      text-align: left;
+    }
+  </style>    
+  <template>
+    <div>displayWidgetName: {{Affichage du nom du widget.}} 0/1</div>
+    <div>backgroundColor: {{Couleur de fond du widget}}</div>
+    <div>clockFontColor: {{Couleur des textes Heures, minutes, secondes.}} white</div>
+    <div>clockBackgroundColor: {{Couleur de fond des textes de l'heure.}} transparent</div>
+    <div>clockBorderColor: {{Couleur des bordures autour de l'heure et des minutes.}} transparent</div>
+    <div>displayWeather: {{Affichage de la météo.}} 0/1</div>
+    <div>displayClouds: {{Affichage du pourcentage de nuages.}} 0/1</div>
+    <div>displayWind: {{Affichage des vitesses et direction du vent.}} 0/1</div>
+    <div>displayRain: {{Affichage de la quantité de pluie dans l'heure.}} 0/1</div>
+    <div>displayHumidity: {{Affichage du pourcentage d'humidité.}} 0/1</div>
+    <div>displayPressure: {{Affichage de la pression atmosphèrique.}} 0/1</div>
+    <div>displaySeconds: {{Affichage des secondes sur l'horloge.}} 0/1</div>
+    <div>displayError: {{Affichage des erreurs JS.}} 0/1</div>
+  </template>
+  <script type="text/javascript">
+    var hoursContainer#id# = document.querySelector('.hours#id#')
+    var minutesContainer#id# = document.querySelector('.minutes#id#')
+    var secondsText#id# = document.querySelector('.seconds#id#')
+
+    var last#id# = new Date(0)
+
+    function updateTime#id#() {
+      let now = new Date
+      let lastHours = last#id#.getHours().toString()
+      let nowHours = now.getHours().toString()
+      if (lastHours !== nowHours) {
+          updateContainer#id#(hoursContainer#id#, nowHours)
+      }
+      let lastMinutes = last#id#.getMinutes().toString()
+      let nowMinutes = now.getMinutes().toString()
+      if (lastMinutes !== nowMinutes) {
+          updateContainer#id#(minutesContainer#id#, nowMinutes)
+      }
+      var nowSeconds = now.getSeconds().toString()
+      secondsText#id#.innerText = nowSeconds.padStart(2, '0')    
+      last#id# = now
+    }
+
+    function updateContainer#id#(container, newTime) {
+      let time = newTime.split('')
+      if (time.length === 1) {
+          time.unshift('0')
+      }
+      let first = container.firstElementChild
+      if (first.lastElementChild.textContent !== time[0]) {
+          updateNumber#id#(first, time[0])
+      }
+      let last = container.lastElementChild
+      if (last.lastElementChild.textContent !== time[1]) {
+          updateNumber#id#(last, time[1])
+      }
+    }
+
+    function updateNumber#id#(element, number) {
+      let second = element.lastElementChild.cloneNode(true)
+      second.textContent = number
+      element.appendChild(second)
+      element.classList.add('anim#id#')
+      setTimeout(function () { element.firstElementChild.style.display = 'none'; }, 900)
+      setTimeout(function () {
+            element.classList.remove('anim#id#');
+            element.removeChild(element.firstElementChild);
+          }, 1000)
+    }
+
+    setInterval(updateTime#id#, 1000)
+  </script>
+  <script>
+    /* JSON structure:
+      { "dt":1685984400,
+        "T":{"value":25.2,"windchill":24.1},
+        "humidity":25,
+        "sea_level":1015,
+        "wind":{"speed":3,"gust":0,"direction":65,"icon":"ENE"},
+        "rain":{"1h":0},
+        "snow":{"1h":0},
+        "iso0":2900,
+        "rain snow limit":"Non pertinent",
+        "clouds":10,
+        "weather":{"icon":"p1j","desc":"Ensoleillé"},
+        "sunrise": 617,
+        "sunset": 2049,
+      }
+   */
+    jeedom.cmd.addUpdateFunction('#id#',function(_options) {
+      if (is_object(cmd = document.querySelector('.cmd[data-cmd_uid="#uid#"]'))) {
+        cmd.querySelector('.errorMessage').innerHTML = ''; // clean previous error
+        try {
+          if('#displayWeather#' != '0') {
+            let json = _options.display_value.replaceAll('&quot;','"');
+            let obj = JSON.parse(json);
+            if(obj != null) {
+              let icon = "url('plugins/meteofrance/data/icones/" +obj.weather.icon +".svg')"
+                cmd.querySelector('.wIcon').style.setProperty('background-image', icon)
+                  
+              let cd = new Date(obj.dt * 1000);
+              let dayTxt = cd.toLocaleDateString('fr-FR', {month: 'long', day: 'numeric',weekday: 'long'});
+              let day = dayTxt.charAt(0).toUpperCase() + dayTxt.slice(1); // ucfirst
+              cmd.querySelector('.dateText').innerHTML = day;
+
+              cmd.querySelector('.condition').innerHTML = obj.weather.desc;
+                  
+              let Tvalue = Math.round(obj.T.value*10) / 10 + '°C';
+              cmd.querySelector('.Tvalue').innerHTML = Tvalue;
+              cmd.querySelector('.Tvalue').setAttribute('title', 'Ressentie: '+obj.T.windchill);
+
+              let sunrise = '--'; let sunset = '--';
+              if(typeof obj.sunrise !== 'undefined') {
+                sunrise = obj.sunrise.toString();
+                if(sunrise.length == 3) sunrise= sunrise.substr(0,1) +':' +sunrise.substr(1)
+                else sunrise= sunrise.substr(0,2) +':' +sunrise.substr(2)
+              }
+              if(typeof obj.sunset !== 'undefined') {
+                sunset = obj.sunset.toString();
+                if(sunset.length == 3) sunset= sunset.substr(0,1) +':' +sunset.substr(1)
+                else sunset= sunset.substr(0,2) +':' +sunset.substr(2)
+              }
+              cmd.querySelector('.sunRiseSet').innerHTML = sunrise +' - ' +sunset;
+
+              if('#displayHumidity#' != '0')
+                cmd.querySelector('.humidity').innerHTML = "Humidité: " +obj.humidity +"%";
+              if('#displayPressure#' != '0')
+                cmd.querySelector('.pressure').innerHTML = "Pression: " +obj.sea_level +"hPa";
+
+              if('#displayWind#' != '0') {
+                let vent = Math.round(obj.wind.speed*3.6) +'km/h';
+                let raf = obj.wind.gust;
+                let gust = '';
+                if(raf>0) gust += ' <span style="background: #ed1c24;color: #ffffff!important" title="Rafales">&nbsp;' +Math.round(raf*3.6) +'km/h&nbsp;</span>'; 
+                let wind = '';
+                if (obj.wind.icon == 'Variable')
+                  wind = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve" width="15px" height="15px"><g><path fill="#3C73A5" d="M32.3,13.1c1.1,0.7,2.1,1.5,2.9,2.4c5.6,5.6,5.6,14.7,0,20.4c-5.5,5.6-14.5,5.6-20,0.1l-0.1-0.1 c-5.5-5.7-5.5-14.8,0.1-20.4l3.7,6.9l2.1-15.2L4.1,10.8l8,2c-7.2,7.2-7.2,18.8,0,26.1c7.1,7.2,18.5,7.3,25.7,0.3 c0.1-0.1,0.3-0.3,0.3-0.3c7.2-7.3,7.2-18.9,0-26.3c-1.5-1.3-3.1-2.5-4.8-3.3L32.3,13.1z"/></g></svg>';
+                else
+                  wind = '<svg data-v-47880d39="" width="15px" height="15px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve" class="icon-wind-direction" style="transform: rotate(' +(obj.wind.direction+180) +'deg);"><g data-v-47880d39="" fill="#3C73A5"><path data-v-47880d39="" d="M510.5,749.6c-14.9-9.9-38.1-9.9-53.1,1.7l-262,207.3c-14.9,11.6-21.6,6.6-14.9-11.6L474,48.1c5-16.6,14.9-18.2,21.6,0l325,898.7c6.6,16.6-1.7,23.2-14.9,11.6L510.5,749.6z"></path><path data-v-47880d39="" d="M817.2,990c-8.3,0-16.6-3.3-26.5-9.9L497.2,769.5c-5-3.3-18.2-3.3-23.2,0L210.3,976.7c-19.9,16.6-41.5,14.9-51.4,0c-6.6-9.9-8.3-21.6-3.3-38.1L449.1,39.8C459,13.3,477.3,10,483.9,10c6.6,0,24.9,3.3,34.8,29.8l325,898.7c5,14.9,5,28.2-1.7,38.1C837.1,985,827.2,990,817.2,990z M485.6,716.4c14.9,0,28.2,5,39.8,11.6l255.4,182.4L485.6,92.9l-267,814.2l223.9-177.4C454.1,721.4,469,716.4,485.6,716.4z"></path></g></svg>';
+                cmd.querySelector('.wind').innerHTML = 'Vent: ' +vent +' ' +wind +' ' +gust;
+                cmd.querySelector('.wind').setAttribute('title', obj.wind.icon);
+              }
+
+              let clouds = '';
+              if('#displayClouds#' != '0') clouds = "Nuages: " +obj.clouds +"% ";
+                cmd.querySelector('.clouds').innerHTML = clouds;
+
+              let rainTxt = '';
+              if('#displayRain#' != '0') {
+                let rain = obj.rain['1h'];
+                let snow = obj.snow['1h'];
+                if(rain) rainTxt += 'Pluie: ' +rain +'mm '
+                if(snow) rainTxt += 'Neige: ' +snow +'mm'
+              }
+              cmd.querySelector('.rain').innerHTML = rainTxt;
+                  
+              let language = navigator.language;
+              let collectDateTxt = new Date(_options.collectDate).toLocaleString(language, {dateStyle: "full", timeStyle: "medium"});
+              let collectDate = collectDateTxt.charAt(0).toUpperCase() + collectDateTxt.slice(1); // ucfirst
+              cmd.querySelector('.collectDate').innerHTML = "Collecte: " +collectDate +'.';
+              cmd.querySelector('.errorMessage').innerHTML = 'Informations créées à partir de données de Météo-France';
+            }
+          }
+          else { // without weather
+            let cd = new Date();
+            let dayTxt = cd.toLocaleDateString('fr-FR', {month: 'long', day: 'numeric',weekday: 'long'});
+            let day = dayTxt.charAt(0).toUpperCase() + dayTxt.slice(1); // ucfirst
+            cmd.querySelector('.dateText').innerHTML = day;
+          }
+          if ('#backgroundColor#' != '#backgroundColor' +'#') {
+            cmd.querySelector('.content').style.backgroundColor = '#backgroundColor#';
+          }
+          if ('#clockBackgroundColor#' != '#clockBackgroundColor'+'#') {
+            cmd.querySelector('.hours#id#').style.backgroundColor = '#clockBackgroundColor#';
+            cmd.querySelector('.minutes#id#').style.backgroundColor = '#clockBackgroundColor#';
+          }
+          if ('#clockFontColor#' != '#clockFontColor'+'#') {
+            cmd.querySelector('.hours#id#').style.color = '#clockFontColor#';
+            cmd.querySelector('.minutes#id#').style.color = '#clockFontColor#';
+            cmd.querySelector('.seconds#id#').style.color = '#clockFontColor#';
+            cmd.querySelector('.tick#id#').style.color = '#clockFontColor#';
+          }
+          if ('#clockBorderColor#' != '#clockBorderColor'+'#') {
+            cmd.querySelector('.hours#id#').style.borderColor = '#clockBorderColor#';
+            cmd.querySelector('.minutes#id#').style.borderColor = '#clockBorderColor#';
+          }
+          if('#displayWidgetName#' != '0')
+            cmd.querySelector('.widgetName#id#').style.display = 'block';
+          else
+            cmd.querySelector('.widgetName#id#').style.display = 'none';
+          if('#displaySeconds#' != '0')
+            cmd.querySelector('.seconds#id#').style.display = 'block';
+          else
+            cmd.querySelector('.seconds#id#').style.display = 'none';
+        }
+        catch(err) {
+          if('#displayError#' != '0')
+            cmd.querySelector('.errorMessage').innerHTML = '<strong>JSON data:' +_options.display_value.substr(0,30) +'...</strong><br>' +err.message;
+        }
+      }
+    });
+    jeedom.cmd.refreshValue([{cmd_id:'#id#',display_value: '#state#', valueDate: '#valueDate#', collectDate: '#collectDate#', alertLevel: '#alertLevel#', unit: '#unite#'}])
+  </script>
+</div>

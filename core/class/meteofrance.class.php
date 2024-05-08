@@ -413,6 +413,18 @@ class meteofrance extends eqLogic {
           }
           // message::add(__FUNCTION__, "I=$i J=$j DT: " .$value['dt'] ." ==> $forecastTS");
           // $value['dt'] = $forecastTS;
+	  if($j == 0) { // only for MeteoHour0Json Add sunrise and sunset for widget
+            $sunrise = $this->getCmd(null, 'Ephemerissunrise_time');
+            if(is_object($sunrise)) {
+              $val = $sunrise->execCmd();
+              $value["sunrise"] = $val;
+            }
+            $sunset = $this->getCmd(null, 'Ephemerissunset_time');
+            if(is_object($sunset)) {
+              $val = $sunset->execCmd();
+              $value["sunset"] = $val;
+            }
+          }
           $cmd = $this->getCmd(null, "MeteoHour${j}Json");
           if(!is_object($cmd)) break;
           $this->checkAndUpdateCmd("MeteoHour${j}Json", str_replace('"','&quot;',json_encode($value,JSON_UNESCAPED_UNICODE)));

@@ -1498,18 +1498,18 @@ log::add(__CLASS__, 'debug', "  Command creation: " .$command['name']);
     $replace['#cityZip#'] = $zip;
 
     $temperature = $this->getCmd(null, 'MeteonowTemperature');
-    $replace['#temperature#'] = is_object($temperature) ? round($temperature->execCmd()) : '';
+    $replace['#temperature#'] = is_object($temperature) ? round(floatval($temperature->execCmd())) : '';
     $replace['#tempid#'] = is_object($temperature) ? $temperature->getId() : '';
 
     $temperature = $this->getCmd(null, 'MeteonowTemperatureRes');
-    $replace['#ressentie#'] = is_object($temperature) ? round($temperature->execCmd()) : '';
+    $replace['#ressentie#'] = is_object($temperature) ? round(floatval($temperature->execCmd())) : '';
     $replace['#ressid#'] = is_object($temperature) ? $temperature->getId() : '';
 
     $humidity = $this->getCmd(null, 'MeteonowHumidity');
     $replace['#humidity#'] = is_object($humidity) ? $humidity->execCmd() : '';
 
     $uvindex = $this->getCmd(null, 'Meteoday0indiceUV');
-    $replace['#uvi#'] = is_object($uvindex) ? round($uvindex->execCmd()) : '';
+    $replace['#uvi#'] = is_object($uvindex) ? round(floatval($uvindex->execCmd())) : '';
 
     $pressure = $this->getCmd(null, 'MeteonowPression');
     $replace['#pressure#'] = is_object($pressure) ? $pressure->execCmd() : '';

@@ -25,53 +25,21 @@ if (!isConnect()) {
 <form class="form-horizontal">
   <fieldset>
     <div class="form-group">
-      <label class="col-md-10 control-label" style="text-align: center">{{La récupération des données de vigilances ne nécessite pas encore l'utilisation de l'API <a href="https://portail-api.meteofrance.fr/devportal">DonneesPubliquesVigilance</a> de Météo France. Le plugin récupère les données sur le <a href="http://storage.gra.cloud.ovh.net/v1/AUTH_555bdc85997f4552914346d4550c421e/gra-vigi6-archive_public/">site d'archives de Météo France</a>. En cas de problème avec le site d'archives MF, il faudra utiliser l'API en renseignant les clés publique et privée ci-dessous.}}
+      <label class="col-md-3 control-label">{{APPLICATION_ID Météo France}}
+        <a target="blank" href="https://portail-api.meteofrance.fr/web/fr/faq">Plus d'info ICI</a>
+        <sup><i class="fas fa-question-circle tooltips" title="{{A copier sur le site MF et à coller ici}}"></i></sup>
+      </label>
+      <div class="col-md-7">
+        <input type="text" class="configKey form-control" data-l1key="credentialApiMeteoFrance"/>
+      </div>
     </div>
     <div class="form-group">
-			<label class="col-md-4 control-label">{{Utilisation de l'API vigilance Météo France}}</label>
-			<div class="col-sm-2">
-				<input id="input_demo_mode" type="checkbox" class="configKey tooltips" data-l1key="useVigilanceAPI">
+			<label class="col-md-3 control-label">{{Utilisation de l'API vigilance Météo France}}</label>
+			<div class="col-sm-1" style="width:2%">
+				<input type="checkbox" class="configKey tooltips" data-l1key="useVigilanceAPI">
 			</div>
-		</div>
-    <div class="form-group">
-      <label class="col-md-4 control-label">{{Clé publique de l'API vigilance Meteo France à générer }}
-        <a target="blank" href="https://portail-api.meteofrance.fr/devportal/apis">ICI</a>
-<!--
--->
-        <sup><i class="fas fa-question-circle tooltips" title="{{Clé publique à copier sur le site MF et à coller ici}}"></i></sup>
+      <label class="col-md-6 control-label" style="text-align: left;line-height:normal">{{La récupération des données de vigilances ne nécessite pas encore l'utilisation de l'API <a href="https://portail-api.meteofrance.fr/web/fr/api/DonneesPubliquesVigilance">DonneesPubliquesVigilance</a> de Météo France. Le plugin  peut récupérer les données sur le <a href="http://storage.gra.cloud.ovh.net/v1/AUTH_555bdc85997f4552914346d4550c421e/gra-vigi6-archive_public/">site d'archives de Météo France</a>.}}
       </label>
-      <div class="col-md-6">
-        <input class="configKey form-control" data-l1key="alertPublicKey" placeholder="Saisissez la clé publique"/>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-md-4 control-label">{{Clé privée de l'API vigilance Meteo France}}
-        <sup><i class="fas fa-question-circle tooltips" title="{{Clé privée à copier sur le site MF et à coller ici}}"></i></sup>
-      </label>
-      <div class="col-md-6">
-        <input type="password" class="configKey form-control" data-l1key="alertPrivateKey" placeholder="Saisissez la clé privée"/>
-      </div>
-    </div>
-<!--
-    <div class="form-group">
-      <label class="col-md-4 control-label">{{Clé privée de l'API vigilance Meteo France}}
-        <sup><i class="fas fa-question-circle tooltips" title="{{Clé privée à copier sur le site MF et à coller ici}}"></i></sup>
-      </label>
-<div class="input-group col-md-6">
-    <input type="text" class="inputPassword configKey form-control" data-l1key="pass" placeholder="Saisissez la clé privée" />
-    <span class="input-group-btn">
-        <a class="btn btn-default form-control bt_showPass roundedRight"><i class="fas fa-eye"></i></a>
-    </span>
-</div>
-    </div>
--->
-
-    <div class="form-group">
-      <label class="col-md-4 control-label">{{Commentaires}}
-      </label>
-      <div class="col-md-6">
-        <input type="text" class="configKey form-control" data-l1key="comment"/>
-      </div>
     </div>
   </fieldset>
 </form>

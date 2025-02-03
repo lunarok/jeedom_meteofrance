@@ -728,14 +728,13 @@ class meteofrance extends eqLogic {
     else log::add(__CLASS__, 'warning', __FUNCTION__ ." Unable to get data.");
   }
 
-  function getVigilanceToken($alertPublicKey,$alertPrivateKey) {
-    $applicationId = base64_encode("$alertPublicKey:$alertPrivateKey");
-    $alertToken = config::byKey('alertToken', __CLASS__, '');
-    $alertTokenTS = config::byKey('alertTokenTS', __CLASS__, 0);
-    if($alertToken == '' || $alertTokenTS-30 < time()) { // create token / renew token
+  function getMeteoFranceToken($credential) {
+    $token = config::byKey("apiToken", __CLASS__, '');
+    $tokenTS = config::byKey("apiTokenTS", __CLASS__, 0);
+    if($token == '' || $tokenTS-30 < time()) { // create token / renew token
       log::add(__CLASS__, 'debug', '  Create new or renew the token');
       $url = "https://portail-api.meteofrance.fr/token";
-      $header = array("Authorization: Basic $applicationId");
+      $header = array("Authorization: Basic $credential");
       $curl = curl_init();
       curl_setopt_array($curl, array(
           CURLOPT_URL => $url, CURLOPT_HTTPHEADER => $header,
@@ -743,23 +742,24 @@ class meteofrance extends eqLogic {
           CURLOPT_POST => true, CURLOPT_POSTFIELDS => 'grant_type=client_credentials'));
       $return = curl_exec($curl);
       $curl_error = curl_error($curl);
+      $errno = curl_errno($curl);
       curl_close($curl);
       if($return === false) {
-        log::add(__CLASS__, 'error', "  Unable to get token. curl_error: $curl_error");
+        log::add(__CLASS__, 'error', "  Unable to get token. curl_error[$errno]: $curl_error");
         return '';
       }
       $dec = json_decode($return,true);
       if(isset($dec['access_token'])) {
-        $alertToken = $dec['access_token'];
-        config::save('alertToken', $alertToken, __CLASS__);
-        config::save('alertTokenTS', time()+ $dec['expires_in'], __CLASS__);
+        $token = $dec['access_token'];
+        config::save("apiToken", $token, __CLASS__);
+        config::save("apiTokenTS", time()+ $dec['expires_in'], __CLASS__);
       }
       else {
-        $alertToken = '';
+        $token = '';
         log::add(__CLASS__, 'debug', "  Token was not set in MF answer: $return");
       }
     }
-    return $alertToken;
+    return $token;
   }
 
   public function downloadVigDataApi($file,$token,$json,$fileResu) {
@@ -830,8 +830,7 @@ class meteofrance extends eqLogic {
 
   public function getVigilanceDataApiCloudMF() {
     log::add(__CLASS__, 'debug', __FUNCTION__ ." http://storage.gra.cloud.ovh.net/v1/AUTH_555bdc85997f4552914346d4550c421e/gra-vigi6-archive_public");
-    $alertPublicKey = trim(config::byKey('alertPublicKey', __CLASS__));
-    $alertPrivateKey = trim(config::byKey('alertPrivateKey', __CLASS__));
+    $credential = trim(config::byKey('credentialApiMeteoFrance', __CLASS__));
     $fileAlert = __DIR__ ."/../../data/CDP_CARTE_EXTERNE.json";
     $fileAlertTxt = __DIR__ ."/../../data/CDP_TEXTES_VIGILANCE.json";
     $fileVignetteJ = __DIR__ ."/../../data/VIGNETTE_NATIONAL_J_500X500.png";
@@ -839,8 +838,8 @@ class meteofrance extends eqLogic {
     $recupAPI = 0;
     $useVigilanceAPI = config::byKey('useVigilanceAPI', __CLASS__, 0);
         // Vigilances avec l'API
-    if( $useVigilanceAPI == 1 && $alertPublicKey != '' && $alertPrivateKey != '') {
-      $token = self::getVigilanceToken($alertPublicKey,$alertPrivateKey);
+    if( $useVigilanceAPI == 1 && $credential != '') {
+      $token = self::getMeteoFranceToken($credential);
       if($token != '') {
           // Json des vigilances
         $file = "cartevigilance/encours";
@@ -853,7 +852,7 @@ class meteofrance extends eqLogic {
         $recupAPI += $this->downloadVigDataApi($file,$token,0,$fileVignetteJ1);
           // Json des vigilances
         $file = "textesvigilance/encours";
-        $recupAPI += $this->downloadVigDataApi($file,$token,1,$fileAlertTxt);
+        $recupAPI += $this->downloadVigDataApi($file,$token,1,$fileTxt);
         if($recupAPI == 4) { // Recover vigilance with MF archives
           log::add(__CLASS__, 'debug', "  Data successfully downloaded using MF API");
           $latestFull = gmdate('YmdHis') .'Z';

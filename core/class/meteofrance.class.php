@@ -41,6 +41,7 @@ class meteofrance extends eqLogic {
 
   public static function backupExclude() { return(array('data/*.json')); }
 
+  /*
   public function checkAndUpdateCmd($_logicalId, $_value, $_updateTime = null) {
     $loglevel = log::convertLogLevel(log::getLogLevel(__CLASS__));
     if($loglevel == 'debug') {
@@ -51,8 +52,8 @@ class meteofrance extends eqLogic {
     }
     parent::checkAndUpdateCmd($_logicalId, $_value, $_updateTime);
   }
+  */
 
-  
   public static function extractValueFromJsonTxt($cmdValue, $request) {
     $txtJson = str_replace('&quot;','"',$cmdValue);
     $json =json_decode($txtJson,true);

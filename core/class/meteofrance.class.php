@@ -843,17 +843,21 @@ class meteofrance extends eqLogic {
       $token = self::getMeteoFranceToken($credential);
       if($token != '') {
           // Json des vigilances
-        $file = "cartevigilance/encours";
+        sleep(2);
+	$file = "cartevigilance/encours";
         $recupAPI += $this->downloadVigDataApi($file,$token,1,$fileAlert);
           // Vignette du jour
-        $file = "vignettenationale-J/encours";
+        sleep(2);
+	$file = "vignettenationale-J/encours";
         $recupAPI += $this->downloadVigDataApi($file,$token,0,$fileVignetteJ);
           // Vignette de demain
-        $file = "vignettenationale-J1/encours";
+        sleep(2);
+	$file = "vignettenationale-J1/encours";
         $recupAPI += $this->downloadVigDataApi($file,$token,0,$fileVignetteJ1);
-          // Json des vigilances
-        $file = "textesvigilance/encours";
-        $recupAPI += $this->downloadVigDataApi($file,$token,1,$fileTxt);
+          // Json textes des vigilances
+        sleep(2);
+	$file = "textesvigilance/encours";
+        $recupAPI += $this->downloadVigDataApi($file,$token,1,$fileAlertTxt);
         if($recupAPI == 4) { // Recover vigilance with MF archives
           log::add(__CLASS__, 'debug', "  Data successfully downloaded using MF API");
           $latestFull = gmdate('YmdHis') .'Z';

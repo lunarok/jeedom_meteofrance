@@ -294,35 +294,31 @@ class meteofrance extends eqLogic {
   }
 
   public function getBulletinDetails($_array = array()) {
-    // $ville = $_array['ville'];
-    $ville = str_replace("'",'-',$_array['ville']);
+    $ville = strtolower(str_replace("'",'-',$_array['ville']));
     $zip = $_array['zip'];
     if($ville != '' && $zip != '') {
-      $url = "http://meteofrance.com/previsions-meteo-france/" . urlencode($ville) . "/" . $_array['zip'];
+      $url = "https://meteofrance.com/previsions-meteo-france/" . urlencode($ville) . "/$zip";
       log::add(__CLASS__, 'debug', __FUNCTION__ ." URL: $url");
       $dom = new DOMDocument;
       if(@$dom->loadHTMLFile($url,LIBXML_NOERROR) === true ) {
-        // $dom->saveHTMLFile(__DIR__ .'/' .$_array['zip'] .'.html');
         $xpath = new DomXPath($dom);
         log::add(__CLASS__, 'debug', '    ' . $xpath->query("//html/body/script[1]")[0]->nodeValue);
         $json = json_decode($xpath->query("//html/body/script[1]")[0]->nodeValue, true);
         $loglevel = log::convertLogLevel(log::getLogLevel(__CLASS__));
         if($loglevel == 'debug') {
-          $hdle = fopen(__DIR__ ."/../../data/" .__FUNCTION__ ."-${ville}_$zip.json", "wb");
+          $hdle = fopen(__DIR__ ."/../../data/" .__FUNCTION__ ."-{$ville}_$zip.json", "wb");
           if($hdle !== FALSE) { fwrite($hdle, json_encode($json)); fclose($hdle); }
         }
         $idBulletinVille = ((is_null($json['id_bulletin_ville']))?'':$json['id_bulletin_ville']);
-        $this->setConfiguration('bulletinVille', $idBulletinVille);
         log::add(__CLASS__, 'debug', "Bulletin Ville Result [$idBulletinVille]");
+        $this->setConfiguration('bulletinVille', $idBulletinVille);
       }
       else {
-        log::add(__CLASS__, 'warning', __FUNCTION__ ." loadHTMLFile failed. getBulletinVille will not be called.");
         $this->setConfiguration('bulletinVille', '');
+        log::add(__CLASS__, 'warning', __FUNCTION__ ." loadHTMLFile failed. getBulletinVille will not be called.");
       }
     }
-    else {
-      log::add(__CLASS__, 'debug', __FUNCTION__ ." Invalid ville/zipcode: $ville/$zip");
-    }
+    else log::add(__CLASS__, 'debug', __FUNCTION__ ." Invalid ville/zipcode: $ville/$zip");
   }
 
   public function getBulletinVille() {

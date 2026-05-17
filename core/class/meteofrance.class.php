@@ -273,10 +273,10 @@ class meteofrance extends eqLogic {
       $url = "https://webservice.meteofrance.com/forecast?lat=$lat&lon=$lon&id=&instants=morning,afternoon,evening,night";
       $ville = $_array['ville'];
       $return = self::callMeteoWS($url,false,true,__FUNCTION__ ."-".$this->getId() ."-$ville.json");
-      if(isset($return['properties']['bulletin_cote'])) $bulletin_cote = $return['properties']['bulletin_cote'];
+      if(isset($return['position']['bulletin_cote'])) $bulletin_cote = $return['position']['bulletin_cote'];
       else $bulletin_cote = 0;
       $this->setConfiguration('bulletinCote', $bulletin_cote);
-      $this->setConfiguration('numDept', $return['properties']['french_department']);
+      $this->setConfiguration('numDept', $return['position']['dept']);
     }
     else {
       log::add(__CLASS__, 'debug', __FUNCTION__ ." Invalid latitude/longitude: $lat/$lon");

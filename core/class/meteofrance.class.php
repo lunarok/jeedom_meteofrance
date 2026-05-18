@@ -850,7 +850,7 @@ class meteofrance extends eqLogic {
 	$file = "vignettenationale-J1/encours";
         $recupAPI += $this->downloadVigDataApi($file,$token,0,$fileVignetteJ1);
 
-        if($recupAPI == 3) { // Recover vigilance with MF archives
+        if($recupAPI == 3) { // Recup OK
           log::add(__CLASS__, 'debug', "  Data successfully downloaded using MF API");
           $latestFull = gmdate('YmdHis') .'Z';
           config::save('prevVigilanceRecovery', $latestFull, __CLASS__);

@@ -849,17 +849,19 @@ class meteofrance extends eqLogic {
         sleep(2);
 	$file = "vignettenationale-J1/encours";
         $recupAPI += $this->downloadVigDataApi($file,$token,0,$fileVignetteJ1);
-          // Json textes des vigilances
-        sleep(2);
-	$file = "textesvigilance/encours";
-        $recupAPI += $this->downloadVigDataApi($file,$token,1,$fileAlertTxt);
-        if($recupAPI == 4) { // Recover vigilance with MF archives
+
+        if($recupAPI == 3) { // Recup OK
           log::add(__CLASS__, 'debug', "  Data successfully downloaded using MF API");
           $latestFull = gmdate('YmdHis') .'Z';
           config::save('prevVigilanceRecovery', $latestFull, __CLASS__);
         }
+          // Json textes des vigilances optionnel
+        sleep(2);
+	$file = "textesvigilance/encours";
+        $recupAPI += $this->downloadVigDataApi($file,$token,1,$fileAlertTxt);
       }
     }
+    /*
     if($recupAPI < 4) { // Recover vigilance with MF archives
       if(date('H') < 6) $timeRecup = strtotime("yesterday");
       else $timeRecup = time();
@@ -949,6 +951,7 @@ class meteofrance extends eqLogic {
         return 1; // erreur
       }
     }
+    */
     return 0; // OK
   }
 

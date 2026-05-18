@@ -38,8 +38,11 @@ if (!isConnect()) {
 			<div class="col-sm-1" style="width:2%">
 				<input type="checkbox" class="configKey tooltips" data-l1key="useVigilanceAPI">
 			</div>
-      <label class="col-md-6 control-label" style="text-align: left;line-height:normal">{{La récupération des données de vigilances ne nécessite pas encore l'utilisation de l'API <a href="https://portail-api.meteofrance.fr/web/fr/api/DonneesPubliquesVigilance">DonneesPubliquesVigilance</a> de Météo France. Le plugin  peut récupérer les données sur le <a href="http://storage.gra.cloud.ovh.net/v1/AUTH_555bdc85997f4552914346d4550c421e/gra-vigi6-archive_public/">site d'archives de Météo France</a>.}}
-      </label>
+	    <label class="col-md-6 control-label" style="text-align: left;line-height:normal">{{Vous devez souscrire à l'API <a href="https://portail-api.meteofrance.fr/web/fr/api/DonneesPubliquesVigilance">Données Publiques Vigilance</a> de Météo France.</a>.}}
+      <!--
+		    <label class="col-md-6 control-label" style="text-align: left;line-height:normal">{{La récupération des données de vigilances ne nécessite pas encore l'utilisation de l'API <a href="https://portail-api.meteofrance.fr/web/fr/api/DonneesPubliquesVigilance">DonneesPubliquesVigilance</a> de Météo France. Le plugin  peut récupérer les données sur le <a href="http://storage.gra.cloud.ovh.net/v1/AUTH_555bdc85997f4552914346d4550c421e/gra-vigi6-archive_public/">site d'archives de Météo France</a>.}}
+      -->
+	    </label>
     </div>
   </fieldset>
 </form>
